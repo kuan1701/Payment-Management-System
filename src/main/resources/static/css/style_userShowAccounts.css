@@ -1,0 +1,149 @@
+.login-wrapper .box {
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+}
+
+.login-wrapper .box .card-header .nav-link img {
+    margin-right: 6px;
+}
+
+.login-wrapper .card-body-main {
+    padding: 45px 40px 20px 40px;
+}
+
+.login-wrapper .box #number {
+    text-align: left;
+    font-size: 16px;
+}
+
+.card-container {
+    width: 100%;
+    margin: 0;
+}
+
+.bfh-selectbox .bfh-selectbox-toggle {
+    height: 40px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.bfh-selectbox .bfh-selectbox-options ul li > a {
+    padding-left: 14px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.login-wrapper .box #amount {
+    text-align: center;
+    font-weight: normal;
+    border: 0;
+}
+
+.ui-widget.ui-widget-content {
+    width: 94%;
+    margin: auto;
+}
+
+.login-wrapper .box #amount:focus {
+    box-shadow: none;
+}
+
+.ui-slider-horizontal .ui-slider-range {
+    transition: 0s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+    background: #f0f1f2;
+    border: 1px solid rgba(0, 0, 0, .125);
+    transition: 0s cubic-bezier(0.4, 0, 1, 1);
+    outline: none;
+    z-index: 1;
+}
+
+.message-block span {
+    padding-bottom: 20px;
+    font-size: 22px;
+}
+
+@media (max-width: 992px) {
+    .card-body .row .col-lg-3 {
+        width: 70%;
+        margin: auto !important;
+    }
+
+    .card-body .row .action {
+        width: 72%;
+        margin: auto !important;
+    }
+
+    .tooltip {
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 634px) {
+    .card-container {
+        font-size: 90% !important;
+    }
+}
+
+@media (max-width: 601px) {
+    .card-container {
+        font-size: 85% !important;
+    }
+}
+
+@media (max-width: 512px) {
+    .card-body .row .col-lg-3 {
+        width: 100%;
+        margin: unset !important;
+        padding: 0 35px 0 35px !important;
+    }
+
+    .card-body .row .col-lg-9 {
+        padding: 0 20px !important;
+    }
+}
+
+@media (max-width: 439px) {
+    .login-wrapper .card-body-main {
+        padding: 36px 16px 24px 16px !important;
+    }
+
+    .card-container {
+        font-size: 90% !important;
+    }
+
+    .message-block span {
+        font-size: 16px !important;
+    }
+
+    .message-block div {
+        height: 132px !important;
+    }
+
+    .message-block div img {
+        width: 132px !important;
+        height: 132px !important;
+    }
+}
+
+@media (max-width: 389px) {
+    .card-container {
+        font-size: 80% !important;
+    }
+
+    .message-block span {
+        padding: 0 !important;
+    }
+
+    .message-block div {
+        height: 108px !important;
+    }
+
+    .message-block div img {
+        width: 108px !important;
+        height: 108px !important;
+    }
+}

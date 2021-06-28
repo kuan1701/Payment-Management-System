@@ -1,0 +1,277 @@
+.login-wrapper .box {
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+}
+
+.login-wrapper .box .card-header .nav-link img {
+    margin-right: 6px;
+}
+
+.col-md-12,
+.col-md-6,
+.col-md-6 .row {
+    width: 100% !important;
+    margin: 0;
+    padding: 0;
+}
+
+.card-container {
+    height: 450px;
+    min-height: 325px;
+    padding: 30px 60px;
+}
+
+.carousel {
+    height: 67%;
+}
+
+.carousel-item .carousel-caption {
+    left: 11%;
+    right: 7%;
+}
+
+.carousel-caption .card {
+    box-shadow: none;
+}
+
+.card-body .card-title {
+    align-self: center;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.account p {
+    margin: 0;
+}
+
+.col-md-6 .options {
+    margin-top: 48px;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+
+.col-md-6 .options img {
+    width: 72px;
+    height: 72px;
+}
+
+.forward-top-link-img a {
+    min-width: 110px;
+}
+
+.col-md-4 {
+    text-align: center;
+}
+
+.col-md-4 h5 {
+    font-size: 16px !important;
+}
+
+.message-block span {
+    padding-bottom: 20px;
+    font-size: 22px;
+}
+
+@media (max-width: 1342px) {
+    .col-md-6 .options {
+        margin: 0;
+        align-items: center;
+    }
+
+    .forward-top-link-img a {
+        min-width: auto;
+    }
+
+    .col-md-4 h5 {
+        font-size: 0 !important;
+    }
+}
+
+@media (max-width: 1059px) {
+    .card-body .card-title {
+        font-size: 21px !important;
+    }
+
+    .col-md-6 .options img {
+        width: 46px;
+        height: 46px;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel {
+        height: 85%;
+    }
+
+    .carousel-caption .card {
+        height: 112% !important;
+    }
+
+    .carousel-item .carousel-caption {
+        left: 12%;
+        right: 10%;
+    }
+
+    .account {
+        height: 59% !important;
+    }
+
+    .card-body .card-title {
+        font-size: 20px !important;
+    }
+
+    .col-md-6 .options {
+        margin: 46px 0 0 0 !important;
+        align-items: unset;
+    }
+
+    .col-md-4 {
+        width: 33%;
+        padding: 0 !important;
+        display: grid;
+    }
+}
+
+@media (max-width: 568px) {
+    .carousel-item .carousel-caption {
+        left: 16%;
+        right: 12%;
+    }
+
+    .card-body .card-title {
+        font-size: 18px !important;
+    }
+
+    .col-md-6 .options {
+        margin: 46px 0 0 0 !important;
+    }
+}
+
+@media (max-width: 508px) {
+    .carousel {
+        height: 74%;
+    }
+
+    .carousel-caption .card {
+        height: 114% !important;
+    }
+
+    .carousel-item .carousel-caption {
+        left: 16%;
+        right: 12%;
+    }
+
+    .account {
+        height: 63% !important;
+    }
+
+    .card-body .card-title {
+        font-size: 14px !important;
+    }
+
+    .col-md-6 .options {
+        margin: 40px 0 0 0 !important;
+    }
+
+    .col-md-6 .options img {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 439px) {
+    .card-container {
+        padding: 0 !important;
+    }
+
+    .carousel {
+        box-shadow: none;
+    }
+
+    .carousel-caption .card {
+        height: 96% !important;
+    }
+
+    .carousel-item .carousel-caption {
+        left: 16%;
+        right: 12%;
+        padding: 35px 0 30px 0 !important;
+    }
+
+    .card-body .card-title {
+        font-size: 18px !important;
+    }
+
+    .col-md-6 .options {
+        margin: 28px 0 0 0 !important;
+    }
+
+    .message-block span {
+        font-size: 16px !important;
+    }
+
+    .message-block div {
+        height: 132px !important;
+    }
+
+    .message-block div img {
+        width: 132px !important;
+        height: 132px !important;
+    }
+}
+
+@media (max-width: 389px) {
+    .carousel-caption .card {
+        height: 104% !important;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        width: 12%;
+    }
+
+    .account {
+        height: 56% !important;
+    }
+
+    .card-body .card-title {
+        font-size: 16px !important;
+    }
+
+    .col-md-6 .options {
+        margin: 42px 0 0 0 !important;
+    }
+
+    .message-block span {
+        padding: 0 !important;
+    }
+
+    .message-block div {
+        height: 108px !important;
+    }
+
+    .message-block div img {
+        width: 108px !important;
+        height: 108px !important;
+    }
+}
+
+@media (max-width: 358px) {
+    .carousel {
+        height: 64%;
+    }
+
+    .carousel-caption .card {
+        height: 114% !important;
+    }
+
+    .col-md-6 .options {
+        margin: 38px 0 0 0 !important;
+    }
+
+    .card-body .card-title {
+        font-size: 13px !important;
+    }
+}

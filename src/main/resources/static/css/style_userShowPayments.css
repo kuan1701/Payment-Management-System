@@ -1,0 +1,170 @@
+.login-wrapper .box .content-wrap {
+    width: 92%;
+}
+
+.login-wrapper .card-body-main {
+    padding: 45px 40px 20px 40px;
+}
+
+.login-wrapper .box {
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+}
+
+.login-wrapper .box .card-header .nav-link img {
+    margin-right: 6px;
+}
+
+.card-container {
+    width: 100%;
+    margin: 0;
+}
+
+.login-wrapper .box .group-btn {
+    margin-bottom: 26px;
+    display: block;
+}
+
+.login-wrapper .box .group-btn label {
+    width: 49%;
+    padding: 8px;
+    margin: 0;
+    font-size: 14px;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+    background: #ffffff;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus {
+    background: #ffffff;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    border: 1px solid #428bca;
+    background: #428bca;
+}
+
+.ui-visual-focus {
+    box-shadow: none;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    height: 40px;
+    background-color: #ffffff;
+}
+
+.gj-datepicker-bootstrap [role=right-icon] button {
+    transition: .05s ease-in-out;
+}
+
+.btn-outline-secondary:not(:disabled):not(.disabled).active, .btn-outline-secondary:not(:disabled):not(.disabled):active, .show > .btn-outline-secondary.dropdown-toggle {
+    background-color: #6c757d75;
+    border-color: #6c757d75;
+}
+
+.btn-outline-secondary:not(:disabled):not(.disabled).active:focus, .btn-outline-secondary:not(:disabled):not(.disabled):active:focus, .show > .btn-outline-secondary.dropdown-toggle:focus {
+    box-shadow: none;
+}
+
+.message-block span {
+    padding-bottom: 20px;
+    font-size: 22px;
+}
+
+@media (max-width: 1474px) {
+    .login-wrapper .box .group-btn label {
+        min-width: 100px;
+        width: auto;
+        margin: 2px !important;
+    }
+}
+
+@media (max-width: 992px) {
+    .card-body .row .col-lg-3 {
+        width: 70%;
+        margin: auto !important;
+    }
+
+    .card-body .row .action {
+        width: 72%;
+        margin: auto !important;
+    }
+
+    .tooltip {
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 512px) {
+    .card-body .row .col-lg-3 {
+        width: 100%;
+        margin: unset !important;
+        padding: 0 35px 0 35px !important;
+    }
+
+    .card-body .row .col-lg-9 {
+        padding: 0 20px !important;
+    }
+}
+
+@media (max-width: 439px) {
+    .login-wrapper .card-body-main {
+        padding: 36px 16px 24px 16px !important;
+    }
+
+    .card-container {
+        font-size: 90% !important;
+    }
+
+    .card-body .card-title a {
+        padding-top: 8px !important;
+    }
+
+    .new-balance span {
+        margin-right: 40% !important;
+    }
+
+    .message-block span {
+        font-size: 16px !important;
+    }
+
+    .message-block div {
+        height: 132px !important;
+    }
+
+    .message-block div img {
+        width: 132px !important;
+        height: 132px !important;
+    }
+}
+
+@media (max-width: 417px) {
+    .card-container {
+        font-size: 83% !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .card-container {
+        font-size: 80% !important;
+    }
+
+    .new-balance span {
+        margin-right: 33% !important;
+    }
+
+    .message-block span {
+        padding: 0 !important;
+    }
+
+    .message-block div {
+        height: 108px !important;
+    }
+
+    .message-block div img {
+        width: 108px !important;
+        height: 108px !important;
+    }
+}

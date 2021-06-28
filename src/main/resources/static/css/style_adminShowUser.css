@@ -1,0 +1,89 @@
+.page-content {
+    min-height: 100vh;
+}
+
+.content-wrap {
+    width: 88% !important;
+}
+
+.card-container {
+    padding: 0;
+    margin: auto;
+}
+
+.form-control {
+    height: 46px !important;
+    margin-top: 0 !important;
+}
+
+.list-group-item .forward-right-link-img {
+    width: 100%;
+    font-size: 0.919rem;
+}
+
+.list-group-item .forward-right-link-img img {
+    width: 14px;
+    height: 14px;
+    float: right;
+    margin: 4px 0 0 0;
+}
+
+span[class="title-label"] label {
+    font-size: 22px !important;
+}
+
+@media (max-width: 767px) {
+    .content-wrap .col-xl-12:first-child {
+        padding: 0 25px !important;
+    }
+
+    .content-wrap .form-row .col-lg-4 {
+        margin-top: 12px;
+    }
+}
+
+@media (max-width: 744px) {
+    .card-container {
+        width: 100% !important;
+    }
+
+    span[class="title-label"] label {
+        font-size: 18px !important;
+    }
+}
+
+@media (max-width: 412px) {
+    h4 {
+        font-size: 18px !important;
+    }
+
+    .card-container {
+        font-size: 80% !important;
+    }
+
+    .form-control {
+        font-size: 13px !important;
+    }
+
+    span[class="title-label"] label {
+        font-size: 16px !important;
+    }
+}
+
+@media (max-width: 354px) {
+    h4 {
+        font-size: 16px !important;
+    }
+
+    .card-container {
+        font-size: 65% !important;
+    }
+
+    .form-control {
+        font-size: 12px !important;
+    }
+
+    span[class="title-label"] label {
+        font-size: 14px !important;
+    }
+}

@@ -1,0 +1,50 @@
+@media (max-width: 992px) {
+    .login-wrapper .box .content-wrap {
+        width: 65%;
+    }
+
+    .login-wrapper .box .content-wrap .action {
+        width: 78%;
+        margin: auto !important;
+    }
+
+    .tooltip {
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 681px) {
+    .login-wrapper .box .content-wrap {
+        width: 80%;
+    }
+
+    .login-wrapper .box .content-wrap .action {
+        width: 85%;
+    }
+}
+
+@media (max-width: 562px) {
+    .login-wrapper .box .content-wrap h4 {
+        font-size: 18px !important;
+    }
+
+    .bfh-selectbox .bfh-selectbox-options ul li > a {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 514px) {
+    .login-wrapper .box .content-wrap h4 {
+        font-size: 16px !important;
+    }
+
+    .bfh-selectbox .bfh-selectbox-options ul li > a {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 462px) {
+    .bfh-selectbox .bfh-selectbox-options ul li > a {
+        white-space: normal !important;
+    }
+}
