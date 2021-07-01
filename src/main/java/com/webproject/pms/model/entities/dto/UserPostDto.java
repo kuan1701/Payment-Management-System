@@ -1,6 +1,6 @@
 package com.webproject.pms.model.entities.dto;
 
-import com.webproject.pms.model.entities.enums.Role;
+import com.webproject.pms.model.entities.Role;
 
 public class UserPostDto {
 	
@@ -22,6 +22,13 @@ public class UserPostDto {
 	
 	private Role role;
 	
+	public UserPostDto(String name, String surname, String phone, String email, String login, String password) {
+		this.name = name;
+		this.surname = surname;
+		this.phone = phone;
+		this.email = email;
+		this.login = login;
+	}
 	
 	public Long getUserId() {
 		return userId;

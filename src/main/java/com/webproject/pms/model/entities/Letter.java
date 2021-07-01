@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
+@Table(name = "letter")
 public class Letter {
 	
 	@Id

@@ -118,7 +118,7 @@
                                 </h4>
 
                                 <div class="form-group group-btn" style="height: 60px; margin-bottom: 24px;">
-                                    <form action="/" method="POST" role="form" class="beta-user">
+                                    <form action="${pageContext.request.contextPath}/" method="POST" role="form" class="beta-user">
                                         <input type="hidden" name="command" value="login"/>
                                         <input type="hidden" name="full_phone" value="+34645364524"/>
                                         <input type="hidden" name="password" value="000000"/>
@@ -187,16 +187,23 @@
                         <!-- Block of Questions -->
                         <div class="block-questions">
                             <p style="margin-bottom: 6px;">
+                                <fmt:message key="login.singUpWithGoogle"/>
+                            </p>
+                            <a href="/google" onfocus="this.blur();">
+                                <fmt:message key="login.google"/>
+                            </a>
+                            <br>
+                            <p style="margin-bottom: 6px;">
                                 <fmt:message key="login.forgotPassword"/>
                             </p>
-                            <a href="?command=recovery" onfocus="this.blur();">
+                            <a href="/recovery" onfocus="this.blur();">
                                 <fmt:message key="login.recovery"/>
                             </a>
                             <br>
                             <p style="margin-bottom: 8px;">
                                 <fmt:message key="login.dontHaveAccount"/>
                             </p>
-                            <a href="?command=registration" onfocus="this.blur();">
+                            <a href="/registration" onfocus="this.blur();">
                                 <fmt:message key="login.signup"/>
                             </a>
                         </div>

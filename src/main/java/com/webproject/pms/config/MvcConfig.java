@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class MvcConfig implements WebMvcConfigurer {
 		return new RestTemplate();
 	}
 	
-//	public void addViewControllers(ViewControllerRegistry registry) {
-//		registry.addViewController("/").setViewName("index");
-//	}
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/").setViewName("index");
+	}
 }

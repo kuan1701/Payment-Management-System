@@ -1,8 +1,9 @@
 package com.webproject.pms.config;
 
-import com.webproject.pms.model.dao.UserDao;
 import com.webproject.pms.service.impl.UserServiceImpl;
+import com.webproject.pms.util.CustomOAuth2UserService;
 import com.webproject.pms.util.CustomUserInfoTokenServices;
+import com.webproject.pms.util.OAuth2LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -39,14 +40,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private UserDao userDao;
-    @Autowired
     private UserServiceImpl userServiceImpl;
     @Autowired
     @Qualifier("oauth2ClientContext")
     private OAuth2ClientContext oAuth2ClientContext;
     @Autowired
     private CustomUserInfoTokenServices customUserInfoTokenServices;
+    @Autowired
+    private CustomOAuth2UserService oAuth2UserService;
+    @Autowired
+    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -64,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     private Filter ssoFilter() {
         OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter(
-                "/login/google");
+                "/google");
         
         OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oAuth2ClientContext);
         googleFilter.setRestTemplate(googleTemplate);
@@ -90,23 +93,47 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                    .antMatchers("/oauth_login/**", "/hello/**", "/forgot/**", "/forgot-oldpassword/**",
+        http
+                    .addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .authorizeRequests()
+                    .antMatchers("/",
+                            "/oauth_login/**",
+                            "/hello/**",
+                            "/forgot/**",
+                            "/forgot-oldpassword/**",
                             "/forgot-page",
-                            "/password/**", "/activate/*", "/registration", "/user/**",
-                            "/resources/**", "/bootstrap/**", "/images/**", "/css/**", "/js/**")
+                            "/password/**",
+                            "/activate/*",
+                            
+                            "/recovery",
+                            "/registration",
+                            "/user/**",
+                            "/resources/**",
+                            "/bootstrap/**",
+                            "/images/**",
+                            "/css/**",
+                            "/js/**")
                     .permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginPage("/")
+                .usernameParameter("email")
                     .defaultSuccessUrl("/hello")
                     .permitAll()
                 .and()
+                    .oauth2Login()
+                    .loginPage("/")
+                    .userInfoEndpoint()
+                    .userService(oAuth2UserService)
+                .and()
+                    .successHandler(oAuth2LoginSuccessHandler)
+                .and()
+                    .logout().permitAll()
+                .and()
                     .rememberMe()
-                    .tokenValiditySeconds(300)
                     .key("remember-me")
+                    .tokenValiditySeconds(300)
                 .and()
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

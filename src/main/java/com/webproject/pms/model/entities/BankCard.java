@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
+@Table(name = "bank_card")
 public class BankCard {
 	
 	@Id

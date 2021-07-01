@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -29,7 +30,7 @@
             <div class="row">
                 <div class="col-auto mr-auto">
                     <div class="logo">
-                        <a href="/" onfocus="this.blur();">
+                        <a href="${pageContext.request.contextPath}/" onfocus="this.blur();">
                             <img src="<c:url value="/images/logo-white.png"/>" alt="Logo"/>
                         </a>
                         <h1>Payment Management System</h1>
@@ -66,7 +67,7 @@
                      style="height: 19px; width: 19px; top: -4px; margin-right: 8px;" alt=""/>
                 <strong><fmt:message key="registration.success"/>!</strong>
                 <fmt:message key="registration.alertRegistrationSuccess"/>
-                <a href="/" class="alert-link"><fmt:message key="registration.logging"/></a>
+                <a href="${pageContext.request.contextPath}/" class="alert-link"><fmt:message key="registration.logging"/></a>
                 <fmt:message key="registration.intoYourAccount"/>
             </p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -130,12 +131,14 @@
                     <fmt:message key="registration.formHeader" var="registration"/>
                     <fmt:message key="registration.name" var="name"/>
                     <fmt:message key="registration.surname" var="surname"/>
+                    <fmt:message key="registration.username" var="username"/>
                     <fmt:message key="registration.email" var="email"/>
                     <fmt:message key="registration.password" var="password"/>
                     <fmt:message key="registration.confirmation" var="confirmation"/>
                     <fmt:message key="registration.nameError" var="nameError"/>
                     <fmt:message key="registration.surnameError" var="surnameError"/>
                     <fmt:message key="registration.phoneError" var="loginError"/>
+                    <fmt:message key="registration.usernameError" var="usernameError"/>
                     <fmt:message key="registration.emailError" var="emailError"/>
                     <fmt:message key="registration.passwordError" var="passwordError"/>
                     <fmt:message key="registration.passwordConfirmationError" var="passwordConfirmationError"/>
@@ -143,6 +146,7 @@
                     <fmt:message key="registration.tooltipOnlyLetters" var="tooltipOnlyLetters"/>
                     <fmt:message key="registration.tooltipOnlyDigits" var="tooltipPhone"/>
                     <fmt:message key="registration.tooltipEmail" var="tooltipEmail"/>
+                    <fmt:message key="registration.tooltipUsername" var="tooltipUsername"/>
                     <fmt:message key="registration.tooltipPassword" var="tooltipPassword"/>
                     <fmt:message key="registration.tooltipPasswordConfirmation" var="tooltipPasswordConfirmation"/>
                     <fmt:message key="registration.correct" var="correct"/>
@@ -156,96 +160,126 @@
                                         ${registration}
                                     </h4>
 
-                                    <form action="" method="POST" role="form">
+                                    <form:form action="" method="POST" role="form" modelAttribute="userForm">
                                         <input type="hidden" name="command" value="registration"/>
 
-                                        <div class="form-row">
+                                        <div class="block-password">
 
                                             <!-- Name -->
-                                            <div class="col-md-6">
-                                                <input id="name" name="name" type="text" class="form-control"
-                                                       data-toggle="tooltip-left"
-                                                       data-title="${tooltipOnlyLetters}"
-                                                       maxlength="24" placeholder="${name}*"
-                                                       value="${nameValue}"/>
-                                                <label for="name" class="default-label">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-6">
+                                                    <form:input id="name" path="name" name="name" type="text" class="form-control"
+                                                           data-toggle="tooltip-left"
+                                                           data-title="${tooltipOnlyLetters}"
+                                                           maxlength="24" placeholder="${name}*"
+                                                           value="${nameValue}"></form:input>
+                                                    <label for="name" class="default-label">
                                                     <span id="valid-msg-name" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt="">
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt="">
                                                     </span>
-                                                    <span id="error-msg-name" class="error-msg invisible">
-                                                        ${nameError}
-                                                    </span>
-                                                </label>
+                                                        <span id="error-msg-name" class="error-msg invisible">
+                                                            ${nameError}
+                                                        </span>
+                                                    </label>
+                                                </div>
                                             </div>
 
                                             <!-- Surname -->
-                                            <div class="col-md-6">
-                                                <input id="surname" name="surname" type="text" class="form-control"
-                                                       data-toggle="tooltip"
-                                                       data-title="${tooltipOnlyLetters}"
-                                                       maxlength="32" placeholder="${surname}*"
-                                                       value="${surnameValue}"/>
-                                                <label for="surname" class="default-label">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-6">
+                                                    <form:input id="surname" path="surname" name="surname" type="text" class="form-control"
+                                                           data-toggle="tooltip"
+                                                           data-title="${tooltipOnlyLetters}"
+                                                           maxlength="32" placeholder="${surname}*"
+                                                           value="${surnameValue}"></form:input>
+                                                    <label for="surname" class="default-label">
                                                     <span id="valid-msg-surname" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt=""/>
                                                     </span>
-                                                    <span id="error-msg-surname" class="error-msg invisible">
-                                                        ${surnameError}
-                                                    </span>
-                                                </label>
+                                                        <span id="error-msg-surname" class="error-msg invisible">
+                                                            ${surnameError}
+                                                        </span>
+                                                    </label>
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div class="form-row">
 
                                             <!-- Phone -->
-                                            <div class="col-md-6" style="margin-top: 8px">
-                                                <input id="phone" name="phone" type="tel" class="form-control"
-                                                       data-toggle="tooltip-left"
-                                                       data-title="${tooltipPhone}"
-                                                       onkeypress="inputOnlyNumbers();"
-                                                       value="${phoneValue}"/>
-                                                <label for="phone" class="default-label">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-6" style="margin-top: 8px">
+                                                    <form:input id="phone" path="phone" name="phone" type="tel" class="form-control"
+                                                           data-toggle="tooltip-left"
+                                                           data-title="${tooltipPhone}"
+                                                           onkeypress="inputOnlyNumbers();"
+                                                           value="${phoneValue}"></form:input>
+                                                    <label for="phone" class="default-label">
                                                     <span id="valid-msg-phone" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt=""/>
                                                     </span>
-                                                    <span id="error-msg-phone" class="error-msg invisible">
-                                                        ${loginError}
-                                                    </span>
-                                                </label>
+                                                        <span id="error-msg-phone" class="error-msg invisible">
+                                                            ${loginError}
+                                                        </span>
+                                                    </label>
+                                                </div>
                                             </div>
 
                                             <!-- Email -->
-                                            <div class="col-md-6">
-                                                <input id="email" name="email" type="email" class="form-control"
-                                                       data-toggle="tooltip"
-                                                       data-title="${tooltipEmail}"
-                                                       maxlength="45" placeholder="${email}"
-                                                       value="${emailValue}"/>
-                                                <label for="email" class="default-label">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-6">
+                                                    <form:input id="email" path="email"
+                                                                name="email" type="email"
+                                                                class="form-control"
+                                                                data-toggle="tooltip"
+                                                                data-title="${tooltipEmail}"
+                                                                maxlength="45" placeholder="${email}"
+                                                                value="${emailValue}"></form:input>
+                                                    <label for="email" class="default-label">
                                                     <span id="valid-msg-email" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt=""/>
                                                     </span>
-                                                    <span id="error-msg-email" class="error-msg invisible">
-                                                        ${emailError}
-                                                    </span>
-                                                </label>
+                                                        <span id="error-msg-email" class="error-msg invisible">
+                                                            ${emailError}
+                                                        </span>
+                                                    </label>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="block-password">
+                                            <!-- Username -->
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-6">
+                                                    <form:input id="username" path="username"
+                                                                name="username" type="text"
+                                                                class="form-control"
+                                                                data-toggle="tooltip-left"
+                                                                data-title="${tooltipUsername}"
+                                                                maxlength="24" placeholder="${username}*"
+                                                                value="${usernameValue}"></form:input>
+                                                    <label for="username" class="default-label">
+                                                    <span id="valid-msg-username" class="valid-msg invisible">
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt="">
+                                                    </span>
+                                                        <span id="error-msg-username" class="error-msg invisible">
+                                                            ${usernameError}
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
 
                                             <!-- Password -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-6">
                                                     <div class="password-input">
-                                                        <input id="password" name="password"
+                                                        <form:input id="password" path="password" name="password"
                                                                type="password" class="form-control"
                                                                data-toggle="tooltip"
                                                                data-title="${tooltipPassword}"
                                                                minlength="6" maxlength="255"
                                                                placeholder="${password}*"
-                                                               value="${passwordValue}"/>
+                                                               value="${passwordValue}"></form:input>
                                                         <a href="#" class="password-control"
                                                            onfocus="this.blur();"
                                                            onclick="return toggle_password(this);"></a>
@@ -265,13 +299,14 @@
                                             <div class="row justify-content-center">
                                                 <div class="col-md-6 ">
                                                     <div class="password-input">
-                                                        <input id="passwordConfirmation" name="passwordConfirmation"
-                                                               type="password" class="form-control"
-                                                               data-toggle="tooltip"
-                                                               data-title="${tooltipPasswordConfirmation}"
-                                                               minlength="6" maxlength="255"
-                                                               placeholder="${confirmation}*"
-                                                               value="${passwordConfirmationValue}"/>
+                                                        <form:input id="passwordConfirmation" path="repeatedPassword"
+                                                                    name="passwordConfirmation"
+                                                                    type="password" class="form-control"
+                                                                    data-toggle="tooltip"
+                                                                    data-title="${tooltipPasswordConfirmation}"
+                                                                    minlength="6" maxlength="255"
+                                                                    placeholder="${confirmation}*"
+                                                                    value="${passwordConfirmationValue}"></form:input>
                                                         <a href="#" class="password-control"
                                                            onfocus="this.blur();"
                                                            onclick="return toggle_passwordConfirmation(this);"></a>
@@ -296,7 +331,7 @@
                                                 ${signupButton}
                                             </button>
                                         </div>
-                                    </form>
+                                    </form:form>
                                 </div>
                             </div>
 
@@ -305,7 +340,7 @@
                                 <p>
                                     <fmt:message key="registration.haveAccountAlready"/>
                                 </p>
-                                <a href="/" onfocus="this.blur();">
+                                <a href="${pageContext.request.contextPath}/" onfocus="this.blur();">
                                     <fmt:message key="registration.login"/>
                                 </a>
                             </div>

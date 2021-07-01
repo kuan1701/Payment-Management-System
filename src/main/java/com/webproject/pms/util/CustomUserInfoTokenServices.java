@@ -1,6 +1,7 @@
 package com.webproject.pms.util;
 
 import com.webproject.pms.model.dao.UserDao;
+import com.webproject.pms.model.entities.MailSender;
 import com.webproject.pms.model.entities.Role;
 import com.webproject.pms.model.entities.User;
 import org.apache.commons.logging.Log;
@@ -23,24 +24,27 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Map;
 
 @Service
 public class CustomUserInfoTokenServices implements ResourceServerTokenServices {
-
+    
     @Autowired
     private UserDao userDao;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private MailSender mailSender;
+    
     protected final Log logger = LogFactory.getLog(this.getClass());
     private String userInfoEndpointUrl;
     private String clientId;
     private OAuth2RestOperations restTemplate;
-
-
+    
+    
     public void customUserInfoTokenServices(String userInfoEndpointUrl, String clientId) {
         this.userInfoEndpointUrl = userInfoEndpointUrl;
         this.clientId = clientId;
@@ -61,7 +65,7 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
         Map map = getMap(this.userInfoEndpointUrl, accessToken);
 
         if (map.containsKey("error")) {
-            System.out.println("userinfo returned error: " + map.get("error"));
+            System.out.println("userInfo returned error: " + map.get("error"));
             throw new InvalidTokenException(accessToken);
         }
         return extractAuthentication(map);
@@ -74,37 +78,36 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
             User user = new User();
             user.setName(String.valueOf(map.get("given_name")));
             user.setSurname(String.valueOf(map.get("family_name")));
-            user.setGoogleUserName(String.valueOf(map.get("email")));
             user.setPassword(passwordEncoder.encode((CharSequence) map.get("sub")));
             user.setEmail(String.valueOf(map.get("email")));
             user.setRole(new Role(1L, "ROLE_USER"));
-
+    
             userDao.save(user);
-//            if (user.getEmail() != null) {
-//                if (!StringUtils.isEmpty(user.getEmail())) {
-//                    String message = String.format(
-//                            "Hello,%s! \nWelcome to the Team!\nYour Username: %s\nYour Password: %s",
-//                            user.getName(), user.getUsername(), map.get("sub")
-//                    );
-//                    mailSender.send(user.getEmail(), "Welcome!", message);
-//                }
-//            }
-
-            OAuth2Request request = new OAuth2Request(null, this.clientId, null, true,
-                    null, null, null, null, null);
+            if (user.getEmail() != null) {
+                if (!StringUtils.isEmpty(user.getEmail())) {
+                    String message = String.format(
+                            "Hello,%s! \nWelcome to the our Payment Management Service!\nYour Username: %s\nYour Password: %s",
+                            user.getName(), user.getUsername(), map.get("sub")
+                    );
+                    mailSender.send(user.getEmail(), "Welcome!", message);
+                }
+            }
+    
+            OAuth2Request request = new OAuth2Request(null, this.clientId, null, true, null, null, null, null, null);
+            
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user,
                     "N/A", Collections.singleton(new SimpleGrantedAuthority(user.getRole().getName())));
             token.setDetails(map);
             return new OAuth2Authentication(request, token);
         } else {
             User user = userDao.findUserByEmail(String.valueOf(map.get("email")));
-
-            OAuth2Request request = new OAuth2Request(null, this.clientId, null, true,
-                    null, null, null, null, null);
+    
+            OAuth2Request request = new OAuth2Request(null, this.clientId, null, true, null, null, null, null, null);
+            
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user,
                     "N/A", Collections.singleton(new SimpleGrantedAuthority(user.getRole().getName())));
             token.setDetails(map);
-
+    
             return new OAuth2Authentication(request, token);
         }
     }
@@ -117,7 +120,7 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Getting user info from: " + path);
         }
-
+        
         try {
             OAuth2RestOperations restTemplate = this.restTemplate;
             if (restTemplate == null) {

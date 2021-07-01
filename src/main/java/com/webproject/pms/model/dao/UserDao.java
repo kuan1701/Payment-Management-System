@@ -13,14 +13,14 @@ public interface UserDao extends JpaRepository<User, Long> {
 	
 	User findUserByPhone(String phone);
 	
-	User findUserByLogin(String login);
+	User findUserByUsername(String username);
 	
 	User findUserByEmail(String email);
 	
-	User findUserByActivationCode(String code);
+	User findUserByActivationCode(String activationCode);
 	
-	User findUserByGoogleUserName(String googleUsername);
-	
+	Boolean existsUserByEmail(String email);
+
 	@Query("select u from User u where u.phone = :phone and u.email = :email")
 	User findUserByPhoneAndEmail(@Param("phone") String phone,
 	                             @Param("email") String email);

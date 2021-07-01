@@ -24,17 +24,6 @@ create table bank_card
 ) engine=InnoDB
 
 Hibernate:
-create table credentials
-(
-    id bigint not null,
-    active bit,
-    creation_date datetime(6),
-    password varchar(255),
-    user_user_id bigint,
-    primary key (id)
-) engine=InnoDB
-
-Hibernate:
 create table hibernate_sequence
 (
     next_val bigint
@@ -99,10 +88,8 @@ create table user
 (
     user_id bigint not null auto_increment,
     activation_code varchar(255),
-    active bit,
-    email varchar(255),
-    google_name varchar(255),
-    google_user_name varchar(255),
+    active bit, email varchar(255),
+    email_verified bit,
     login varchar(30),
     name varchar(30),
     password varchar(100),
@@ -111,7 +98,7 @@ create table user
     surname varchar(30),
     role_id bigint,
     primary key (user_id)
-) engine=InnoDB
+) engine=InnoD
 
 Hibernate:
 alter table account
@@ -120,10 +107,6 @@ alter table account
 Hibernate:
 alter table bank_card
     add constraint FK6j7048q6auijf41vans0lj5qw foreign key (account_account_id) references account (account_id)
-
-Hibernate:
-alter table credentials
-    add constraint FKpbdmkrnodfvibdmgg9lwtmqeo foreign key (user_user_id) references user (user_id)
 
 Hibernate:
 alter table letter

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "user")
 public class User implements Serializable, UserDetails {
 	
 	@Id
@@ -22,45 +23,37 @@ public class User implements Serializable, UserDetails {
 	private Long userId;
 	
 	@NotEmpty
-	@Size(min = 2, max = 30)
+	@Size(min = 2)
 	private String name;
 	
 	@NotEmpty
-	@Size(min = 2, max = 30)
+	@Size(min = 2)
 	private String surname;
 	
 	@NotEmpty
-	@Size(min = 7, max = 30)
+	@Size(min = 7)
 	private String phone;
 	
 	@NotEmpty
 	@Email
 	private String email;
 	
-	private String activationCode;
+	@NotEmpty
+	@Size(min = 2)
+	private String username;
 	
 	@NotEmpty
-	@Size(min = 2, max = 30)
-	private String login;
-	
-	@NotEmpty
-	@Size(min = 8, max = 100)
+	@Size(min = 8)
 	private String password;
 	
 	@Transient
 	private String repeatedPassword;
 	
-	@Transient
-	private String verifiedPassword;
+	private Boolean emailVerified;
 	
-	@NotEmpty
+	private String activationCode;
+	
 	private String registrationDate;
-	
-	@NotEmpty
-	private String googleName;
-	
-	@NotEmpty
-	private String googleUserName;
 	
 	private Boolean active;
 	
@@ -75,26 +68,31 @@ public class User implements Serializable, UserDetails {
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<LogEntry> logEntries;
-	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Credentials> credentials;
-	
+
 	public User() {
+	}
+	
+	public User(@NotEmpty @Size(min = 2) String name,
+	            @NotEmpty @Size(min = 2) String surname,
+	            @NotEmpty @Email String email,
+	            Boolean emailVerified) {
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.emailVerified = emailVerified;
 	}
 	
 	public User(String name,
 	            String surname,
+	            String phone,
 	            String email,
-	            String password,
-	            String activationCode,
-	            Boolean active
+	            String username
 	) {
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
-		this.password = password;
-		this.activationCode = activationCode;
-		this.active = active;
+		this.username = username;
+		this.phone = phone;
 	}
 	
 	@Override
@@ -107,16 +105,14 @@ public class User implements Serializable, UserDetails {
 				surname.equals(user.surname) &&
 				phone.equals(user.phone) &&
 				email.equals(user.email) &&
-				login.equals(user.login) &&
+				username.equals(user.username) &&
 				getPassword().equals(user.getPassword()) &&
-				registrationDate.equals(user.registrationDate) &&
-				googleName.equals(user.googleName) &&
-				googleUserName.equals(user.googleUserName);
+				registrationDate.equals(user.registrationDate);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(userId, name, surname, phone, email, login, getPassword(), registrationDate, googleName, googleUserName);
+		return Objects.hash(userId, name, surname, phone, email, username, getPassword(), registrationDate);
 	}
 	
 	@Override
@@ -126,7 +122,7 @@ public class User implements Serializable, UserDetails {
 	
 	@Override
 	public String getUsername() {
-		return email;
+		return username;
 	}
 	
 	@Override
@@ -195,11 +191,11 @@ public class User implements Serializable, UserDetails {
 	}
 	
 	public String getLogin() {
-		return login;
+		return username;
 	}
 	
-	public void setLogin(String login) {
-		this.login = login;
+	public void setLogin(String username) {
+		this.username = username;
 	}
 	
 	public String getRegistrationDate() {
@@ -208,22 +204,6 @@ public class User implements Serializable, UserDetails {
 	
 	public void setRegistrationDate(String registrationDate) {
 		this.registrationDate = registrationDate;
-	}
-	
-	public String getGoogleName() {
-		return googleName;
-	}
-	
-	public void setGoogleName(String googleName) {
-		this.googleName = googleName;
-	}
-	
-	public String getGoogleUserName() {
-		return googleUserName;
-	}
-	
-	public void setGoogleUserName(String googleUserName) {
-		this.googleUserName = googleUserName;
 	}
 	
 	public void setPassword(String password) {
@@ -238,22 +218,6 @@ public class User implements Serializable, UserDetails {
 		this.repeatedPassword = repeatedPassword;
 	}
 	
-	public String getVerifiedPassword() {
-		return verifiedPassword;
-	}
-	
-	public void setVerifiedPassword(String verifiedPassword) {
-		this.verifiedPassword = verifiedPassword;
-	}
-	
-	public String getActivationCode() {
-		return activationCode;
-	}
-	
-	public void setActivationCode(String activationCode) {
-		this.activationCode = activationCode;
-	}
-	
 	public Boolean getActive() {
 		return active;
 	}
@@ -262,19 +226,27 @@ public class User implements Serializable, UserDetails {
 		this.active = active;
 	}
 	
-	public List<Credentials> getCredentials() {
-		return credentials;
-	}
-	
-	public void setCredentials(List<Credentials> credentials) {
-		this.credentials = credentials;
-	}
-	
 	public Role getRole() {
 		return role;
 	}
 	
 	public void setRole(Role role) {
 		this.role = role;
+	}
+	
+	public Boolean getEmailVerified() {
+		return emailVerified;
+	}
+	
+	public void setEmailVerified(Boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
+	
+	public String getActivationCode() {
+		return activationCode;
+	}
+	
+	public void setActivationCode(String activationCode) {
+		this.activationCode = activationCode;
 	}
 }
