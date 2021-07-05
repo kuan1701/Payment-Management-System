@@ -40,10 +40,10 @@ public class User implements Serializable, UserDetails {
 	
 	@NotEmpty
 	@Size(min = 2)
-	private String username;
+	private String login;
 	
 	@NotEmpty
-	@Size(min = 8)
+	@Size(min = 6)
 	private String password;
 	
 	@Transient
@@ -57,7 +57,7 @@ public class User implements Serializable, UserDetails {
 	
 	private Boolean active;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Role role;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -82,16 +82,16 @@ public class User implements Serializable, UserDetails {
 		this.emailVerified = emailVerified;
 	}
 	
-	public User(String name,
-	            String surname,
-	            String phone,
-	            String email,
-	            String username
+	public User(@NotEmpty @Size(min = 2) String name,
+	            @NotEmpty @Size(min = 2) String surname,
+	            @NotEmpty @Size(min = 7) String phone,
+	            @NotEmpty @Email String email,
+	            @NotEmpty @Size(min = 2) String login
 	) {
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
-		this.username = username;
+		this.login = login;
 		this.phone = phone;
 	}
 	
@@ -105,14 +105,14 @@ public class User implements Serializable, UserDetails {
 				surname.equals(user.surname) &&
 				phone.equals(user.phone) &&
 				email.equals(user.email) &&
-				username.equals(user.username) &&
+				login.equals(user.login) &&
 				getPassword().equals(user.getPassword()) &&
 				registrationDate.equals(user.registrationDate);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(userId, name, surname, phone, email, username, getPassword(), registrationDate);
+		return Objects.hash(userId, name, surname, phone, email, login, getPassword(), registrationDate);
 	}
 	
 	@Override
@@ -122,7 +122,7 @@ public class User implements Serializable, UserDetails {
 	
 	@Override
 	public String getUsername() {
-		return username;
+		return login;
 	}
 	
 	@Override
@@ -191,11 +191,11 @@ public class User implements Serializable, UserDetails {
 	}
 	
 	public String getLogin() {
-		return username;
+		return login;
 	}
 	
-	public void setLogin(String username) {
-		this.username = username;
+	public void setLogin(String login) {
+		this.login = login;
 	}
 	
 	public String getRegistrationDate() {
@@ -248,5 +248,29 @@ public class User implements Serializable, UserDetails {
 	
 	public void setActivationCode(String activationCode) {
 		this.activationCode = activationCode;
+	}
+	
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+	
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}
+	
+	public List<Letter> getLetters() {
+		return letters;
+	}
+	
+	public void setLetters(List<Letter> letters) {
+		this.letters = letters;
+	}
+	
+	public List<LogEntry> getLogEntries() {
+		return logEntries;
+	}
+	
+	public void setLogEntries(List<LogEntry> logEntries) {
+		this.logEntries = logEntries;
 	}
 }

@@ -138,11 +138,12 @@
                                 </div>
 
                                 <form action="${pageContext.request.contextPath}/" method="POST" role="form">
-                                    <input type="hidden" name="command" value="login"/>
+                                    <input type="hidden" name="login" value="login"/>
 
                                     <!-- Login -->
                                     <div>
-                                        <input id="login" name="login" type="tel" class="form-control"
+                                        <input id="login" name="login" type="text"
+                                               class="form-control"
                                                onkeypress="inputOnlyNumbers();"
                                                value="${loginValue}"/>
                                         <label for="login" class="default-label">
@@ -196,7 +197,7 @@
                             <p style="margin-bottom: 6px;">
                                 <fmt:message key="login.forgotPassword"/>
                             </p>
-                            <a href="/recovery" onfocus="this.blur();">
+                            <a href="/forgot-password" onfocus="this.blur();">
                                 <fmt:message key="login.recovery"/>
                             </a>
                             <br>

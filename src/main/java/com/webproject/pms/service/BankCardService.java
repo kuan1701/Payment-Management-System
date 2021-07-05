@@ -1,7 +1,7 @@
 package com.webproject.pms.service;
 
 import com.webproject.pms.model.entities.BankCard;
-import com.webproject.pms.model.entities.dto.BankCardGetDto;
+import com.webproject.pms.dto.BankCardGetDto;
 
 import java.util.List;
 

@@ -1,8 +1,6 @@
 package com.webproject.pms.service;
 
 import com.webproject.pms.model.entities.User;
-import com.webproject.pms.model.entities.dto.UserGetDto;
-import com.webproject.pms.model.entities.dto.UserPostDto;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 
@@ -10,29 +8,31 @@ import java.util.List;
 
 public interface UserService {
 	
-	boolean saveUser(User user);
+	User saveUser(User user);
+	
+	boolean updateUser(User user, Long userId);
 	
 	User findUserByUserId(Long userId);
 	
 	User findUserByUserLogin(String login);
 	
-	UserGetDto findUserByPhone(String phone);
+	User findUserByPhone(String phone);
 	
 	User findUserByEmail(String email);
 	
-	UserGetDto findUserByPhoneAndEmail(String phone, String email);
+	User findUserByPhoneAndEmail(String phone, String email);
 	
-	boolean registrationUser(User userPostDto);
+	User findByActivationCode(String code);
 	
-	boolean activateCode(String code);
+	boolean registrationUser(User user, Model model);
 	
-	boolean deleteUserByUserId(Long userId);
+	boolean activateUser(String code);
 	
-	boolean updateUser(User user, Long userId);
+	boolean forgotPassword(String email, Model model);
 	
-	List<UserGetDto> findAllUsers();
+	List<User> findAllUsers();
 	
-	List<UserGetDto> searchByCriteria(String name, String surname, String phone, String email);
+	List<User> searchByCriteria(String name, String surname, String phone, String email);
 	
 	UserDetails loadUserByUsername(String email);
 }

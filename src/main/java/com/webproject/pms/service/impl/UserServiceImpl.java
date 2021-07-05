@@ -2,11 +2,9 @@ package com.webproject.pms.service.impl;
 
 import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.UserDao;
-import com.webproject.pms.model.entities.MailSender;
+import com.webproject.pms.util.MailSender.MailSender;
 import com.webproject.pms.model.entities.Role;
 import com.webproject.pms.model.entities.User;
-import com.webproject.pms.model.entities.dto.UserGetDto;
-import com.webproject.pms.model.entities.dto.UserPostDto;
 import com.webproject.pms.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,10 +14,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		User userFindByUsername = userDao.findUserByUsername(username);
+		User userFindByUsername = userDao.findUserByLogin(username);
 		User userFindByUserEmail = userDao.findUserByEmail(username);
 		User userFindByUserPhone = userDao.findUserByPhone(username);
 		
@@ -67,39 +66,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	public boolean saveUser(User user) {
-		
-		User userFromDB = userDao.findUserByUsername(user.getUsername());
-		
-		if (userFromDB != null) {
-			return false;
-		}
-		
-		user.setEmailVerified(true);
-		user.setActive(true);
-		user.setRole(new Role(1L, "ROLE_USER"));
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setActivationCode(UUID.randomUUID().toString());
-		userDao.save(user);
-		return true;
-	}
-	
-	public boolean deleteUser(Long userId) {
-		if (userDao.findById(userId).isPresent()) {
-			userDao.deleteById(userId);
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean deleteUserByUserId(Long userId) {
-		
-		if (userDao.existsById(userId)) {
-			userDao.deleteById(userId);
-			return true;
-		}
-		return false;
+	public User saveUser(User user) {
+		return userDao.save(user);
 	}
 	
 	@Override
@@ -114,14 +82,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	public List<UserGetDto> findAllUsers() {
-		
-		return mapStructMapper.usersToUserGetDtos(userDao.findAll());
+	public List<User> findAllUsers() {
+		return userDao.findAll();
 	}
 	
 	@Override
-	public List<UserGetDto> searchByCriteria(String name, String surname, String phone, String email) {
-		return null;
+	public List<User> searchByCriteria(String name, String surname, String phone, String email) {
+		return userDao.searchByCriteria(name, surname,phone, email);
 	}
 	
 	@Override
@@ -133,16 +100,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
+	@Transactional
 	public User findUserByUserLogin(String login) {
 		
-		return userDao.findUserByUsername(login);
+		return userDao.findUserByLogin(login);
 	}
 	
 	@Override
 	@Transactional
-	public UserGetDto findUserByPhone(String phone) {
+	public User findUserByPhone(String phone) {
 		
-		return mapStructMapper.userToUserGetDto(userDao.findUserByPhone(phone));
+		return userDao.findUserByPhone(phone);
 	}
 	
 	@Override
@@ -154,50 +122,108 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	
 	@Override
 	@Transactional
-	public UserGetDto findUserByPhoneAndEmail(String phone, String email) {
+	public User findUserByPhoneAndEmail(String phone, String email) {
 		
-		return mapStructMapper.userToUserGetDto(userDao.findUserByPhoneAndEmail(phone, email));
+		return userDao.findUserByPhoneAndEmail(phone, email);
 	}
 	
 	@Override
-	public boolean registrationUser(User userPostDto) {
+	@Transactional
+	public User findByActivationCode(String code) {
+		return userDao.findUserByActivationCode(code);
+	}
+	
+	/**
+	 * ADD USER IN DATA BASE, SEND EMAIL
+	 */
+	@Override
+	@Transactional
+	public boolean registrationUser(User user, Model model) {
 		
-		if (userDao.findUserByEmail(userPostDto.getEmail()) == null) {
-			User user = new User(userPostDto.getName(), userPostDto.getSurname(), userPostDto.getEmail(), userPostDto.getPhone(), userPostDto.getLogin());
-			user.setPassword(passwordEncoder.encode(userPostDto.getPassword()));
-			user.setEmailVerified(true);
+		User userDB = userDao.findUserByLogin(user.getLogin());
+		User emailDB = userDao.findUserByEmail(user.getEmail());
+		User phoneDB = userDao.findUserByPhone(user.getPhone());
+
+		if (userDB != null || emailDB != null || phoneDB != null) {
+			return false;
+		}
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setRegistrationDate(new Date().toString());
+			user.setEmailVerified(false);
 			user.setActive(true);
 			user.setRole(new Role(1L, "ROLE_USER"));
 			user.setActivationCode(UUID.randomUUID().toString());
-			
 			userDao.save(user);
-			sendEmail(user);
-			return true;
+		
+		if (!StringUtils.isEmpty(user.getEmail())) {
+			String message = String.format(
+					"Hello, %s! \n"
+							+ "Welcome to Payment System! Please, visit next link: http://localhost:8080/activate/%s",
+					user.getUsername(),
+					user.getActivationCode()
+			);
+			mailSender.send(user.getEmail(), "Activation code", message);
+			System.out.println(message);
 		}
-		return false;
+		return true;
 	}
 	
+	/**
+	 * ACTIVATE USER
+	 */
 	@Override
-	public boolean activateCode(String code) {
+	@Transactional
+	public boolean activateUser(String code) {
 		
 		User user = userDao.findUserByActivationCode(code);
 		if (user == null) {
 			return false;
 		}
 		user.setActivationCode(null);
+		user.setEmailVerified(true);
 		userDao.save(user);
 		return true;
 	}
 	
-	private void sendEmail(User user) {
-		if (!StringUtils.isEmpty(user.getEmail())) {
+	/**
+	 * If User forgot password and use Send Email method
+	 */
+	@Transactional
+	public boolean forgotPassword(String email, Model model) {
+		User emailFromDb = userDao.findUserByEmail(email);
+		
+		if (emailFromDb == null) {
+			model.addAttribute("emailError", "No found email!");
+			return false;
+		}
+		
+		emailFromDb.setActivationCode(UUID.randomUUID().toString());
+		userDao.save(emailFromDb);
+		
+		if (!StringUtils.isEmpty(email)) {
 			String message = String.format(
-					"Hello,%s! \nWelcome to Service! Please, visit next link: http://localhost:8080/registration/activate/%s",
-					user.getName(),
-					user.getActivationCode()
+					"Hello,%s! \nYou forgot password! Please, visit next link: http://localhost:8080/password/%s",
+					emailFromDb.getUsername(),
+					emailFromDb.getActivationCode()
 			);
-			mailSender.send(user.getEmail(), "Activation code", message);
-			System.out.println(message);
+			mailSender.send(email, "Activation code", message);
+		}
+		return true;
+	}
+	
+	/**
+	 * Check code, after send email user
+	 */
+	public void activateCodeForNewPassword(Model model, String code) {
+		User userDB = findByActivationCode(code);
+		boolean isActivate = activateUser(code);
+		
+		if (isActivate) {
+			model.addAttribute("user", userDB);
+			model.addAttribute("messageSuccess", "Input new password");
+		} else {
+			model.addAttribute("user", userDB);
+			model.addAttribute("messageDanger", "Activation code is not found!");
 		}
 	}
 }

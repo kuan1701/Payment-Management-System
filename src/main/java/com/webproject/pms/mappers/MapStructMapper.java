@@ -4,7 +4,7 @@ import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.Payment;
 import com.webproject.pms.model.entities.User;
-import com.webproject.pms.model.entities.dto.*;
+import com.webproject.pms.dto.*;
 import org.mapstruct.Mapper;
 
 import java.util.List;

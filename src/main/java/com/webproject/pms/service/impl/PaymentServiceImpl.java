@@ -6,7 +6,7 @@ import com.webproject.pms.model.dao.PaymentDao;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.Payment;
-import com.webproject.pms.model.entities.dto.PaymentGetDto;
+import com.webproject.pms.dto.PaymentGetDto;
 import com.webproject.pms.service.PaymentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

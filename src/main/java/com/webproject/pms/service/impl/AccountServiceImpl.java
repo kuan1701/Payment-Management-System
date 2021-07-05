@@ -3,7 +3,7 @@ package com.webproject.pms.service.impl;
 import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.AccountDao;
 import com.webproject.pms.model.entities.Account;
-import com.webproject.pms.model.entities.dto.AccountDto;
+import com.webproject.pms.dto.AccountDto;
 import com.webproject.pms.service.AccountService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -3,7 +3,7 @@ package com.webproject.pms.service.impl;
 import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.BankCardDao;
 import com.webproject.pms.model.entities.BankCard;
-import com.webproject.pms.model.entities.dto.BankCardGetDto;
+import com.webproject.pms.dto.BankCardGetDto;
 import com.webproject.pms.service.BankCardService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

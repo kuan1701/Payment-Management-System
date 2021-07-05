@@ -131,7 +131,7 @@
                     <fmt:message key="registration.formHeader" var="registration"/>
                     <fmt:message key="registration.name" var="name"/>
                     <fmt:message key="registration.surname" var="surname"/>
-                    <fmt:message key="registration.username" var="username"/>
+                    <fmt:message key="registration.username" var="login"/>
                     <fmt:message key="registration.email" var="email"/>
                     <fmt:message key="registration.password" var="password"/>
                     <fmt:message key="registration.confirmation" var="confirmation"/>
@@ -150,6 +150,7 @@
                     <fmt:message key="registration.tooltipPassword" var="tooltipPassword"/>
                     <fmt:message key="registration.tooltipPasswordConfirmation" var="tooltipPasswordConfirmation"/>
                     <fmt:message key="registration.correct" var="correct"/>
+                    <fmt:message key="login.phone" var="phone"/>
 
                     <div class="row">
                         <div class="login-wrapper">
@@ -160,7 +161,7 @@
                                         ${registration}
                                     </h4>
 
-                                    <form:form action="" method="POST" role="form" modelAttribute="userForm">
+                                    <form:form action="" method="POST" role="form" modelAttribute="user">
                                         <input type="hidden" name="command" value="registration"/>
 
                                         <div class="block-password">
@@ -168,18 +169,20 @@
                                             <!-- Name -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-6">
-                                                    <form:input id="name" path="name" name="name" type="text" class="form-control"
-                                                           data-toggle="tooltip-left"
-                                                           data-title="${tooltipOnlyLetters}"
-                                                           maxlength="24" placeholder="${name}*"
-                                                           value="${nameValue}"></form:input>
+                                                    <form:input id="name" path="name"
+                                                                name="name" type="text"
+                                                                class="form-control"
+                                                                data-toggle="tooltip-left"
+                                                                data-title="${tooltipOnlyLetters}"
+                                                                maxlength="24" placeholder="${name}*"
+                                                                value="${nameValue}"></form:input>
                                                     <label for="name" class="default-label">
                                                     <span id="valid-msg-name" class="valid-msg invisible">
                                                         ${correct}<img src="<c:url value="/images/correct.png"/>"
                                                                        alt="">
                                                     </span>
                                                         <span id="error-msg-name" class="error-msg invisible">
-                                                            ${nameError}
+                                                                ${nameError}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -188,18 +191,19 @@
                                             <!-- Surname -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-6">
-                                                    <form:input id="surname" path="surname" name="surname" type="text" class="form-control"
-                                                           data-toggle="tooltip"
-                                                           data-title="${tooltipOnlyLetters}"
-                                                           maxlength="32" placeholder="${surname}*"
-                                                           value="${surnameValue}"></form:input>
+                                                    <form:input id="surname" path="surname"
+                                                                name="surname" type="text" class="form-control"
+                                                                data-toggle="tooltip"
+                                                                data-title="${tooltipOnlyLetters}"
+                                                                maxlength="32" placeholder="${surname}*"
+                                                                value="${surnameValue}"></form:input>
                                                     <label for="surname" class="default-label">
                                                     <span id="valid-msg-surname" class="valid-msg invisible">
                                                         ${correct}<img src="<c:url value="/images/correct.png"/>"
                                                                        alt=""/>
                                                     </span>
                                                         <span id="error-msg-surname" class="error-msg invisible">
-                                                            ${surnameError}
+                                                                ${surnameError}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -208,18 +212,19 @@
                                             <!-- Phone -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-6" style="margin-top: 8px">
-                                                    <form:input id="phone" path="phone" name="phone" type="tel" class="form-control"
-                                                           data-toggle="tooltip-left"
-                                                           data-title="${tooltipPhone}"
-                                                           onkeypress="inputOnlyNumbers();"
-                                                           value="${phoneValue}"></form:input>
+                                                    <form:input id="phone" path="phone"
+                                                                name="phone" type="tel" class="form-control"
+                                                                data-toggle="tooltip-left"
+                                                                data-title="${tooltipPhone}"
+                                                                onkeypress="inputOnlyNumbers();"
+                                                                value="${phoneValue}"></form:input>
                                                     <label for="phone" class="default-label">
                                                     <span id="valid-msg-phone" class="valid-msg invisible">
                                                         ${correct}<img src="<c:url value="/images/correct.png"/>"
                                                                        alt=""/>
                                                     </span>
                                                         <span id="error-msg-phone" class="error-msg invisible">
-                                                            ${loginError}
+                                                                ${loginError}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -233,7 +238,7 @@
                                                                 class="form-control"
                                                                 data-toggle="tooltip"
                                                                 data-title="${tooltipEmail}"
-                                                                maxlength="45" placeholder="${email}"
+                                                                maxlength="45" placeholder="${email}*"
                                                                 value="${emailValue}"></form:input>
                                                     <label for="email" class="default-label">
                                                     <span id="valid-msg-email" class="valid-msg invisible">
@@ -241,7 +246,7 @@
                                                                        alt=""/>
                                                     </span>
                                                         <span id="error-msg-email" class="error-msg invisible">
-                                                            ${emailError}
+                                                                ${emailError}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -250,20 +255,20 @@
                                             <!-- Username -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-6">
-                                                    <form:input id="username" path="username"
-                                                                name="username" type="text"
+                                                    <form:input id="login" path="login"
+                                                                name="login" type="text"
                                                                 class="form-control"
                                                                 data-toggle="tooltip-left"
                                                                 data-title="${tooltipUsername}"
-                                                                maxlength="24" placeholder="${username}*"
+                                                                maxlength="24" placeholder="${login}*"
                                                                 value="${usernameValue}"></form:input>
-                                                    <label for="username" class="default-label">
-                                                    <span id="valid-msg-username" class="valid-msg invisible">
+                                                    <label for="login" class="default-label">
+                                                    <span id="valid-msg-login" class="valid-msg invisible">
                                                         ${correct}<img src="<c:url value="/images/correct.png"/>"
                                                                        alt="">
                                                     </span>
-                                                        <span id="error-msg-username" class="error-msg invisible">
-                                                            ${usernameError}
+                                                        <span id="error-msg-login" class="error-msg invisible">
+                                                                ${usernameError}
                                                         </span>
                                                     </label>
                                                 </div>

@@ -1,9 +1,9 @@
 package com.webproject.pms.config;
 
 import com.webproject.pms.service.impl.UserServiceImpl;
-import com.webproject.pms.util.CustomOAuth2UserService;
-import com.webproject.pms.util.CustomUserInfoTokenServices;
-import com.webproject.pms.util.OAuth2LoginSuccessHandler;
+import com.webproject.pms.util.OAuth2.CustomOAuth2UserService;
+import com.webproject.pms.util.OAuth2.CustomUserInfoTokenServices;
+import com.webproject.pms.util.OAuth2.OAuth2LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -26,7 +26,6 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilt
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.Filter;
 
@@ -95,31 +94,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                     .addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
-                    .antMatchers("/",
-                            "/oauth_login/**",
-                            "/hello/**",
-                            "/forgot/**",
-                            "/forgot-oldpassword/**",
-                            "/forgot-page",
-                            "/password/**",
-                            "/activate/*",
-                            
-                            "/recovery",
+                    //Доступ только для не зарегистрированных пользователей
+                    .antMatchers(
+                        "/forgot-password",
                             "/registration",
-                            "/user/**",
-                            "/resources/**",
-                            "/bootstrap/**",
-                            "/images/**",
-                            "/css/**",
-                            "/js/**")
-                    .permitAll()
+                            "/registration-message",
+                            "/activate/*"
+                    ).not().fullyAuthenticated()
+                    //Доступ только для пользователей с ролью Администратор
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    //Доступ только для пользователей с ролью Пользователь
+                    .antMatchers("/my-account").hasRole("USER")
+                    //Доступ разрешен всем пользователям
+                    .antMatchers(
+                        "/",
+                        "/user/**",
+                        "/resources/**",
+                        "/bootstrap/**",
+                        "/images/**",
+                        "/css/**",
+                        "/js/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
+                    //Настройка для входа в систему
                     .formLogin()
                     .loginPage("/")
-                .usernameParameter("email")
-                    .defaultSuccessUrl("/hello")
+                    .usernameParameter("email")
+                    //Перенарпавление на главную страницу после успешного входа
+                    .defaultSuccessUrl("/my-account")
                     .permitAll()
                 .and()
                     .oauth2Login()
@@ -129,16 +133,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .successHandler(oAuth2LoginSuccessHandler)
                 .and()
-                    .logout().permitAll()
-                .and()
-                    .rememberMe()
-                    .key("remember-me")
-                    .tokenValiditySeconds(300)
-                .and()
                     .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .deleteCookies("remember-me")
-                    .permitAll();
+                    .permitAll()
+                    .logoutSuccessUrl("/");
     }
     
     @Override

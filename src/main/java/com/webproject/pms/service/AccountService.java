@@ -1,7 +1,7 @@
 package com.webproject.pms.service;
 
 import com.webproject.pms.model.entities.Account;
-import com.webproject.pms.model.entities.dto.AccountDto;
+import com.webproject.pms.dto.AccountDto;
 
 import java.util.List;
 

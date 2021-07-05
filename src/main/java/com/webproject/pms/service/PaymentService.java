@@ -3,7 +3,7 @@ package com.webproject.pms.service;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.Payment;
-import com.webproject.pms.model.entities.dto.PaymentGetDto;
+import com.webproject.pms.dto.PaymentGetDto;
 
 import java.math.BigDecimal;
 import java.util.List;
