@@ -144,13 +144,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		User emailDB = userDao.findUserByEmail(user.getEmail());
 		User phoneDB = userDao.findUserByPhone(user.getPhone());
 
-		if (userDB != null || emailDB != null || phoneDB != null) {
+		if (userDB != null) {
+			model.addAttribute("userLoginError", "This login already exist");
+			return false;
+		}
+		else if(emailDB != null) {
+			model.addAttribute("mailError", "This email already exist");
+			return false;
+		}
+		else if(phoneDB != null) {
+			model.addAttribute("phoneError", "This phone already exist");
 			return false;
 		}
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRegistrationDate(new Date().toString());
 			user.setEmailVerified(false);
-			user.setActive(true);
+			user.setActive(false);
 			user.setRole(new Role(1L, "ROLE_USER"));
 			user.setActivationCode(UUID.randomUUID().toString());
 			userDao.save(user);
@@ -180,6 +189,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			return false;
 		}
 		user.setActivationCode(null);
+		user.setActive(true);
 		user.setEmailVerified(true);
 		userDao.save(user);
 		return true;

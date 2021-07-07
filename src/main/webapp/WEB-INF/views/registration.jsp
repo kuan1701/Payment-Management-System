@@ -89,7 +89,7 @@
     </c:if>
 
     <!-- Alert phoneExistError -->
-    <c:if test="${response eq 'phoneExistError'}">
+    <c:if test="${phoneError}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="registration.failed"/>!</strong>
                 <fmt:message key="registration.alertPhoneExistError"/>
@@ -218,6 +218,8 @@
                                                                 data-title="${tooltipPhone}"
                                                                 onkeypress="inputOnlyNumbers();"
                                                                 value="${phoneValue}"></form:input>
+                                                    <form:errors path="phone"></form:errors>
+                                                    <div class="error-msg">${phoneError}</div>
                                                     <label for="phone" class="default-label">
                                                     <span id="valid-msg-phone" class="valid-msg invisible">
                                                         ${correct}<img src="<c:url value="/images/correct.png"/>"
@@ -240,6 +242,8 @@
                                                                 data-title="${tooltipEmail}"
                                                                 maxlength="45" placeholder="${email}*"
                                                                 value="${emailValue}"></form:input>
+                                                    <form:errors path="email"></form:errors>
+                                                    <div class="error-msg">${mailError}</div>
                                                     <label for="email" class="default-label">
                                                     <span id="valid-msg-email" class="valid-msg invisible">
                                                         ${correct}<img src="<c:url value="/images/correct.png"/>"
@@ -262,6 +266,8 @@
                                                                 data-title="${tooltipUsername}"
                                                                 maxlength="24" placeholder="${login}*"
                                                                 value="${usernameValue}"></form:input>
+                                                    <form:errors path="login"></form:errors>
+                                                    <div class="error-msg">${userLoginError}</div>
                                                     <label for="login" class="default-label">
                                                     <span id="valid-msg-login" class="valid-msg invisible">
                                                         ${correct}<img src="<c:url value="/images/correct.png"/>"

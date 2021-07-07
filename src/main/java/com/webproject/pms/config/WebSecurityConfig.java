@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     private Filter ssoFilter() {
         OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter(
-                "/google");
+                "/login/google");
         
         OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oAuth2ClientContext);
         googleFilter.setRestTemplate(googleTemplate);
@@ -93,7 +93,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                    .addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class)
+                .csrf()
+                    .disable()
                     .addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
                     //Доступ только для не зарегистрированных пользователей
@@ -109,7 +110,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/my-account").hasRole("USER")
                     //Доступ разрешен всем пользователям
                     .antMatchers(
-                        "/",
+                        "/login",
                         "/user/**",
                         "/resources/**",
                         "/bootstrap/**",
@@ -120,14 +121,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     //Настройка для входа в систему
                     .formLogin()
-                    .loginPage("/")
+                    .loginPage("/login")
                     .usernameParameter("email")
-                    //Перенарпавление на главную страницу после успешного входа
+                    //Перенарпавление на страницу после успешного входа
                     .defaultSuccessUrl("/my-account")
                     .permitAll()
                 .and()
                     .oauth2Login()
-                    .loginPage("/")
+                    .loginPage("/login")
                     .userInfoEndpoint()
                     .userService(oAuth2UserService)
                 .and()
@@ -135,7 +136,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .logout()
                     .permitAll()
-                    .logoutSuccessUrl("/");
+                    .logoutSuccessUrl("/login");
     }
     
     @Override

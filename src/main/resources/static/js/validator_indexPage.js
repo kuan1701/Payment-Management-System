@@ -9,18 +9,18 @@ let submitBtn = document.querySelector("#submit");
  * Configuring the phone number input field.
  * "token" must be obtained on the API website.
  */
-let iti = window.intlTelInput(login, {
-    separateDialCode: true,
-    hiddenInput: "full_phone",
-    initialCountry: "auto",
-    geoIpLookup: (callback) => {
-        $.get('https://ipinfo.io', () => {
-        }, "jsonp").always((response) => {
-            let countryCode = (response && response.country) ? response.country : "";
-            callback(countryCode);
-        });
-    },
-});
+// let iti = window.intlTelInput(login, {
+//     separateDialCode: true,
+//     hiddenInput: "full_phone",
+//     initialCountry: "auto",
+//     geoIpLookup: (callback) => {
+//         $.get('https://ipinfo.io', () => {
+//         }, "jsonp").always((response) => {
+//             let countryCode = (response && response.country) ? response.country : "";
+//             callback(countryCode);
+//         });
+//     },
+// });
 
 /**
  * Login (phone number) validation
@@ -55,16 +55,14 @@ login.addEventListener('keyup', validationLogin);
 login.addEventListener('change', validationLogin);
 
 function validationLogin() {
-    resetLogin();
+    resetPassword();
 
-    if (login.value.trim() === "") {
+    if (login.value.trim() === ""
+        || login.value.trim().length < 2
+        || login.value.trim().length > 255) {
         notValidLogin();
     } else {
-        if (iti.isValidNumber()) {
-            validLogin();
-        } else {
-            notValidLogin();
-        }
+        validLogin();
     }
 }
 

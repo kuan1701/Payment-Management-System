@@ -4,6 +4,7 @@
 let name = document.querySelector("#name");
 let surname = document.querySelector("#surname");
 let phone = document.querySelector("#phone");
+let login = document.querySelector("#login");
 let email = document.querySelector("#email");
 let password = document.querySelector("#password");
 let passwordConfirmation = document.querySelector("#passwordConfirmation");
@@ -210,6 +211,52 @@ function validationEmail() {
 }
 
 /**
+ * Login validation
+ */
+let validMsgLogin = document.querySelector("#valid-msg-login"),
+    errorMsgLogin = document.querySelector("#error-msg-login");
+
+function resetLogin() {
+    validMsgLogin.classList.add("invisible");
+    errorMsgLogin.classList.add("invisible");
+    login.classList.remove("valid-input");
+    login.classList.remove("error-input");
+}
+
+function validLogin() {
+    validMsgLogin.classList.remove("invisible");
+    errorMsgLogin.classList.add("invisible");
+    login.classList.add("valid-input");
+    login.classList.remove("error-input");
+}
+
+function notValidLogin() {
+    validMsgLogin.classList.add("invisible");
+    errorMsgLogin.classList.remove("invisible");
+    login.classList.remove("valid-input");
+    login.classList.add("error-input");
+}
+
+login.addEventListener('click', resetLogin);
+login.addEventListener('blur', validationLogin);
+login.addEventListener('keyup', validationLogin);
+login.addEventListener('change', validationLogin);
+
+function validationLogin() {
+    resetLogin();
+
+    if (login.value.trim() === "") {
+        notValidLogin();
+    } else {
+        if (login.value.trim().search(/[a-zA-Zа-яА-ЯёЁїЇ ]{1,32}/) === -1) {
+            notValidLogin();
+        } else {
+            validLogin();
+        }
+    }
+}
+
+/**
  * Password validation
  */
 let validMsgPassword = document.querySelector("#valid-msg-password"),
@@ -336,6 +383,13 @@ submitBtn.addEventListener('click', (event) => {
     if (surname.classList.contains("error-input")) {
         event.preventDefault();
         notValidSurname();
+        return false;
+    }
+
+    validationLogin();
+    if (login.classList.contains("error-input")) {
+        event.preventDefault();
+        notValidLogin();
         return false;
     }
 

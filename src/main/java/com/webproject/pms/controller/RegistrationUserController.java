@@ -1,6 +1,5 @@
 package com.webproject.pms.controller;
 
-import com.webproject.pms.manager.ServerResponse;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
