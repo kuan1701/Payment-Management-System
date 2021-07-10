@@ -1,5 +1,5 @@
 /**
- * Elements on index.jsp page for validation
+ * Elements on login.jsp page for validation
  */
 let login = document.querySelector("#login");
 let password = document.querySelector("#password");

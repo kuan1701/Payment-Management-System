@@ -13,10 +13,10 @@
     <title><fmt:message key="user.update_password.title"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="shortcut icon" href="<c:url value="/static/images/favicon-white.ico"/>" type="image/x-icon">
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/styles.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/style-fixed-footer.css"/>">
+    <link rel="shortcut icon" href="<c:url value="/images/favicon-white.ico"/>" type="image/x-icon">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/styles.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/style-fixed-footer.css"/>">
 </head>
 <body>
 <div class="main">
@@ -131,7 +131,7 @@
                                                    onclick="return toggle_oldPassword(this);"></a>
                                                 <label for="oldPassword" class="default-label">
                                                     <span id="valid-msg-oldPassword" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                     </span>
                                                     <span id="error-msg-oldPassword" class="error-msg invisible">
                                                         ${passwordError}
@@ -154,7 +154,7 @@
                                                    onclick="return toggle_newPassword(this);"></a>
                                                 <label for="newPassword" class="default-label">
                                                     <span id="valid-msg-newPassword" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                     </span>
                                                     <span id="error-msg-newPassword" class="error-msg invisible">
                                                         ${passwordError}
@@ -178,7 +178,7 @@
                                             </div>
                                             <label for="passwordConfirmation" class="default-label">
                                                 <span id="valid-msg-passwordConfirmation" class="valid-msg invisible">
-                                                    ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                    ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                 </span>
                                                 <span id="error-msg-passwordConfirmation" class="error-msg invisible">
                                                     ${passwordConfirmationError}
@@ -204,5 +204,5 @@
     <jsp:include page="../template/footer.jsp"/>
 </div>
 </body>
-<script src="<c:url value="/static/js/validator_userUpdatePassword.js"/>"></script>
+<script src="<c:url value="/js/validator_userUpdatePassword.js"/>"></script>
 </html>

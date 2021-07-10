@@ -13,14 +13,14 @@
     <title><fmt:message key="user.page.myPayments"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="shortcut icon" href="<c:url value="/static/images/favicon-white.ico"/>" type="image/x-icon">
+    <link rel="shortcut icon" href="<c:url value="/images/favicon-white.ico"/>" type="image/x-icon">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css"/>">
     <script type="text/javascript" src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"></script>
-    <link rel="stylesheet" href="<c:url value="/static/css/styles.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/style_userShowPayments.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/styles.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/style_userShowPayments.css"/>">
 </head>
 <body>
 <div class="main">
@@ -113,7 +113,7 @@
                                                 <a class="nav-link nav-link-hover" role="tab" data-toggle="tab"
                                                    aria-selected="false"
                                                    onclick="document.getElementById('form-showAccounts').submit(); return false;">
-                                                    <img src="<c:url value="/static/images/show-accounts.png"/>" class="icon-sidebar"
+                                                    <img src="<c:url value="/images/show-accounts.png"/>" class="icon-sidebar"
                                                          style="width: 20px; height: 20px;" alt=""/>
                                                     ${myAccounts}
                                                 </a>
@@ -125,7 +125,7 @@
                                                 <a class="nav-link" role="tab" data-toggle="tab"
                                                    aria-selected="true"
                                                    onclick="document.getElementById('form-showPayments').submit(); return false;">
-                                                    <img src="<c:url value="/static/images/show-payments.png"/>"
+                                                    <img src="<c:url value="/images/show-payments.png"/>"
                                                          class="icon-sidebar" style="height: 17px" alt=""/>
                                                     ${myPayments}
                                                 </a>
@@ -148,7 +148,7 @@
                                                             <label>
                                                                     ${searchCriteria}:
                                                             </label>
-                                                            <form action="/static" method="POST" role="form">
+                                                            <form action="" method="POST" role="form">
                                                                 <input type="hidden" name="command"
                                                                        value="searchPayments"/>
 
@@ -277,14 +277,14 @@
                                                                                                     <!-- Show Platezhi Info -->
                                                                                                     <a href="?command=showPaymentInfo&paymentId=${platezhi.paymentId}"
                                                                                                        class="float-right">
-                                                                                                        <img src="<c:url value="/static/images/info.png"/>"
+                                                                                                        <img src="<c:url value="/images/info.png"/>"
                                                                                                              alt="${showInfo}"/>
                                                                                                     </a>
 
                                                                                                     <!-- Repeat Platezhi -->
                                                                                                     <a href="?command=repeatPayment&paymentId=${platezhi.paymentId}"
                                                                                                        class="float-right">
-                                                                                                        <img src="<c:url value="/static/images/repeat-payment.png"/>"
+                                                                                                        <img src="<c:url value="/images/repeat-payment.png"/>"
                                                                                                              alt="${repeat}"/>
                                                                                                     </a>
                                                                                                 </p>
@@ -312,7 +312,7 @@
                                                                                                     <!-- Show Platezhi Info -->
                                                                                                     <a href="?command=showPaymentInfo&paymentId=${platezhi.paymentId}"
                                                                                                        class="float-right">
-                                                                                                        <img src="<c:url value="/static/images/info.png"/>"
+                                                                                                        <img src="<c:url value="/images/info.png"/>"
                                                                                                              alt="${showInfo}"/>
                                                                                                     </a>
                                                                                                 </p>
@@ -339,7 +339,7 @@
                                                         </label>
                                                     </span>
                                                     <div class="w-100" style="height:172px;">
-                                                        <img src="<c:url value="/static/images/profit_3.png"/>" alt=""
+                                                        <img src="<c:url value="/images/profit_3.png"/>" alt=""
                                                              style="width: 172px; height: 172px; position: absolute; bottom: 35px; right: 55px;"/>
                                                     </div>
                                                 </div>
@@ -357,5 +357,5 @@
     <jsp:include page="../template/footer.jsp"/>
 </div>
 </body>
-<script src="<c:url value="/static/js/searcher_userShowPayments.js"/>"></script>
+<script src="<c:url value="/js/searcher_userShowPayments.js"/>"></script>
 </html>

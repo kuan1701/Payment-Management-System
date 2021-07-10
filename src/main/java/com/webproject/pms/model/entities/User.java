@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "user")
-public class User implements Serializable, UserDetails {
+public class User implements UserDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +40,7 @@ public class User implements Serializable, UserDetails {
 	
 	@NotEmpty
 	@Size(min = 2)
-	private String login;
+	private String username;
 	
 	@NotEmpty
 	@Size(min = 6)
@@ -86,12 +86,12 @@ public class User implements Serializable, UserDetails {
 	            @NotEmpty @Size(min = 2) String surname,
 	            @NotEmpty @Size(min = 7) String phone,
 	            @NotEmpty @Email String email,
-	            @NotEmpty @Size(min = 2) String login
+	            @NotEmpty @Size(min = 2) String username
 	) {
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
-		this.login = login;
+		this.username = username;
 		this.phone = phone;
 	}
 	
@@ -105,14 +105,14 @@ public class User implements Serializable, UserDetails {
 				surname.equals(user.surname) &&
 				phone.equals(user.phone) &&
 				email.equals(user.email) &&
-				login.equals(user.login) &&
+				username.equals(user.username) &&
 				getPassword().equals(user.getPassword()) &&
 				registrationDate.equals(user.registrationDate);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(userId, name, surname, phone, email, login, getPassword(), registrationDate);
+		return Objects.hash(userId, name, surname, phone, email, username, getPassword(), registrationDate);
 	}
 	
 	@Override
@@ -122,7 +122,7 @@ public class User implements Serializable, UserDetails {
 	
 	@Override
 	public String getUsername() {
-		return login;
+		return username;
 	}
 	
 	@Override
@@ -190,12 +190,9 @@ public class User implements Serializable, UserDetails {
 		this.email = email;
 	}
 	
-	public String getLogin() {
-		return login;
-	}
 	
-	public void setLogin(String login) {
-		this.login = login;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	public String getRegistrationDate() {

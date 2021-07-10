@@ -216,7 +216,6 @@
                                                                 name="phone" type="tel" class="form-control"
                                                                 data-toggle="tooltip-left"
                                                                 data-title="${tooltipPhone}"
-                                                                onkeypress="inputOnlyNumbers();"
                                                                 value="${phoneValue}"></form:input>
                                                     <form:errors path="phone"></form:errors>
                                                     <div class="error-msg">${phoneError}</div>
@@ -259,14 +258,14 @@
                                             <!-- Username -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-6">
-                                                    <form:input id="login" path="login"
+                                                    <form:input id="login" path="username"
                                                                 name="login" type="text"
                                                                 class="form-control"
                                                                 data-toggle="tooltip-left"
                                                                 data-title="${tooltipUsername}"
                                                                 maxlength="24" placeholder="${login}*"
                                                                 value="${usernameValue}"></form:input>
-                                                    <form:errors path="login"></form:errors>
+                                                    <form:errors path="username"></form:errors>
                                                     <div class="error-msg">${userLoginError}</div>
                                                     <label for="login" class="default-label">
                                                     <span id="valid-msg-login" class="valid-msg invisible">

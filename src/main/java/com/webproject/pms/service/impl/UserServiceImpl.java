@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 	
 	private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
@@ -41,28 +42,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String dataEntered) throws UsernameNotFoundException {
 		
-		User userFindByUsername = userDao.findUserByLogin(username);
-		User userFindByUserEmail = userDao.findUserByEmail(username);
-		User userFindByUserPhone = userDao.findUserByPhone(username);
+		User user;
+		user = userDao.findUserByUsername(dataEntered);
 		
-		if(userFindByUsername != null)
-		{
-			return userFindByUsername;
+		if (user == null) {
+			user = userDao.findUserByEmail(dataEntered);
+			if (user == null) {
+				user = userDao.findUserByPhone(dataEntered);
+				if (user == null) {
+					throw new UsernameNotFoundException("User not found");
+				}
+			}
 		}
-		
-		if(userFindByUserEmail != null)
-		{
-			return userFindByUserEmail;
-		}
-		
-		if(userFindByUserPhone != null)
-		{
-			return userFindByUserPhone;
-		}
-		
-		throw new UsernameNotFoundException("User not found");
+		return user;
 	}
 	
 	@Override
@@ -73,10 +67,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Override
 	public boolean updateUser(User user, Long userId) {
 		
-		if (userDao.existsById(userId)) {
-			user.setUserId(userId);
-			userDao.save(user);
-			return true;
+		if (user.getUserId().equals(userId)) {
+			if (userDao.findById(userId).isPresent()) {
+				User updatedUser = userDao.findById(userId).get();
+				updatedUser.setName(user.getName());
+				updatedUser.setSurname(user.getSurname());
+				updatedUser.setPhone(user.getPhone());
+				updatedUser.setEmail(user.getEmail());
+				userDao.save(updatedUser);
+				return true;
+			}
+			return false;
 		}
 		return false;
 	}
@@ -92,7 +93,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	@Transactional
 	public User findUserByUserId(Long userId) {
 		
 		Optional<User> userFromDb = userDao.findById(userId);
@@ -100,35 +100,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	@Transactional
-	public User findUserByUserLogin(String login) {
+	public User findUserByUsername(String username) {
 		
-		return userDao.findUserByLogin(login);
+		return userDao.findUserByUsername(username);
 	}
 	
 	@Override
-	@Transactional
 	public User findUserByPhone(String phone) {
 		
 		return userDao.findUserByPhone(phone);
 	}
 	
 	@Override
-	@Transactional
 	public User findUserByEmail(String email) {
 		
 		return userDao.findUserByEmail(email);
 	}
 	
 	@Override
-	@Transactional
 	public User findUserByPhoneAndEmail(String phone, String email) {
 		
 		return userDao.findUserByPhoneAndEmail(phone, email);
 	}
 	
 	@Override
-	@Transactional
 	public User findByActivationCode(String code) {
 		return userDao.findUserByActivationCode(code);
 	}
@@ -137,18 +132,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 * ADD USER IN DATA BASE, SEND EMAIL
 	 */
 	@Override
-	@Transactional
 	public boolean registrationUser(User user, Model model) {
 		
-		User userDB = userDao.findUserByLogin(user.getLogin());
+		User userDB = userDao.findUserByUsername(user.getUsername());
 		User emailDB = userDao.findUserByEmail(user.getEmail());
 		User phoneDB = userDao.findUserByPhone(user.getPhone());
-
+		
 		if (userDB != null) {
 			model.addAttribute("userLoginError", "This login already exist");
 			return false;
-		}
-		else if(emailDB != null) {
+		} else if (emailDB != null) {
 			model.addAttribute("mailError", "This email already exist");
 			return false;
 		}
@@ -181,7 +174,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 * ACTIVATE USER
 	 */
 	@Override
-	@Transactional
 	public boolean activateUser(String code) {
 		
 		User user = userDao.findUserByActivationCode(code);
@@ -198,7 +190,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	/**
 	 * If User forgot password and use Send Email method
 	 */
-	@Transactional
 	public boolean forgotPassword(String email, Model model) {
 		User emailFromDb = userDao.findUserByEmail(email);
 		

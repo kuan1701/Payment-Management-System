@@ -253,7 +253,9 @@ password.addEventListener('change', validationPassword);
 function validationPassword() {
     resetPassword();
 
-    if (password.value.trim() === "" || password.value.trim().length < 6 || password.value.trim().length > 255) {
+    if (password.value.trim() === ""
+        || password.value.trim().length < 6
+        || password.value.trim().length > 255) {
         notValidPassword();
     } else {
         validPassword();

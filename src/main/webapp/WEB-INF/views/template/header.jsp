@@ -24,12 +24,12 @@
                         <div class="navbar-nav">
                             <div class="nav-item">
                                 <a href="#" id="dropdown" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                    ${currentUser.name} ${currentUser.surname}
+                                    ${user.name} ${user.surname}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" style="padding: 0;"
                                      aria-labelledby="dropdownMenuLink">
                                     <div class="dropdown-item" style="display: grid;">
-                                        <a href="?command=profile">
+                                        <a href="${pageContext.request.contextPath}/profile-info/${user.userId}">
                                             <div class="float-left">
                                                 <p style="margin: 0;">
                                                     <fmt:message key="header.profile"/>
@@ -61,7 +61,7 @@
                                     <div class="dropdown-divider"></div>
 
                                     <div class="dropdown-item" style="display: grid;">
-                                        <a href="?command=logout">
+                                        <a href="/logout">
                                             <div class="float-left">
                                                 <p style="margin-bottom: 0.1rem;">
                                                     <fmt:message key="header.logout"/>

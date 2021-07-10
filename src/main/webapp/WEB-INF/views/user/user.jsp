@@ -281,7 +281,7 @@
                                                 <span>
                                                     <label>
                                                         <fmt:message key="user.page.accountsEmpty"/>
-                                                        <a href="?command=createAccount" class="alert-link">
+                                                        <a href="${pageContext.request.contextPath}/create-account" class="alert-link">
                                                             <fmt:message key="user.page.create"/>
                                                         </a>
                                                         <fmt:message key="user.page.acceptPaymentsFromAllOverTheWorld"/>

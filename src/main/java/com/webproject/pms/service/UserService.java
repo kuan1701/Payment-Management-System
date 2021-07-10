@@ -6,15 +6,16 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 
+
 public interface UserService {
 	
 	User saveUser(User user);
 	
-	boolean updateUser(User user, Long userId);
+	boolean updateUser(User user, Long id);
 	
 	User findUserByUserId(Long userId);
 	
-	User findUserByUserLogin(String login);
+	User findUserByUsername(String username);
 	
 	User findUserByPhone(String phone);
 	

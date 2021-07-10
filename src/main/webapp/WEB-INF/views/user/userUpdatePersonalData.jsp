@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -13,10 +14,10 @@
     <title><fmt:message key="user.update_data.title"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="shortcut icon" href="<c:url value="/static/images/favicon-white.ico"/>" type="image/x-icon">
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/intlTelInput.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/styles.css"/>">
+    <link rel="shortcut icon" href="<c:url value="/images/favicon-white.ico"/>" type="image/x-icon">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/intlTelInput.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/styles.css"/>">
 </head>
 <body>
 
@@ -42,7 +43,7 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form action="/static" method="POST" role="form">
+                    <form action="" method="POST" role="form">
                         <input type="hidden" name="command" value="deleteProfile"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
@@ -204,21 +205,22 @@
                                             ${formHeader}
                                         </h4>
 
-                                        <form action="" method="POST" role="form">
+                                        <form:form action="" method="POST" role="form" modelAttribute="user">
                                             <input type="hidden" name="command" value="profile"/>
 
                                             <div class="form-row">
 
                                                 <!-- Name -->
                                                 <div class="col-md-6">
-                                                    <input id="name" name="name" type="text" class="form-control"
-                                                           data-toggle="tooltip-left"
-                                                           data-title="${tooltipOnlyLetters}"
-                                                           maxlength="24" placeholder="${name}*"
-                                                           value="${nameValue}"/>
+                                                    <form:input id="name" name="name" type="text"
+                                                                path="name" class="form-control"
+                                                                data-toggle="tooltip-left"
+                                                                data-title="${tooltipOnlyLetters}"
+                                                                maxlength="24" placeholder="${name}*"
+                                                                value="${user.name}"></form:input>
                                                     <label for="name" class="default-label">
                                                         <span id="valid-msg-name" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-name" class="error-msg invisible">
                                                             ${nameError}
@@ -228,14 +230,15 @@
 
                                                 <!-- Surname -->
                                                 <div class="col-md-6">
-                                                    <input id="surname" name="surname" type="text" class="form-control"
-                                                           data-toggle="tooltip"
-                                                           data-title="${tooltipOnlyLetters}"
-                                                           maxlength="32" placeholder="${surname}*"
-                                                           value="${surnameValue}"/>
+                                                    <form:input id="surname" name="surname"
+                                                                type="text" class="form-control"
+                                                                data-toggle="tooltip" path="surname"
+                                                                data-title="${tooltipOnlyLetters}"
+                                                                maxlength="32" placeholder="${surname}*"
+                                                                value="${user.surname}"></form:input>
                                                     <label for="surname" class="default-label">
                                                         <span id="valid-msg-surname" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-surname" class="error-msg invisible">
                                                             ${surnameError}
@@ -247,14 +250,14 @@
                                             <!-- Phone -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-9" style="margin-top: 8px">
-                                                    <input id="phone" name="phone" type="tel" class="form-control"
-                                                           data-toggle="tooltip"
+                                                    <form:input id="phone" name="phone"
+                                                           type="tel" class="form-control"
+                                                           data-toggle="tooltip" path="phone"
                                                            data-title="${tooltipPhone}"
-                                                           onkeypress="inputOnlyNumbers();"
-                                                           value="${phoneValue}"/>
+                                                           value="${user.phone}"></form:input>
                                                     <label for="phone" class="default-label">
                                                         <span id="valid-msg-phone" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-phone" class="error-msg invisible">
                                                             ${loginError}
@@ -266,14 +269,14 @@
                                             <!-- Email -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-9">
-                                                    <input id="email" name="email" type="email" class="form-control"
-                                                           data-toggle="tooltip"
+                                                    <form:input id="email" name="email" type="email" class="form-control"
+                                                           data-toggle="tooltip" path="email"
                                                            data-title="${tooltipEmail}"
                                                            maxlength="45" placeholder="${email}"
-                                                           value="${emailValue}"/>
+                                                           value="${user.email}"></form:input>
                                                     <label for="email" class="default-label">
                                                         <span id="valid-msg-email" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-email" class="error-msg invisible">
                                                             ${emailError}
@@ -299,7 +302,7 @@
                                                     </div>
                                                     <label for="password" class="default-label">
                                                         <span id="valid-msg-password" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-password" class="error-msg invisible">
                                                             ${passwordError}
@@ -315,7 +318,7 @@
                                                     ${updateData}
                                                 </button>
                                             </div>
-                                        </form>
+                                        </form:form>
 
                                         <!-- Change Password Button -->
                                         <div class="action back-btn">
@@ -349,6 +352,6 @@
     <jsp:include page="../template/footer.jsp"/>
 </div>
 </body>
-<script src="<c:url value="/static/js/validator_userUpdatePersonalData.js"/>"></script>
-<script src="<c:url value="/static/js/modalWindow_userUpdatePersonalData.js"/>"></script>
+<script src="<c:url value="/js/validator_userUpdatePersonalData.js"/>"></script>
+<script src="<c:url value="/js/modalWindow_userUpdatePersonalData.js"/>"></script>
 </html>

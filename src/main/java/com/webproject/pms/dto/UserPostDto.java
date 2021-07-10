@@ -14,7 +14,7 @@ public class UserPostDto {
 	
 	private String email;
 	
-	private String login;
+	private String username;
 	
 	private String password;
 	
@@ -22,12 +22,12 @@ public class UserPostDto {
 	
 	private Role role;
 	
-	public UserPostDto(String name, String surname, String phone, String email, String login, String password) {
+	public UserPostDto(String name, String surname, String phone, String email, String username, String password) {
 		this.name = name;
 		this.surname = surname;
 		this.phone = phone;
 		this.email = email;
-		this.login = login;
+		this.username = username;
 	}
 	
 	public Long getUserId() {
@@ -70,12 +70,12 @@ public class UserPostDto {
 		this.email = email;
 	}
 	
-	public String getLogin() {
-		return login;
+	public String getUsername() {
+		return username;
 	}
 	
-	public void setLogin(String login) {
-		this.login = login;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	public String getPassword() {

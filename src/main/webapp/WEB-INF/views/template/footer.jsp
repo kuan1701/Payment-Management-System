@@ -10,7 +10,7 @@
 <div class="footer">
     <div class="container-fluid">
         <div class="social">
-            <a href="https://github.com/kuan1701/Payment_Management_System" onfocus="this.blur();">
+            <a href="https://github.com/kuan1701/Payment-Management-System" onfocus="this.blur()">
                 <img id="github-icon" data-toggle="tooltip-top"
                      src="<c:url value="/images/GitHub-Mark-32px-white.ico"/>"
                      title="<fmt:message key="footer.github"/>"
@@ -18,7 +18,7 @@
             </a>
         </div>
         <span class="copyright">
-            &copy; 2020 Payment Management System.<br/>
+            &copy; 2021 Payment Management System.<br/>
             <fmt:message key="footer.copyright"/>
         </span>
         <div class="time">

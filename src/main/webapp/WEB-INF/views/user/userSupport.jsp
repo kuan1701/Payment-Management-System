@@ -13,12 +13,12 @@
     <title><fmt:message key="user.support.title"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="shortcut icon" href="<c:url value="/static/images/favicon-white.ico"/>" type="image/x-icon">
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap-formhelpers.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/styles.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/style_userSupport.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/style-fixed-footer.css"/>">
+    <link rel="shortcut icon" href="<c:url value="/images/favicon-white.ico"/>" type="image/x-icon">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap-formhelpers.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/styles.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/style_userSupport.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/style-fixed-footer.css"/>">
 </head>
 <body>
 <div class="main">
@@ -134,7 +134,7 @@
                                                 </div>
                                                 <label for="typeQuestion" class="default-label">
                                                     <span id="valid-msg-typeQuestion" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                     </span>
                                                     <span id="error-msg-typeQuestion" class="error-msg invisible">
                                                         ${typeQuestionError}
@@ -177,5 +177,5 @@
     <jsp:include page="../template/footer.jsp"/>
 </div>
 </body>
-<script src="<c:url value="/static/js/validator_userSupport.js"/>"></script>
+<script src="<c:url value="/js/validator_userSupport.js"/>"></script>
 </html>

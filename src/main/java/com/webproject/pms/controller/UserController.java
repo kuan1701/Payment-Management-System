@@ -1,11 +1,19 @@
 package com.webproject.pms.controller;
 
+import com.webproject.pms.model.entities.Account;
+import com.webproject.pms.model.entities.Letter;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -18,15 +26,48 @@ public class UserController {
 	}
 	
 	@GetMapping("/my-account")
-	public String recoveryPage(Model model, @AuthenticationPrincipal User user) {
-		
+	public String accountPage(
+			Model model,
+			@AuthenticationPrincipal User user
+	) {
 		model.addAttribute("user", user);
 		return "user/user";
+	}
+	
+	@GetMapping("/profile-info/{id}")
+	public String showUserInfo(Model model,
+	                           @PathVariable("id") Long id
+	) {
+		model.addAttribute("user", userService.findUserByUserId(id));
+		return "user/userUpdatePersonalData";
+	}
+	
+	@PostMapping("/profile-info/{id}")
+	public String updateUser(@ModelAttribute("user") @Valid User user,
+	                         BindingResult bindingResult,
+	                         @PathVariable("id") Long id,
+	                         Model model) {
+		if (bindingResult.hasErrors()) {
+			return "user/userUpdatePersonalData";
+		}
+		if (!userService.updateUser(user, id)) {
+			model.addAttribute("registrationError", "Update data error");
+			return "user/userUpdatePersonalData";
+		}
+		userService.updateUser(user, id);
+		return "redirect:user/userUpdatePersonalData";
 	}
 	
 	@GetMapping("/forgot-password")
 	public String recoveryPage() {
 		
 		return "recovery";
+	}
+	
+	@GetMapping("/support")
+	public String support(Model model)
+	{
+		model.addAttribute("support", new Letter());
+		return "user/userSupport";
 	}
 }

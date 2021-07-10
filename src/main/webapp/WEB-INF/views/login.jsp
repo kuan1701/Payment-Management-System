@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -60,42 +61,6 @@
         </div>
     </div>
 
-    <!-- Alert loginNotExist -->
-    <c:if test="${response eq 'loginNotExist'}">
-        <div id="alert" class="alert alert-danger fade show" role="alert">
-            <p><strong><fmt:message key="login.failed"/></strong>
-                <fmt:message key="login.alertLoginNotExistError"/>
-            </p>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:if>
-
-    <!-- Alert invalidData -->
-    <c:if test="${response eq 'invalidData'}">
-        <div id="alert" class="alert alert-danger fade show" role="alert">
-            <p><strong><fmt:message key="login.failed"/></strong>
-                <fmt:message key="login.alertInvalidLoginDataError"/>
-            </p>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:if>
-
-    <!-- Alert authenticationError -->
-    <c:if test="${response eq 'authenticationError'}">
-        <div id="alert" class="alert alert-danger fade show" role="alert">
-            <p><strong><fmt:message key="login.failed"/></strong>
-                <fmt:message key="login.alertAuthenticationError"/>
-            </p>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:if>
-
     <div class="login-bg">
         <div class="page-content container-fluid">
             <div class="row justify-content-center">
@@ -109,7 +74,7 @@
                     <fmt:message key="login.input" var="login"/>
 
                     <sec:authorize access="isAuthenticated()">
-                        <% response.sendRedirect("/"); %>
+                        <% response.sendRedirect("/login"); %>
                     </sec:authorize>
                     <div class="login-wrapper">
                         <div class="box">
@@ -124,37 +89,36 @@
                                 </h4>
 
                                 <div class="form-group group-btn" style="height: 60px; margin-bottom: 24px;">
-                                    <form action="/login" method="POST" role="form"
+                                    <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
-                                        <input type="hidden" name="command" value="login"/>
+                                        <input type="hidden" name="command" value="username"/>
                                         <input type="hidden" name="full_phone" value="+34645364524"/>
                                         <input type="hidden" name="password" value="000000"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-User
                                         </button>
-                                    </form>
+                                    </form:form>
 
-                                    <form action="/login" method="POST" role="form"
+                                    <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
-                                        <input type="hidden" name="command" value="login"/>
+                                        <input type="hidden" name="command" value="username"/>
                                         <input type="hidden" name="full_phone" value="+393524594551"/>
                                         <input type="hidden" name="password" value="111111"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-Admin
                                         </button>
-                                    </form>
+                                    </form:form>
                                 </div>
 
-                                <form action="/login" method="POST" role="form">
-                                    <input type="hidden" name="login" value="login"/>
+                                <form action="${pageContext.request.contextPath}/login" method="POST">
 
                                     <!-- Login -->
                                     <div>
-                                        <input id="login" name="login" type="text"
-                                               class="form-control btn-shadow"
-                                               placeholder="${login}"/>
+                                        <input name="username" type="text" id="username"
+                                               class="form-control btn-shadow" autofocus="autofocus"
+                                                    placeholder="${login}"/>
 
-                                        <label for="login" class="default-label">
+                                        <label for="username" class="default-label">
                                             <span id="valid-msg-login" class="valid-msg invisible">
                                                 ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                             </span>
@@ -188,7 +152,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <a class="button btn-lg button-google btn-block text-uppercase btn-outline"
-                                               href="/login/google">
+                                               href="${pageContext.request.contextPath}/login/google">
                                                 <img src="https://img.icons8.com/color/16/000000/google-logo.png">
                                                 <fmt:message key="login.singUpWithGoogle"/>
                                             </a>

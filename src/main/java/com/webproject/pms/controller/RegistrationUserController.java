@@ -30,12 +30,6 @@ public class RegistrationUserController {
 		return "registration";
 	}
 	
-	@GetMapping("/registration-message")
-	public String registrationMessage()
-	{
-		return "activationMessage";
-	}
-	
 	@PostMapping("/registration")
 	public String addUser(
 			@ModelAttribute("user") @Valid User user,
@@ -66,7 +60,12 @@ public class RegistrationUserController {
 		} else {
 			model.addAttribute("message", "Activation code is not found!");
 		}
-		
 		return "activationSuccess";
+	}
+	
+	@GetMapping("/registration-message")
+	public String registrationMessage()
+	{
+		return "activationMessage";
 	}
 }

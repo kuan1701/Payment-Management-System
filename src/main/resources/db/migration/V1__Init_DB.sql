@@ -90,7 +90,7 @@ create table user
     activation_code varchar(255),
     active bit, email varchar(255),
     email_verified bit,
-    login varchar(30),
+    username varchar(30),
     name varchar(30),
     password varchar(100),
     phone varchar(30),
