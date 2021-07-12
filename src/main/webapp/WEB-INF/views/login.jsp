@@ -91,9 +91,9 @@
                                 <div class="form-group group-btn" style="height: 60px; margin-bottom: 24px;">
                                     <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
-                                        <input type="hidden" name="command" value="username"/>
-                                        <input type="hidden" name="full_phone" value="+34645364524"/>
-                                        <input type="hidden" name="password" value="000000"/>
+                                        <input type="hidden" name="username" value="robert2018"/>
+                                        <input type="hidden" name="phone" value="+375292852775"/>
+                                        <input type="hidden" name="password" value="14082018"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-User
                                         </button>
@@ -102,7 +102,7 @@
                                     <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
                                         <input type="hidden" name="command" value="username"/>
-                                        <input type="hidden" name="full_phone" value="+393524594551"/>
+                                        <input type="hidden" name="phone" value="+393524594551"/>
                                         <input type="hidden" name="password" value="111111"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-Admin

@@ -205,7 +205,8 @@
                                             ${formHeader}
                                         </h4>
 
-                                        <form:form action="" method="POST" role="form" modelAttribute="user">
+                                        <c:url value="/profile-info/${user.userId}" var="var"/>
+                                        <form:form action="${var}" method="POST" role="form" modelAttribute="user">
                                             <input type="hidden" name="command" value="profile"/>
 
                                             <div class="form-row">

@@ -1,6 +1,5 @@
 package com.webproject.pms.controller;
 
-import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.Letter;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.UserServiceImpl;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -25,15 +25,27 @@ public class UserController {
 		this.userService = userService;
 	}
 	
+	/**
+	 *  Show user account
+	 * @param model
+	 * @param principal
+	 * @return page user
+	 */
 	@GetMapping("/my-account")
 	public String accountPage(
 			Model model,
-			@AuthenticationPrincipal User user
+			Principal principal
 	) {
-		model.addAttribute("user", user);
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "user/user";
 	}
 	
+	/**
+	 * Show profile info for update
+	 * @param model
+	 * @param id
+	 * @return page userUpdatePersonalData
+	 */
 	@GetMapping("/profile-info/{id}")
 	public String showUserInfo(Model model,
 	                           @PathVariable("id") Long id
@@ -65,8 +77,10 @@ public class UserController {
 	}
 	
 	@GetMapping("/support")
-	public String support(Model model)
+	public String support(Model model,
+	                      @AuthenticationPrincipal User user)
 	{
+		model.addAttribute("user", user);
 		model.addAttribute("support", new Letter());
 		return "user/userSupport";
 	}

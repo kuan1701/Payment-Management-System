@@ -121,4 +121,20 @@ public class Account {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	public List<BankCard> getBankCards() {
+		return bankCards;
+	}
+	
+	public void setBankCards(List<BankCard> bankCards) {
+		this.bankCards = bankCards;
+	}
+	
+	public List<Payment> getPayments() {
+		return payments;
+	}
+	
+	public void setPayments(List<Payment> payments) {
+		this.payments = payments;
+	}
 }

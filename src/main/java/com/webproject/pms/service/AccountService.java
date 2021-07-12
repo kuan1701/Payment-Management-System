@@ -2,6 +2,7 @@ package com.webproject.pms.service;
 
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.dto.AccountDto;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface AccountService {
 	
 	Boolean unblockAccount(Long accountId);
 	
-	Boolean registrationAccount(Account Account);
+	Boolean registrationAccount(Account Account, Model model);
 	
 	List<AccountDto> findAllAccounts();
 	

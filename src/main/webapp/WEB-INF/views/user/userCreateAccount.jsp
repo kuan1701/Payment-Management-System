@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -98,7 +99,7 @@
                                             ${formHeader}
                                         </h4>
 
-                                        <form action="" method="POST" role="form">
+                                        <form:form action="" method="POST" role="form" modelAttribute="account">
                                             <input type="hidden" name="command" value="createAccount"/>
 
                                             <!-- AccountDto Number -->
@@ -107,10 +108,11 @@
                                                     ${numberNewAccount}:
                                                 </label>
                                                 <div class="form-group">
-                                                    <input id="number" name="number" type="text" class="form-control"
-                                                           style="height: 46px; margin: 0 10px 0 0; text-align: center; font-size: 18px;"
-                                                           readonly="readonly" maxlength="20"
-                                                           value="${numberValue}"/>
+                                                    <form:input id="number" name="number" path="number"
+                                                                type="text" class="form-control"
+                                                                style="height: 46px; margin: 0 10px 0 0; text-align: center; font-size: 18px;"
+                                                                readonly="readonly" maxlength="20"
+                                                                value="${numberValue}"></form:input>
                                                     <img id="repeat" src="<c:url value="/images/repeat.png"/>"
                                                          alt="" class="glyphicon icon-repeat"/>
                                                 </div>
@@ -125,7 +127,7 @@
                                             </div>
 
                                             <!-- Currency -->
-                                            <input type="hidden" id="currency" name="currency"/>
+                                            <form:input type="hidden" id="currency" name="currency" path="currency"></form:input>
 
                                             <!-- Select Currency -->
                                             <div style="margin-top: 16px;">
@@ -151,7 +153,7 @@
                                                     ${createAccount}
                                                 </button>
                                             </div>
-                                        </form>
+                                        </form:form>
                                     </div>
                                 </div>
                             </div>

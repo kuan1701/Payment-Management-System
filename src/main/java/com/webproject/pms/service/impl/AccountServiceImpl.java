@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,17 +37,18 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	@Transactional
-	public Boolean registrationAccount(Account account) {
+	public Boolean registrationAccount(Account account, Model model) {
 		
 		if (accountDao.findAccountByNumber(account.getNumber()) == null) {
-			account.setBalance(new BigDecimal("0.00"));
-			account.setBlocked(false);
-			account.setDeleted(false);
-			
-			accountDao.save(account);
-			return true;
+			return false;
 		}
-		return false;
+		model.addAttribute("accountNumberError", "This account already exist");
+		account.setBalance(new BigDecimal("0.00"));
+		account.setBlocked(false);
+		account.setDeleted(false);
+		
+		accountDao.save(account);
+		return true;
 	}
 	
 	@Override
