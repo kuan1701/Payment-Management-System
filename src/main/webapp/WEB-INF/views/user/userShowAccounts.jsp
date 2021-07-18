@@ -104,36 +104,24 @@
                                         <ul class="nav nav-tabs card-header-tabs justify-content-lg-center"
                                             role="tablist">
                                             <li class="nav-item-active">
-                                                <a class="nav-link" role="tab" data-toggle="tab"
-                                                   aria-selected="true"
-                                                   onclick="document.getElementById('form-showAccounts').submit(); return false;">
+                                                <a href="${pageContext.request.contextPath}/show-accounts" class="nav-link">
                                                     <img src="<c:url value="/images/show-accounts.png"/>" class="icon-sidebar"
                                                          style="width: 20px; height: 20px;" alt=""/>
                                                     ${myAccounts}
                                                 </a>
-                                                <form action="" method="GET" role="form" id="form-showAccounts">
-                                                    <input type="hidden" name="command" value="showAccounts"/>
-                                                </form>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link nav-link-hover" role="tab" data-toggle="tab"
-                                                   aria-selected="false"
-                                                   onclick="document.getElementById('form-showPayments').submit(); return false;">
-                                                    <img src="<c:url value="/images/show-platezhis.png"/>"
+                                                <a href="${pageContext.request.contextPath}/show-payments" class="nav-link">
+                                                    <img src="<c:url value="/images/show-payments.png"/>"
                                                          class="icon-sidebar" style="height: 17px" alt=""/>
                                                     ${myPayments}
                                                 </a>
-                                                <form action="" method="GET" role="form" id="form-showPayments">
-                                                    <input type="hidden" name="command" value="showPayments"/>
-                                                </form>
                                             </li>
                                         </ul>
                                     </div>
 
                                     <c:choose>
-                                        <c:when test="${response ne 'unableGetData' &&
-                                                        response ne 'showUserAccountsError' &&
-                                                        accountsEmpty == false}">
+                                        <c:when test="${accountsEmpty == false}">
 
                                             <div class="card-body card-body-main">
                                                 <div class="row">
@@ -206,12 +194,12 @@
                                                                 <div class="card-container">
                                                                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-2 row-cols-xl-2">
 
-                                                                        <c:forEach items="${accounts}" var="account">
+                                                                        <c:forEach items="${accountList}" var="account">
                                                                             <div class="col mb-4">
                                                                                 <div class="card bg-light">
                                                                                     <div class="card-header">
                                                                                         <c:choose>
-                                                                                            <c:when test="${account.isBlocked}">
+                                                                                            <c:when test="${account.blocked}">
                                                                                                 <small class="text-danger float-right">
                                                                                                         ${statusBlocked}
                                                                                                 </small>
@@ -230,7 +218,7 @@
                                                                                                 ${balance}: ${account.balance} ${account.currency}
 
                                                                                             <!-- Show AccountDto Info -->
-                                                                                            <a href="?command=showAccountSettings&accountId=${account.accountId}"
+                                                                                            <a href="/account-setting/${account.number}"
                                                                                                class="float-right">
                                                                                                 <img src="<c:url value="/images/info.png"/>"
                                                                                                      alt="${settings}"/>

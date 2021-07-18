@@ -43,7 +43,7 @@
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
                     <form action="" method="POST" role="form">
                         <input type="hidden" name="command" value="deleteAccount"/>
-                        <input type="hidden" name="accountId" value="${viewableAccount.accountId}"/>
+                        <input type="hidden" name="accountId" value="${account.accountId}"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
                         </button>
@@ -198,59 +198,23 @@
                                             <ul class="nav nav-tabs card-header-tabs justify-content-lg-center"
                                                 role="tablist">
                                                 <li class="nav-item-home">
-                                                    <a class="nav-link" role="tab" data-toggle="tab"
-                                                       aria-selected="false"
-                                                       onclick="document.getElementById('form-showAccounts').submit(); return false;">
-                                                        <img src="<c:url value="/images/show-accounts.png"/>"
-                                                             class="icon-sidebar" style="width: 20px; height: 20px;"
-                                                             alt=""/>
+                                                    <a href="${pageContext.request.contextPath}/show-accounts" class="nav-link">
+                                                        <img src="<c:url value="/images/show-accounts.png"/>" class="icon-sidebar"
+                                                             style="width: 20px; height: 20px;" alt=""/>
                                                         ${myAccounts}
                                                     </a>
-                                                    <form action="" method="GET" id="form-showAccounts" role="form">
-                                                        <input type="hidden" name="command" value="showAccounts"/>
-                                                    </form>
                                                 </li>
                                                 <li class="nav-item-home">
-                                                    <a class="nav-link" role="tab" data-toggle="tab"
-                                                       aria-selected="false"
-                                                       onclick="document.getElementById('form-showPayments').submit(); return false;">
-                                                        <img src="<c:url value="/images/show-platezhis.png"/>"
-                                                             class="icon-sidebar" style="height: 17px"
-                                                             alt=""/>
+                                                    <a href="${pageContext.request.contextPath}/show-payments" class="nav-link">
+                                                        <img src="<c:url value="/images/show-payments.png"/>"
+                                                             class="icon-sidebar" style="height: 17px" alt=""/>
                                                         ${myPayments}
                                                     </a>
-                                                    <form action="" method="GET" id="form-showPayments" role="form">
-                                                        <input type="hidden" name="command" value="showPayments"/>
-                                                    </form>
                                                 </li>
                                             </ul>
                                         </div>
 
                                         <div class="card-body card-body-main">
-
-                                            <!-- Return to Accounts -->
-                                            <c:if test="${response eq 'unableGetData' ||
-                                                          response eq 'unableGetAccountId' ||
-                                                          response eq 'showAccountError' ||
-                                                          response eq 'accountDeletedSuccess'}">
-                                                <div class="message-block">
-                                                    <span class="title-label forward-left-link-img">
-                                                        <a href="?command=showAccounts" class="float-left">
-                                                            <img src="<c:url value="/images/return.png"/>"
-                                                                 class="icon-return" alt=""/>
-                                                                ${returnToAllAccounts}
-                                                        </a>
-                                                    </span>
-                                                </div>
-                                            </c:if>
-
-                                            <c:if test="${response ne 'unableGetData' &&
-                                                          response ne 'unableGetAccountId' &&
-                                                          response ne 'showAccountError' &&
-                                                          response ne 'accountDeletedSuccess'}">
-
-                                                <jsp:useBean id="viewableAccount" scope="request"
-                                                             type="com.webproject.pms.model.entities.Account"/>
 
                                                 <div class="row">
                                                     <div class="col-xl-12">
@@ -259,7 +223,7 @@
 
                                                                 <!-- AccountDto Status -->
                                                                 <c:choose>
-                                                                    <c:when test="${viewableAccount.isBlocked}">
+                                                                    <c:when test="${account.blocked}">
                                                                         <label class="for-form-label text-center"
                                                                                style="margin-top:10px; font-size: 18px;">
                                                                                 ${accountStatus}:
@@ -288,9 +252,10 @@
                                                                     <input id="number" name="number"
                                                                            type="text" class="form-control"
                                                                            readonly="readonly"
-                                                                           value="${viewableAccount.number}"/>
+                                                                           value="${account.number}"/>
                                                                     <label for="number"
-                                                                           class="default-label">&nbsp;</label>
+                                                                           class="default-label">&nbsp;
+                                                                    </label>
                                                                 </div>
 
                                                                 <!-- AccountDto Balance and Currency -->
@@ -303,11 +268,11 @@
                                                                                type="text" class="form-control"
                                                                                style="min-width: 49%; margin-right: 1%;"
                                                                                readonly="readonly"
-                                                                               value="${viewableAccount.balance}"/>
+                                                                               value="${account.balance}"/>
                                                                         <div id="currency"
                                                                              class="bfh-selectbox bfh-currencies"
                                                                              style="min-width: 49%; margin-left: 1%; pointer-events: none;"
-                                                                             data-currency="${viewableAccount.currency}"
+                                                                             data-currency="${account.currency}"
                                                                              data-flags="true">
                                                                         </div>
                                                                         <label for="balance"
@@ -325,7 +290,7 @@
                                                                         <!-- Show AccountDto Cards -->
                                                                         <div class="col-md-6">
                                                                             <span class="forward-top-link-img">
-                                                                                 <a href="?command=showAccountCards&accountId=${viewableAccount.accountId}"
+                                                                                 <a href="/attached-cards/${account.number}"
                                                                                     class="float-right">
                                                                                     <img src="<c:url value="/images/credit-cards.png"/>"
                                                                                          alt=""/>
@@ -337,9 +302,9 @@
                                                                         <!-- Show AccountDto Payments -->
                                                                         <div class="col-md-6">
                                                                             <span class="forward-top-link-img">
-                                                                                <a href="?command=showAccountPayments&accountId=${viewableAccount.accountId}"
+                                                                                <a href="/show-account-payments/${account.number}"
                                                                                    class="float-right">
-                                                                                    <img src="<c:url value="/images/platezhis.png"/>"
+                                                                                    <img src="<c:url value="/images/payments.png"/>"
                                                                                          alt=""/>
                                                                                     <h5>${showPaymentArchive}</h5>
                                                                                 </a>
@@ -348,7 +313,7 @@
                                                                     </div>
 
                                                                     <c:choose>
-                                                                        <c:when test="${viewableAccount.isBlocked}">
+                                                                        <c:when test="${account.blocked}">
                                                                             <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                                id="list-unblockAccount-list" role="tab"
                                                                                href="?command=unblockAccount"
@@ -365,7 +330,7 @@
                                                                                 <input type="hidden" name="command"
                                                                                        value="unblockAccount"/>
                                                                                 <input type="hidden" name="accountId"
-                                                                                       value="${viewableAccount.accountId}"/>
+                                                                                       value="${account.accountId}"/>
                                                                             </form>
                                                                         </c:when>
                                                                         <c:otherwise>
@@ -385,7 +350,7 @@
                                                                                 <input type="hidden" name="command"
                                                                                        value="blockAccount"/>
                                                                                 <input type="hidden" name="accountId"
-                                                                                       value="${viewableAccount.accountId}"/>
+                                                                                       value="${account.accountId}"/>
                                                                             </form>
                                                                         </c:otherwise>
                                                                     </c:choose>
@@ -405,7 +370,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </c:if>
+
                                         </div>
                                     </div>
                                 </div>

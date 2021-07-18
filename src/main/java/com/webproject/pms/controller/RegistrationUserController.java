@@ -23,33 +23,47 @@ public class RegistrationUserController {
 		this.userService = userService;
 	}
 	
+	/**
+	 * Registration user
+	 * @param model
+	 * @return registraion page
+	 */
 	@GetMapping("/registration")
-	public String registration(Model model)
+	public String registrationPage(Model model)
 	{
 		model.addAttribute("user", new User());
 		return "registration";
 	}
 	
 	@PostMapping("/registration")
-	public String addUser(
+	public String registrationUser(
 			@ModelAttribute("user") @Valid User user,
 			BindingResult bindingResult,
 			Model model) {
 		
 		if (bindingResult.hasErrors()){
+			model.addAttribute("registrationError", "Invalid data");
 			return "registration";
 		}
 		if (!user.getPassword().equals(user.getRepeatedPassword())){
-			model.addAttribute("passwordError", "Password mismatch");
+			model.addAttribute("registrationError", "Password mismatch");
 			return "registration";
 		}
 		if (!userService.registrationUser(user, model)){
 			model.addAttribute("registrationError", "Registration error");
 			return "registration";
+		} else {
+			model.addAttribute("registrationError", "Registration success");
 		}
-		return "redirect:/registration-message";
+		return "registration";
 	}
 	
+	/**
+	 * Activate user via mail sender
+	 * @param model
+	 * @param code
+	 * @return activationSuccess page
+	 */
 	@GetMapping("/activate/{code}")
 	public String activate(Model model, @PathVariable String code) {
 		
@@ -63,6 +77,10 @@ public class RegistrationUserController {
 		return "activationSuccess";
 	}
 	
+	/**
+	 * Registration message
+	 * @return activationMessage page
+	 */
 	@GetMapping("/registration-message")
 	public String registrationMessage()
 	{

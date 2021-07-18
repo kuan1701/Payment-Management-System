@@ -2,6 +2,7 @@ package com.webproject.pms.model.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Account {
 	@Size(min = 1, max = 255)
 	private String number;
 	
-	@NotEmpty
+	@NotNull
 	private BigDecimal balance;
 	
 	@NotEmpty

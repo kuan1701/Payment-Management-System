@@ -6,7 +6,6 @@ import com.webproject.pms.model.dao.PaymentDao;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.Payment;
-import com.webproject.pms.dto.PaymentGetDto;
 import com.webproject.pms.service.PaymentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Service
+@Transactional
 public class PaymentServiceImpl implements PaymentService {
 	
 	private static final Logger LOGGER = LogManager.getLogger(PaymentServiceImpl.class);
@@ -36,7 +36,6 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	@Transactional
 	public synchronized Payment makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, BigDecimal exchangeRate, String appointment) {
 		
 		Account accountFrom = accountDao.getOne(accountId);
@@ -84,27 +83,23 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	@Transactional
 	public synchronized void makePaymentOnCard(Long accountId, String cardNumber, BigDecimal amount, String appointment) {
 	
 	}
 	
 	@Override
-	@Transactional
 	public synchronized boolean checkAvailableAccount(Account account) {
 		
 		return account.getBlocked();
 	}
 	
 	@Override
-	@Transactional
 	public synchronized boolean checkAvailableCard(BankCard card) {
 		
 		return card.getActive();
 	}
 	
 	@Override
-	@Transactional
 	public synchronized boolean checkAvailableAmount(Account account, BigDecimal amount) {
 		
 		BigDecimal balance = account.getBalance();
@@ -112,7 +107,6 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	@Transactional
 	public synchronized void transaction(Account accountFrom, Account accountTo, BigDecimal amount) {
 		
 		if (!accountFrom.getBlocked() && !accountTo.getBlocked()) {
@@ -126,7 +120,6 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	@Transactional
 	public synchronized void transaction(Account accountFrom, String cardNumber, BigDecimal amount) {
 		
 		if (!accountFrom.getBlocked()) {
@@ -140,57 +133,44 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	@Transactional
-	public PaymentGetDto findPaymentByPaymentId(Long paymentId) {
+	public Payment findPaymentByPaymentId(Long paymentId) {
 		
-		return mapStructMapper.paymentToPaymentGetDto(paymentDao.getOne(paymentId));
+		return paymentDao.getById(paymentId);
 	}
 	
 	@Override
-	@Transactional
-	public List<PaymentGetDto> findAllPaymentsByAccountId(Long accountId) {
+	public List<Payment> findAllPaymentsByAccountId(Long accountId) {
 		
-		return mapStructMapper.paymentsToPaymentGetDtos(
-				paymentDao.findPaymentsByAccount_AccountId(accountId));
+		return paymentDao.findPaymentsByAccount_AccountId(accountId);
 	}
 	
 	@Override
-	@Transactional
-	public List<PaymentGetDto> findAllPaymentsByUserId(Long userId) {
+	public List<Payment> findAllPaymentsByUserId(Long userId) {
 		
-		return mapStructMapper.paymentsToPaymentGetDtos(
-				paymentDao.findPaymentsByUserId(userId));
+		return paymentDao.findPaymentsByUserId(userId);
 	}
 	
 	@Override
-	@Transactional
-	public List<PaymentGetDto> findLastPaymentsByUserId(Long userId) {
+	public List<Payment> findLastPaymentsByUserId(Long userId) {
 		
-		return mapStructMapper.paymentsToPaymentGetDtos(
-				paymentDao.findLastPaymentsByAccountUserId(userId));
+		return paymentDao.findLastPaymentsByAccountUserId(userId);
 	}
 	
 	@Override
-	@Transactional
-	public List<PaymentGetDto> findAllPayments() {
+	public List<Payment> findAllPayments() {
 		
-		return mapStructMapper.paymentsToPaymentGetDtos(
-				paymentDao.findAll());
+		return paymentDao.findAll();
 	}
 	
 	@Override
-	@Transactional
-	public List<PaymentGetDto> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate) {
+	public List<Payment> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate) {
 		
-		return mapStructMapper.paymentsToPaymentGetDtos(
-				paymentDao.searchByCriteria(userId, isOutgoing, startDate, finalDate));
+		return paymentDao.searchByCriteria(userId, isOutgoing, startDate, finalDate);
 	}
 	
 	@Override
-	@Transactional
-	public List<PaymentGetDto> searchByCriteria(Long userId, String startDate, String finalDate) {
+	public List<Payment> searchByCriteria(Long userId, String startDate, String finalDate) {
 		
-		return mapStructMapper.paymentsToPaymentGetDtos(
-				paymentDao.searchByCriteria(userId, startDate, finalDate));
+		return paymentDao.searchByCriteria(userId, startDate, finalDate);
 	}
 }

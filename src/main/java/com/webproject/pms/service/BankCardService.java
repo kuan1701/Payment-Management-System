@@ -1,7 +1,6 @@
 package com.webproject.pms.service;
 
 import com.webproject.pms.model.entities.BankCard;
-import com.webproject.pms.dto.BankCardGetDto;
 
 import java.util.List;
 
@@ -19,11 +18,11 @@ public interface BankCardService {
 	
 	Boolean deleteCardByCardNumber(String cardNumber);
 	
-	BankCardGetDto findCardByCardId(Long cardId);
+	BankCard findCardByCardId(Long cardId);
 	
-	BankCardGetDto findCardByCardNumber(String number);
+	BankCard findCardByCardNumber(String number);
 	
-	List<BankCardGetDto> findCardsByAccountId(Long accountId);
+	List<BankCard> findCardsByAccountId(Long accountId);
 	
-	List<BankCardGetDto> findAllCards();
+	List<BankCard> findAllCards();
 }

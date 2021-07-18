@@ -29,23 +29,26 @@
                                 <div class="dropdown-menu dropdown-menu-right" style="padding: 0;"
                                      aria-labelledby="dropdownMenuLink">
                                     <div class="dropdown-item" style="display: grid;">
-                                        <a href="${pageContext.request.contextPath}/profile-info/${user.userId}">
-                                            <div class="float-left">
-                                                <p style="margin: 0;">
-                                                    <fmt:message key="header.profile"/>
-                                                </p>
-                                            </div>
-                                            <div class="float-right">
-                                                <img src="<c:url value="/images/profile.png"/>" class="icon-header"
-                                                     style="width: 20px;" alt=""/>
-                                            </div>
-                                        </a>
+
+                                        <form action="${pageContext.request.contextPath}/profile-info/${user.userId}" method="GET" role="form">
+                                            <a href="${pageContext.request.contextPath}/profile-info/${user.userId}">
+                                                <div class="float-left">
+                                                    <p style="margin: 0;">
+                                                        <fmt:message key="header.profile"/>
+                                                    </p>
+                                                </div>
+                                                <div class="float-right">
+                                                    <img src="<c:url value="/images/profile.png"/>" class="icon-header"
+                                                         style="width: 20px;" alt=""/>
+                                                </div>
+                                            </a>
+                                        </form>
                                     </div>
 
                                     <div class="dropdown-divider"></div>
 
                                     <div class="dropdown-item" style="display: grid;">
-                                        <a href="?command=showActionLog">
+                                        <a href="${pageContext.request.contextPath}/action-log">
                                             <div class="float-left">
                                                 <p style="margin-bottom: 0.1rem;">
                                                     <fmt:message key="header.actionLog"/>
@@ -61,7 +64,7 @@
                                     <div class="dropdown-divider"></div>
 
                                     <div class="dropdown-item" style="display: grid;">
-                                        <a href="/logout">
+                                        <a href="${pageContext.request.contextPath}/logout">
                                             <div class="float-left">
                                                 <p style="margin-bottom: 0.1rem;">
                                                     <fmt:message key="header.logout"/>

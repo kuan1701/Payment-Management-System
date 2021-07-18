@@ -13,6 +13,8 @@ public interface UserService {
 	
 	boolean updateUser(User user, Long id);
 	
+	void updatePassword(User user, String password);
+	
 	User findUserByUserId(Long userId);
 	
 	User findUserByUsername(String username);

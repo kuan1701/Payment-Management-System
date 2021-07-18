@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -35,7 +36,7 @@
     </c:if>
 
     <!-- Alert Success -->
-    <c:if test="${response eq 'passwordUpdatedSuccess'}">
+    <c:if test="${passwordError eq 'Update password successfully.'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p><strong><fmt:message key="user.page.success"/>!</strong>
                 <fmt:message key="user.page.alertPasswordUpdatedSuccess"/>
@@ -47,7 +48,7 @@
     </c:if>
 
     <!-- Alert oldPasswordError -->
-    <c:if test="${response eq 'oldPasswordError'}">
+    <c:if test="${passwordError eq 'Your old password is incorrect.'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertOldPasswordNotMatch"/>
@@ -59,7 +60,7 @@
     </c:if>
 
     <!-- Alert newPasswordError -->
-    <c:if test="${response eq 'newPasswordError'}">
+    <c:if test="${passwordError eq 'You new password must be different than the old one.'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertNewPasswordNotConfirmed"/>
@@ -113,8 +114,7 @@
                                             ${formHeader}
                                         </h4>
 
-                                        <form action="" method="POST" role="form">
-                                            <input type="hidden" name="command" value="updatePassword"/>
+                                        <form:form action="" method="POST" role="form" modelAttribute="user">
 
                                             <!-- Old Password -->
                                             <div class="password-input">
@@ -191,7 +191,7 @@
                                                     ${changePassword}
                                                 </button>
                                             </div>
-                                        </form>
+                                        </form:form>
                                     </div>
                                 </div>
                             </div>

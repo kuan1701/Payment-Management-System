@@ -58,20 +58,8 @@
 <div class="main">
     <jsp:include page="../template/header.jsp"/>
 
-    <!-- Alert unableGetData -->
-    <c:if test="${response eq 'unableGetData'}">
-        <div id="alert" class="alert alert-danger fade show" role="alert">
-            <p><strong><fmt:message key="user.page.failed"/>!</strong>
-                <fmt:message key="user.page.alertUnableGetData"/>
-            </p>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:if>
-
     <!-- Alert Success -->
-    <c:if test="${response eq 'dataUpdatedSuccess'}">
+    <c:if test="${updateInfo eq 'Update data successfully'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p><strong><fmt:message key="user.page.success"/>!</strong>
                 <fmt:message key="user.page.alertDataUpdatedSuccess"/>
@@ -83,7 +71,7 @@
     </c:if>
 
     <!-- Alert passwordNotMatchError -->
-    <c:if test="${response eq 'passwordNotMatchError'}">
+    <c:if test="${updateInfo eq 'passwordNotMatchError'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertPasswordNotMatchError"/>
@@ -95,7 +83,7 @@
     </c:if>
 
     <!-- Alert invalidData -->
-    <c:if test="${response eq 'invalidData'}">
+    <c:if test="${updateInfo eq 'invalidData'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertInvalidDataError"/>
@@ -107,7 +95,7 @@
     </c:if>
 
     <!-- Alert phoneExistError -->
-    <c:if test="${response eq 'phoneExistError'}">
+    <c:if test="${updateInfo eq 'This phone already exist'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertPhoneExistError"/>
@@ -119,7 +107,7 @@
     </c:if>
 
     <!-- Alert emailExistError -->
-    <c:if test="${response eq 'emailExistError'}">
+    <c:if test="${updateInfo eq 'This email already exist'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertEmailExistError"/>
@@ -131,37 +119,10 @@
     </c:if>
 
     <!-- Alert dataUpdatedError -->
-    <c:if test="${response eq 'dataUpdatedError'}">
+    <c:if test="${updateInfo eq 'Update data error'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/></strong>
                 <fmt:message key="user.page.alertDataUpdatedError"/>
-            </p>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:if>
-
-    <!-- Alert userHasFundsError -->
-    <c:if test="${response eq 'userHasFundsError'}">
-        <div id="alert" class="alert alert-danger fade show" role="alert">
-            <p><strong><fmt:message key="user.page.failed"/>!</strong>
-                <fmt:message key="user.page.alertUserHasFundsError"/>
-                <a href="?command=showAccounts" class="alert-link">
-                    <fmt:message key="user.page.viewAccounts"/>
-                </a>
-            </p>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:if>
-
-    <!-- Alert profileDeletedError -->
-    <c:if test="${response eq 'profileDeletedError'}">
-        <div id="alert" class="alert alert-danger fade show" role="alert">
-            <p><strong><fmt:message key="user.page.failed"/></strong>
-                <fmt:message key="user.page.alertProfileDeletedError"/>
             </p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -207,18 +168,19 @@
 
                                         <c:url value="/profile-info/${user.userId}" var="var"/>
                                         <form:form action="${var}" method="POST" role="form" modelAttribute="user">
-                                            <input type="hidden" name="command" value="profile"/>
+                                            <input type="hidden" name="userId" value="${user.userId}"/>
+                                            <input type="hidden" name="username" value="${user.username}"/>
 
                                             <div class="form-row">
 
                                                 <!-- Name -->
                                                 <div class="col-md-6">
-                                                    <form:input id="name" name="name" type="text"
-                                                                path="name" class="form-control"
+                                                    <input id="name" name="name" type="text"
+                                                                class="form-control"
                                                                 data-toggle="tooltip-left"
                                                                 data-title="${tooltipOnlyLetters}"
                                                                 maxlength="24" placeholder="${name}*"
-                                                                value="${user.name}"></form:input>
+                                                                value="${user.name}"/>
                                                     <label for="name" class="default-label">
                                                         <span id="valid-msg-name" class="valid-msg invisible">
                                                             ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
@@ -231,12 +193,12 @@
 
                                                 <!-- Surname -->
                                                 <div class="col-md-6">
-                                                    <form:input id="surname" name="surname"
+                                                    <input id="surname" name="surname"
                                                                 type="text" class="form-control"
-                                                                data-toggle="tooltip" path="surname"
+                                                                data-toggle="tooltip"
                                                                 data-title="${tooltipOnlyLetters}"
                                                                 maxlength="32" placeholder="${surname}*"
-                                                                value="${user.surname}"></form:input>
+                                                                value="${user.surname}"/>
                                                     <label for="surname" class="default-label">
                                                         <span id="valid-msg-surname" class="valid-msg invisible">
                                                             ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
@@ -251,11 +213,11 @@
                                             <!-- Phone -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-9" style="margin-top: 8px">
-                                                    <form:input id="phone" name="phone"
+                                                    <input id="phone" name="phone"
                                                            type="tel" class="form-control"
-                                                           data-toggle="tooltip" path="phone"
+                                                           data-toggle="tooltip"
                                                            data-title="${tooltipPhone}"
-                                                           value="${user.phone}"></form:input>
+                                                           value="${user.phone}"/>
                                                     <label for="phone" class="default-label">
                                                         <span id="valid-msg-phone" class="valid-msg invisible">
                                                             ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
@@ -270,11 +232,11 @@
                                             <!-- Email -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-9">
-                                                    <form:input id="email" name="email" type="email" class="form-control"
-                                                           data-toggle="tooltip" path="email"
+                                                    <input id="email" name="email" type="email" class="form-control"
+                                                           data-toggle="tooltip"
                                                            data-title="${tooltipEmail}"
                                                            maxlength="45" placeholder="${email}"
-                                                           value="${user.email}"></form:input>
+                                                           value="${user.email}"/>
                                                     <label for="email" class="default-label">
                                                         <span id="valid-msg-email" class="valid-msg invisible">
                                                             ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
@@ -323,8 +285,7 @@
 
                                         <!-- Change Password Button -->
                                         <div class="action back-btn">
-                                            <form action="/" method="GET" role="form">
-                                                <input type="hidden" name="command" value="updatePassword"/>
+                                            <form action="${pageContext.request.contextPath}/update-password/${userId}" method="GET" role="form">
                                                 <button type="submit" class="btn btn-primary signup btn-default"
                                                         style="width: 56%;">
                                                     ${changePassword}

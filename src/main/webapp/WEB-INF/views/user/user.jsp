@@ -48,39 +48,30 @@
                                     <ul class="nav nav-tabs card-header-tabs justify-content-lg-center"
                                         role="tablist">
                                         <li class="nav-item-home">
-                                            <a class="nav-link" role="tab" data-toggle="tab" aria-selected="false"
-                                               onclick="document.getElementById('form-showAccounts').submit(); return false;">
+                                            <a href="${pageContext.request.contextPath}/show-accounts" class="nav-link">
                                                 <img src="<c:url value="/images/show-accounts.png"/>" class="icon-sidebar"
                                                      style="width: 20px; height: 20px;" alt=""/>
                                                 ${myAccounts}
                                             </a>
-                                            <form action="" method="GET" id="form-showAccounts" role="form">
-                                                <input type="hidden" name="command" value="showAccounts"/>
-                                            </form>
                                         </li>
                                         <li class="nav-item-home">
-                                            <a class="nav-link" role="tab" data-toggle="tab" aria-selected="false"
-                                               onclick="document.getElementById('form-showPayments').submit(); return false;">
+                                            <a href="${pageContext.request.contextPath}/show-payments" class="nav-link">
                                                 <img src="<c:url value="/images/show-payments.png"/>"
                                                      class="icon-sidebar" style="height: 17px" alt=""/>
                                                 ${myPayments}
                                             </a>
-                                            <form action="" method="GET" id="form-showPayments" role="form">
-                                                <input type="hidden" name="command" value="showPayments"/>
-                                            </form>
                                         </li>
                                     </ul>
                                 </div>
 
                                 <c:choose>
                                     <c:when test="${accountsEmpty == false}">
-                                        <jsp:useBean id="accounts" scope="request" type="java.util.List"/>
 
                                         <div class="card-body card-container">
                                             <div id="carouselAccounts" class="carousel slide" data-ride="carousel">
 
                                                 <ol class="carousel-indicators">
-                                                    <c:forEach items="${accounts}" varStatus="loop">
+                                                    <c:forEach items="${accountList}" varStatus="loop">
                                                         <c:choose>
                                                             <c:when test="${loop.first == true}">
                                                                 <li data-target="#carouselAccounts"
@@ -97,7 +88,7 @@
 
                                                 <div class="col-md-12 h-100">
                                                     <div class="carousel-inner h-100">
-                                                        <c:forEach items="${accounts}" var="account" varStatus="loop">
+                                                        <c:forEach items="${accountList}" var="account" varStatus="loop">
                                                             <c:choose>
                                                                 <c:when test="${loop.first == true}">
                                                                     <div class="carousel-item active h-100">
@@ -112,7 +103,7 @@
                                                                                     <div class="card bg-light h-100">
                                                                                         <div class="card-header">
                                                                                             <c:choose>
-                                                                                                <c:when test="${account.isBlocked}">
+                                                                                                <c:when test="${account.blocked}">
                                                                                                     <p class="text-danger float-left">
                                                                                                             ${statusBlocked}
                                                                                                     </p>
@@ -140,7 +131,7 @@
                                                                                         <!-- Show AccountDto Info -->
                                                                                         <div class="col-md-4">
                                                                                             <span class="forward-top-link-img">
-                                                                                                 <a href="?command=showAccountSettings&accountId=${account.accountId}"
+                                                                                                 <a href="/account-setting/${account.number}"
                                                                                                     class="float-right">
                                                                                                     <img src="<c:url value="/images/settings.png"/>"
                                                                                                          alt=""/>
@@ -152,7 +143,7 @@
                                                                                         <!-- Show AccountDto Cards -->
                                                                                         <div class="col-md-4">
                                                                                             <span class="forward-top-link-img">
-                                                                                                 <a href="?command=showAccountCards&accountId=${account.accountId}"
+                                                                                                 <a href="/attached-cards/${account.number}"
                                                                                                     class="float-right">
                                                                                                     <img src="<c:url value="/images/credit-cards.png"/>"
                                                                                                          alt=""/>
@@ -164,7 +155,7 @@
                                                                                         <!-- Show AccountDto Payments -->
                                                                                         <div class="col-md-4">
                                                                                             <span class="forward-top-link-img">
-                                                                                                <a href="?command=showAccountPayments&accountId=${account.accountId}"
+                                                                                                <a href="/show-account-payments/${account.number}"
                                                                                                    class="float-right">
                                                                                                     <img src="<c:url value="/images/payments.png"/>"
                                                                                                          alt=""/>
@@ -191,7 +182,7 @@
                                                                                     <div class="card bg-light h-100">
                                                                                         <div class="card-header">
                                                                                             <c:choose>
-                                                                                                <c:when test="${account.isBlocked}">
+                                                                                                <c:when test="${account.blocked}">
                                                                                                     <p class="text-danger float-left">
                                                                                                             ${statusBlocked}
                                                                                                     </p>
@@ -219,7 +210,7 @@
                                                                                         <!-- Show AccountDto Info -->
                                                                                         <div class="col-md-4">
                                                                                             <span class="forward-top-link-img">
-                                                                                                 <a href="?command=showAccountSettings&accountId=${account.accountId}"
+                                                                                                 <a href="/account-setting/${account.number}"
                                                                                                     class="float-right">
                                                                                                     <img src="<c:url value="/images/settings.png"/>"
                                                                                                          alt=""/>
@@ -231,7 +222,7 @@
                                                                                         <!-- Show AccountDto Cards -->
                                                                                         <div class="col-md-4">
                                                                                             <span class="forward-top-link-img">
-                                                                                                 <a href="?command=showAccountCards&accountId=${account.accountId}"
+                                                                                                 <a href="/attached-cards/${account.number}"
                                                                                                     class="float-right">
                                                                                                     <img src="<c:url value="/images/credit-cards.png"/>"
                                                                                                          alt=""/>

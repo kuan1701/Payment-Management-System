@@ -2,10 +2,10 @@ package com.webproject.pms.service.impl;
 
 import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.UserDao;
-import com.webproject.pms.util.MailSender.MailSender;
 import com.webproject.pms.model.entities.Role;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.UserService;
+import com.webproject.pms.util.MailSender.MailSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.util.StringUtils;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -69,6 +68,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		
 		if (user.getUserId().equals(userId)) {
 			if (userDao.findById(userId).isPresent()) {
+				
 				User updatedUser = userDao.findById(userId).get();
 				updatedUser.setName(user.getName());
 				updatedUser.setSurname(user.getSurname());
@@ -80,6 +80,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			return false;
 		}
 		return false;
+	}
+	
+	@Override
+	public void updatePassword(User user, String newPassword) {
+		String encodedNewPassword = passwordEncoder.encode(newPassword);
+		user.setPassword(encodedNewPassword);
+		userDao.save(user);
 	}
 	
 	@Override
@@ -141,13 +148,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		User phoneDB = userDao.findUserByPhone(user.getPhone());
 		
 		if (userDB != null) {
+			model.addAttribute("registrationError", "This login already exist");
 			model.addAttribute("userLoginError", "This login already exist");
 			return false;
 		} else if (emailDB != null) {
+			model.addAttribute("registrationError", "This email already exist");
 			model.addAttribute("mailError", "This email already exist");
 			return false;
 		}
 		else if(phoneDB != null) {
+			model.addAttribute("registrationError", "This phone already exist");
 			model.addAttribute("phoneError", "This phone already exist");
 			return false;
 		}

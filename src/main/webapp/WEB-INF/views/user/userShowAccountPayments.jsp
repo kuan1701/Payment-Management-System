@@ -84,59 +84,23 @@
                                             <ul class="nav nav-tabs card-header-tabs justify-content-lg-center"
                                                 role="tablist">
                                                 <li class="nav-item-home">
-                                                    <a class="nav-link" role="tab" data-toggle="tab"
-                                                       aria-selected="false"
-                                                       onclick="document.getElementById('form-showAccounts').submit(); return false;">
-                                                        <img src="<c:url value="/images/show-accounts.png"/>"
-                                                             class="icon-sidebar" style="width: 20px; height: 20px;"
-                                                             alt=""/>
+                                                    <a href="${pageContext.request.contextPath}/show-accounts" class="nav-link">
+                                                        <img src="<c:url value="/images/show-accounts.png"/>" class="icon-sidebar"
+                                                             style="width: 20px; height: 20px;" alt=""/>
                                                         ${myAccounts}
                                                     </a>
-                                                    <form action="" method="GET" id="form-showAccounts" role="form">
-                                                        <input type="hidden" name="command" value="showAccounts"/>
-                                                    </form>
                                                 </li>
                                                 <li class="nav-item-home">
-                                                    <a class="nav-link" role="tab" data-toggle="tab"
-                                                       aria-selected="false"
-                                                       onclick="document.getElementById('form-showPayments').submit(); return false;">
-                                                        <img src="<c:url value="/images/show-platezhis.png"/>"
-                                                             class="icon-sidebar" style="height: 17px"
-                                                             alt=""/>
+                                                    <a href="${pageContext.request.contextPath}/show-payments" class="nav-link">
+                                                        <img src="<c:url value="/images/show-payments.png"/>"
+                                                             class="icon-sidebar" style="height: 17px" alt=""/>
                                                         ${myPayments}
                                                     </a>
-                                                    <form action="" method="GET" id="form-showPayments" role="form">
-                                                        <input type="hidden" name="command" value="showPayments"/>
-                                                    </form>
                                                 </li>
                                             </ul>
                                         </div>
 
                                         <div class="card-body card-body-main">
-
-                                            <!-- Return to Accounts -->
-                                            <c:if test="${response eq 'unableGetData' ||
-                                                          response eq 'unableGetAccountId' ||
-                                                          response eq 'showAccountError' ||
-                                                          response eq 'unableGetPayments'}">
-                                                <div class="message-block">
-                                                    <span class="title-label forward-left-link-img">
-                                                        <a href="?command=showAccounts" class="float-left">
-                                                            <img src="<c:url value="/images/return.png"/>"
-                                                                 class="icon-return" alt=""/>
-                                                                ${returnToAllAccounts}
-                                                        </a>
-                                                    </span>
-                                                </div>
-                                            </c:if>
-
-                                            <c:if test="${response ne 'unableGetUserId' &&
-                                                          response ne 'unableGetAccountId' &&
-                                                          response ne 'showAccountError' &&
-                                                          response ne 'unableGetPayments'}">
-
-                                                <jsp:useBean id="viewableAccount" scope="request"
-                                                             type="com.webproject.pms.model.entities.Account"/>
 
                                                 <div class="row">
                                                     <div class="col-xl-12">
@@ -145,7 +109,7 @@
 
                                                                 <!-- AccountDto Status -->
                                                                 <c:choose>
-                                                                    <c:when test="${viewableAccount.isBlocked}">
+                                                                    <c:when test="${account.blocked}">
                                                                         <label class="for-form-label text-center"
                                                                                style="font-size: 18px;">
                                                                                 ${accountStatus}:
@@ -169,12 +133,12 @@
                                                                 <div>
                                                                     <label class="for-form-label"
                                                                            style="margin-top: 12px;">
-                                                                            ${accountNumber}:
+                                                                        ${accountNumber}:
                                                                     </label>
                                                                     <input id="number" name="number"
                                                                            type="text" class="form-control"
                                                                            readonly="readonly"
-                                                                           value="${viewableAccount.number}"/>
+                                                                           value="${account.number}"/>
                                                                     <label for="number"
                                                                            class="default-label">&nbsp;</label>
                                                                 </div>
@@ -182,18 +146,18 @@
                                                                 <!-- AccountDto Balance and Currency -->
                                                                 <div>
                                                                     <label class="for-form-label">
-                                                                            ${accountBalance}:
+                                                                        ${accountBalance}:
                                                                     </label>
                                                                     <div style="display: flex; margin-bottom: 25px;">
                                                                         <input id="balance" name="balance"
                                                                                type="text" class="form-control"
                                                                                style="min-width: 49%; margin-right: 1%;"
                                                                                readonly="readonly"
-                                                                               value="${viewableAccount.balance}"/>
+                                                                               value="${account.balance}"/>
                                                                         <div id="currency"
                                                                              class="bfh-selectbox bfh-currencies"
                                                                              style="min-width: 49%; margin-left: 1%; pointer-events: none;"
-                                                                             data-currency="${viewableAccount.currency}"
+                                                                             data-currency="${account.currency}"
                                                                              data-flags="true">
                                                                         </div>
                                                                         <label for="balance"
@@ -211,7 +175,7 @@
                                                                         <!-- Show AccountDto Info -->
                                                                         <div class="col-md-6">
                                                                             <span class="forward-top-link-img">
-                                                                                <a href="?command=showAccountSettings&accountId=${viewableAccount.accountId}"
+                                                                                <a href="/account-setting/${account.number}"
                                                                                    class="float-right">
                                                                                     <img src="<c:url value="/images/settings.png"/>"
                                                                                          alt=""/>
@@ -223,7 +187,7 @@
                                                                         <!-- Show AccountDto Cards -->
                                                                         <div class="col-md-6">
                                                                             <span class="forward-top-link-img">
-                                                                                <a href="?command=showAccountCards&accountId=${viewableAccount.accountId}"
+                                                                                <a href="/attached-cards/${account.number}"
                                                                                    class="float-right">
                                                                                     <img src="<c:url value="/images/credit-cards.png"/>"
                                                                                          alt=""/>
@@ -249,16 +213,16 @@
                                                                 <div class="card-container">
                                                                     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1">
 
-                                                                        <c:forEach items="${platezhis}"
-                                                                                   var="platezhi">
+                                                                        <c:forEach items="${paymentList}"
+                                                                                   var="payment">
                                                                             <div class="col mb-4">
                                                                                 <div class="card bg-light">
                                                                                     <div class="card-header">
                                                                                         <small class="text-muted float-left">
-                                                                                                ${platezhi.date}
+                                                                                                ${payment.date}
                                                                                         </small>
                                                                                         <c:choose>
-                                                                                            <c:when test="${platezhi.condition}">
+                                                                                            <c:when test="${payment.condition}">
                                                                                                 <small class="text-success float-right">
                                                                                                         ${success}
                                                                                                 </small>
@@ -275,28 +239,28 @@
 
                                                                                         <!-- Outgoing and Incoming Payments -->
                                                                                         <c:choose>
-                                                                                            <c:when test="${platezhi.isOutgoing}">
+                                                                                            <c:when test="${payment.outgoing}">
 
                                                                                                 <!-- Sender and Recipient -->
                                                                                                 <p class="card-title text-muted">
-                                                                                                        ${platezhi.senderNumber}
+                                                                                                        ${payment.senderNumber}
                                                                                                     <span class="forward-right-link-img">&Longrightarrow;</span>
-                                                                                                        ${platezhi.recipientNumber}
+                                                                                                        ${payment.recipientNumber}
                                                                                                 </p>
 
                                                                                                 <!-- Sent Funds -->
                                                                                                 <p class="card-title text-muted">
-                                                                                                        ${sentFunds}: ${platezhi.senderAmount} ${platezhi.senderCurrency}
+                                                                                                        ${sentFunds}: ${payment.senderAmount} ${payment.senderCurrency}
                                                                                                 </p>
 
                                                                                                 <!-- New balance -->
                                                                                                 <p class="card-title text-muted new-balance">
                                                                                                     <span>
-                                                                                                        ${remained}: ${platezhi.newBalance} ${platezhi.senderCurrency}
+                                                                                                        ${remained}: ${payment.newBalance} ${payment.senderCurrency}
                                                                                                     </span>
 
                                                                                                     <!-- Show Platezhi Info -->
-                                                                                                    <a href="?command=showPaymentInfo&paymentId=${platezhi.paymentId}"
+                                                                                                    <a href="?command=showPaymentInfo&paymentId=${payment.paymentId}"
                                                                                                        class="float-right">
                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                              style="margin-left: 7px;"
@@ -304,9 +268,9 @@
                                                                                                     </a>
 
                                                                                                     <!-- Repeat Platezhi -->
-                                                                                                    <a href="?command=repeatPayment&paymentId=${platezhi.paymentId}"
+                                                                                                    <a href="?command=repeatPayment&paymentId=${payment.paymentId}"
                                                                                                        class="float-right">
-                                                                                                        <img src="<c:url value="/images/repeat-platezhi.png"/>"
+                                                                                                        <img src="<c:url value="/images/repeat-payment.png"/>"
                                                                                                              alt="${repeat}"/>
                                                                                                     </a>
                                                                                                 </p>
@@ -315,22 +279,22 @@
 
                                                                                                 <!-- Sender and Recipient -->
                                                                                                 <p class="card-title text-muted">
-                                                                                                        ${platezhi.recipientNumber}
+                                                                                                        ${payment.recipientNumber}
                                                                                                     <span class="forward-left-link-img">&Longleftarrow;</span>
-                                                                                                        ${platezhi.senderNumber}
+                                                                                                        ${payment.senderNumber}
                                                                                                 </p>
 
                                                                                                 <!-- Received Funds -->
                                                                                                 <p class="card-title text-muted">
-                                                                                                        ${receivedFunds}: ${platezhi.recipientAmount} ${platezhi.recipientCurrency}
+                                                                                                        ${receivedFunds}: ${payment.recipientAmount} ${payment.recipientCurrency}
                                                                                                 </p>
 
                                                                                                 <!-- New balance -->
                                                                                                 <p class="card-title text-muted">
-                                                                                                        ${remained}: ${platezhi.newBalance} ${platezhi.recipientCurrency}
+                                                                                                        ${remained}: ${payment.newBalance} ${payment.recipientCurrency}
 
                                                                                                     <!-- Show Platezhi Info -->
-                                                                                                    <a href="?command=showPaymentInfo&paymentId=${platezhi.paymentId}"
+                                                                                                    <a href="?command=showPaymentInfo&paymentId=${payment.paymentId}"
                                                                                                        class="float-right">
                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                              alt="${showInfo}"/>
@@ -358,7 +322,6 @@
                                                         </c:choose>
                                                     </div>
                                                 </div>
-                                            </c:if>
                                         </div>
                                     </div>
                                 </div>

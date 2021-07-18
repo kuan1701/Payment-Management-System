@@ -60,7 +60,7 @@
     </div>
 
     <!-- Alert Success -->
-    <c:if test="${response eq 'registrationSuccess'}">
+    <c:if test="${registrationError eq 'Registration success'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p>
                 <img src="<c:url value="/images/like.png"/>" class="icon-sidebar"
@@ -77,7 +77,7 @@
     </c:if>
 
     <!-- Alert invalidData -->
-    <c:if test="${response eq 'invalidData'}">
+    <c:if test="${registrationError eq 'Invalid data'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="registration.failed"/>!</strong>
                 <fmt:message key="registration.alertIncorrectRegistrationDataError"/>
@@ -89,7 +89,7 @@
     </c:if>
 
     <!-- Alert phoneExistError -->
-    <c:if test="${phoneError}">
+    <c:if test="${registrationError eq 'This phone already exist'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="registration.failed"/>!</strong>
                 <fmt:message key="registration.alertPhoneExistError"/>
@@ -101,7 +101,7 @@
     </c:if>
 
     <!-- Alert emailExistError -->
-    <c:if test="${response eq 'emailExistError'}">
+    <c:if test="${registrationError eq 'This email already exist'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="registration.failed"/>!</strong>
                 <fmt:message key="registration.alertEmailExistError"/>
@@ -112,8 +112,20 @@
         </div>
     </c:if>
 
+    <!-- Alert emailExistError -->
+    <c:if test="${registrationError eq 'This login already exist'}">
+        <div id="alert" class="alert alert-danger fade show" role="alert">
+            <p><strong><fmt:message key="registration.failed"/>!</strong>
+                <fmt:message key="registration.alertLoginExistError"/>
+            </p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:if>
+
     <!-- Alert registrationError -->
-    <c:if test="${response eq 'registrationError'}">
+    <c:if test="${registrationError eq 'Registration error'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="registration.failed"/>!</strong>
                 <fmt:message key="registration.alertRegistrationError"/>

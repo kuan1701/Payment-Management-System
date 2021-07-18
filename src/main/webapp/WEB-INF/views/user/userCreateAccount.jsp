@@ -26,7 +26,7 @@
     <jsp:include page="../template/header.jsp"/>
 
     <!-- Alert unableGetData -->
-    <c:if test="${response eq 'unableGetData'}">
+    <c:if test="${accountError eq 'Create account error'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertUnableGetData"/>
@@ -38,7 +38,7 @@
     </c:if>
 
     <!-- Alert Success -->
-    <c:if test="${response eq 'accountCreatedSuccess'}">
+    <c:if test="${accountError eq 'Create success'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p><strong><fmt:message key="user.page.success"/>!</strong>
                 <fmt:message key="user.page.alertAccountCreatedSuccess"/>
@@ -62,7 +62,7 @@
     </c:if>
 
     <!-- Alert accountCreatedError -->
-    <c:if test="${response eq 'accountCreatedError'}">
+    <c:if test="${accountError eq 'Create error'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/></strong>
                 <fmt:message key="user.page.alertAccountCreatedError"/>
@@ -100,7 +100,7 @@
                                         </h4>
 
                                         <form:form action="" method="POST" role="form" modelAttribute="account">
-                                            <input type="hidden" name="command" value="createAccount"/>
+                                            <input type="hidden" name="userId" value="${account.user.userId}"/>
 
                                             <!-- AccountDto Number -->
                                             <div>

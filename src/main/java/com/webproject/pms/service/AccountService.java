@@ -1,9 +1,9 @@
 package com.webproject.pms.service;
 
 import com.webproject.pms.model.entities.Account;
-import com.webproject.pms.dto.AccountDto;
 import org.springframework.ui.Model;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface AccountService {
@@ -16,19 +16,19 @@ public interface AccountService {
 	
 	Boolean unblockAccount(Long accountId);
 	
-	Boolean registrationAccount(Account Account, Model model);
+	Boolean registrationAccount(Account Account, Model model, Principal principal);
 	
-	List<AccountDto> findAllAccounts();
+	List<Account> findAllAccounts();
 	
-	AccountDto findAccountByAccountId(Long accountId);
+	Account findAccountByAccountId(Long accountId);
 	
-	List<AccountDto> findAllAccountsByUserId(Long userId);
+	List<Account> findAllAccountsByUserId(Long userId);
 	
-	AccountDto findAccountByAccountNumber(String number);
+	Account findAccountByAccountNumber(String number);
 	
 	String findAccountNumberByAccountId(Long accountId);
 	
-	List<AccountDto> searchByCriteria(String number, String min_value, String max_value, String currency);
+	List<Account> searchByCriteria(String number, String min_value, String max_value, String currency);
 	
-	List<AccountDto> searchByCriteria(Long userId, String number, String min_value, String max_value, String currency);
+	List<Account> searchByCriteria(Long userId, String number, String min_value, String max_value, String currency);
 }

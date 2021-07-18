@@ -159,10 +159,6 @@
                                             <h4>
                                                 ${formHeader}
                                             </h4>
-
-                                            <c:if test="${response ne 'unableGetData' &&
-                                                          responce ne 'showActionLogError'}">
-
                                                 <div class="row">
                                                     <div class="col-lg-3 col-xl-3">
                                                         <div class="search-block">
@@ -254,7 +250,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </c:if>
                                         </div>
                                     </div>
                                 </div>

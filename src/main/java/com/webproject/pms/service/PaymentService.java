@@ -3,7 +3,6 @@ package com.webproject.pms.service;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.Payment;
-import com.webproject.pms.dto.PaymentGetDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,17 +23,17 @@ public interface PaymentService {
 	
 	void transaction(Account accountFrom, String cardNumber, BigDecimal amount);
 	
-	PaymentGetDto findPaymentByPaymentId(Long paymentId);
+	Payment findPaymentByPaymentId(Long paymentId);
 	
-	List<PaymentGetDto> findAllPaymentsByAccountId(Long accountId);
+	List<Payment> findAllPaymentsByAccountId(Long accountId);
 	
-	List<PaymentGetDto> findAllPaymentsByUserId(Long userId);
+	List<Payment> findAllPaymentsByUserId(Long userId);
 	
-	List<PaymentGetDto> findLastPaymentsByUserId(Long userId);
+	List<Payment> findLastPaymentsByUserId(Long userId);
 	
-	List<PaymentGetDto> findAllPayments();
+	List<Payment> findAllPayments();
 	
-	List<PaymentGetDto> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate);
+	List<Payment> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate);
 	
-	List<PaymentGetDto> searchByCriteria(Long userId, String startDate, String finalDate);
+	List<Payment> searchByCriteria(Long userId, String startDate, String finalDate);
 }
