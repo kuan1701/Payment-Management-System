@@ -1,12 +1,15 @@
 package com.webproject.pms.service.impl;
 
 import com.webproject.pms.mappers.MapStructMapper;
+import com.webproject.pms.model.dao.AccountDao;
 import com.webproject.pms.model.dao.BankCardDao;
+import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.service.BankCardService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +24,14 @@ public class BankCardServiceImpl implements BankCardService {
 	
 	private static final Logger LOGGER = LogManager.getLogger(BankCardService.class);
 	private final BankCardDao bankCardDao;
+	private final PasswordEncoder passwordEncoder;
 	private final MapStructMapper mapStructMapper;
 	
 	@Autowired
-	public BankCardServiceImpl(BankCardDao bankCardDao, MapStructMapper mapStructMapper) {
+	public BankCardServiceImpl(BankCardDao bankCardDao, AccountDao accountDao, PasswordEncoder passwordEncoder, MapStructMapper mapStructMapper) {
 		
 		this.bankCardDao = bankCardDao;
+		this.passwordEncoder = passwordEncoder;
 		this.mapStructMapper = mapStructMapper;
 	}
 	
@@ -37,31 +42,34 @@ public class BankCardServiceImpl implements BankCardService {
 	}
 	
 	@Override
-	public Boolean addNewBankCard(BankCard bankCard, String month, String year) {
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/yyyy");
+	public Boolean addNewBankCard(BankCard bankCard, Account account) {
+
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/yy");
 		Date date = null;
 		
 		try {
-			date = formatter.parse(month + "/" + year);
+			date = formatter.parse(bankCard.getMonth() + "/" + bankCard.getYear());
 		} catch (ParseException e) {
 			LOGGER.error("ParseException: " + e.getMessage());
 		}
 		
-		if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) == null) {
-			bankCard.setValidity(formatter.format(date));
-			bankCard.setActive(true);
-			bankCardDao.save(bankCard);
-			return true;
+		if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null
+				|| account == null
+		) {
+			return false;
 		}
-		return false;
+		bankCard.setAccount(account);
+		bankCard.setActive(true);
+		bankCard.setValidity(formatter.format(date));
+		bankCardDao.save(bankCard);
+		return true;
 	}
 	
 	@Override
 	public Boolean blockCard(Long cardId) {
 		
 		if (cardId != null) {
-			BankCard bankCard = bankCardDao.getOne(cardId);
+			BankCard bankCard = bankCardDao.getById(cardId);
 			bankCard.setActive(false);
 			bankCardDao.save(bankCard);
 			return true;
@@ -73,7 +81,7 @@ public class BankCardServiceImpl implements BankCardService {
 	public Boolean unblockCard(Long cardId) {
 		
 		if (cardId != null) {
-			BankCard bankCard = bankCardDao.getOne(cardId);
+			BankCard bankCard = bankCardDao.getById(cardId);
 			bankCard.setActive(false);
 			bankCardDao.save(bankCard);
 			return false;

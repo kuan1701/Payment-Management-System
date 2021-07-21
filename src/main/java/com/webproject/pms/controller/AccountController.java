@@ -1,11 +1,11 @@
 package com.webproject.pms.controller;
 
 import com.webproject.pms.model.entities.Account;
+import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,24 +33,18 @@ public class AccountController {
 	 */
 	@GetMapping("/create-account")
 	public String createAccountPage(Model model,
-	                                Principal principal)
-	{
+	                                Principal principal
+	) {
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		model.addAttribute("account", new Account());
 		return "user/userCreateAccount";
 	}
 	
 	@PostMapping("/create-account")
-	public String createAccount(
-			@ModelAttribute("account") Account account,
-			BindingResult bindingResult,
-			Principal principal,
-			Model model) {
-		
-		if (bindingResult.hasErrors()){
-			model.addAttribute("accountError", "Create error");
-			return "user/userCreateAccount";
-		}
+	public String createAccount(Model model,
+	                            Principal principal,
+	                            @ModelAttribute("account") Account account
+	) {
 		if (!accountService.registrationAccount(account, model, principal)){
 			model.addAttribute("accountError", "Create account error");
 			return "user/userCreateAccount";
@@ -70,12 +64,12 @@ public class AccountController {
 	public String showAccounts(Model model,
 	                           Principal principal
 	) {
-		List<Account> accountList = accountService.findAllAccountsByUserId(
-				userService.findUserByUsername(principal.getName()).getUserId());
+		User user = userService.findUserByUsername(principal.getName());
+		List<Account> accountList = accountService.findAllAccountsByUserId(user.getUserId());
 		
 		model.addAttribute("accountsEmpty", accountList.isEmpty());
 		model.addAttribute("accountList", accountList);
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("user", user);
 		return "user/userShowAccounts";
 	}
 	

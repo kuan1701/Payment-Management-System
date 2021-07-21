@@ -14,12 +14,20 @@ public class BankCard {
 	private Long cardId;
 	
 	@NotEmpty
-	@Size(min = 16, max = 16)
+	@Size(max = 19)
 	private String number;
 	
 	@NotEmpty
-	@Size(min = 3, max = 3)
-	private Integer CVV;
+	@Size(max = 3)
+	private String CVV;
+	
+	@NotEmpty
+	@Size(max = 2)
+	private String month;
+	
+	@NotEmpty
+	@Size(max = 2)
+	private String year;
 	
 	private String validity;
 	
@@ -31,8 +39,8 @@ public class BankCard {
 	public BankCard() {
 	}
 	
-	public BankCard(@NotEmpty @Size(min = 16, max = 16) String number,
-	                @NotEmpty @Size(min = 3, max = 3) Integer CVV) {
+	public BankCard(@NotEmpty @Size(max = 19) String number,
+	                @NotEmpty @Size(max = 3) String CVV) {
 		this.number = number;
 		this.CVV = CVV;
 	}
@@ -71,11 +79,11 @@ public class BankCard {
 		this.number = number;
 	}
 	
-	public Integer getCVV() {
+	public String getCVV() {
 		return CVV;
 	}
 	
-	public void setCVV(Integer CVV) {
+	public void setCVV(String CVV) {
 		this.CVV = CVV;
 	}
 	
@@ -101,5 +109,21 @@ public class BankCard {
 	
 	public void setAccount(Account account) {
 		this.account = account;
+	}
+	
+	public String getMonth() {
+		return month;
+	}
+	
+	public void setMonth(String month) {
+		this.month = month;
+	}
+	
+	public String getYear() {
+		return year;
+	}
+	
+	public void setYear(String year) {
+		this.year = year;
 	}
 }

@@ -30,19 +30,17 @@
                                      aria-labelledby="dropdownMenuLink">
                                     <div class="dropdown-item" style="display: grid;">
 
-                                        <form action="${pageContext.request.contextPath}/profile-info/${user.userId}" method="GET" role="form">
-                                            <a href="${pageContext.request.contextPath}/profile-info/${user.userId}">
-                                                <div class="float-left">
-                                                    <p style="margin: 0;">
-                                                        <fmt:message key="header.profile"/>
-                                                    </p>
-                                                </div>
-                                                <div class="float-right">
-                                                    <img src="<c:url value="/images/profile.png"/>" class="icon-header"
-                                                         style="width: 20px;" alt=""/>
-                                                </div>
-                                            </a>
-                                        </form>
+                                        <a href="${pageContext.request.contextPath}/profile-info/${user.userId}">
+                                            <div class="float-left">
+                                                <p style="margin: 0;">
+                                                    <fmt:message key="header.profile"/>
+                                                </p>
+                                            </div>
+                                            <div class="float-right">
+                                                <img src="<c:url value="/images/profile.png"/>" class="icon-header"
+                                                     style="width: 20px;" alt=""/>
+                                            </div>
+                                        </a>
                                     </div>
 
                                     <div class="dropdown-divider"></div>

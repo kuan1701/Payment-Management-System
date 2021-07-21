@@ -150,104 +150,192 @@ function validationCVV() {
 }
 
 /**
- * Month and year validation
+ * Month validation
  */
-let validMsgValidity = document.querySelector("#valid-msg-validity"),
-    errorMsgValidity = document.querySelector("#error-msg-validity"),
-    errorMsgValidityExpired = document.querySelector("#error-msg-validityExpired"),
-    errorMsgValidityExpiredError = document.querySelector("#error-msg-validityExpiredError");
+let validMsgMonth = document.querySelector("#valid-msg-month"),
+    errorMsgMonth = document.querySelector("#error-msg-month");
 
-function resetValidity() {
-    errorMsgValidityExpired.classList.add("invisible");
-    errorMsgValidityExpiredError.classList.add("invisible");
-    validMsgValidity.classList.add("invisible");
-    errorMsgValidity.classList.add("invisible");
-    document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("valid-input");
-    document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("error-input");
-    document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("valid-input");
-    document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("error-input");
+function resetMonth() {
+    validMsgMonth.classList.add("invisible");
+    errorMsgMonth.classList.add("invisible");
+    month.classList.remove("valid-input");
+    month.classList.remove("error-input");
 }
 
-function validValidity() {
-    validMsgValidity.classList.remove("invisible");
-    errorMsgValidity.classList.add("invisible");
-    document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.add("valid-input");
-    document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("error-input");
-    document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.add("valid-input");
-    document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("error-input");
+function validMonth() {
+    validMsgMonth.classList.remove("invisible");
+    errorMsgMonth.classList.add("invisible");
+    month.classList.add("valid-input");
+    month.classList.remove("error-input");
 }
 
-function notValidValidity() {
-    validMsgValidity.classList.add("invisible");
-    errorMsgValidity.classList.remove("invisible");
-    document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("valid-input");
-    document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.add("error-input");
-    document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("valid-input");
-    document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.add("error-input");
+function notValidMonth() {
+    validMsgMonth.classList.add("invisible");
+    errorMsgMonth.classList.remove("invisible");
+    month.classList.remove("valid-input");
+    month.classList.add("error-input");
 }
 
-function validityExpired() {
-    errorMsgValidityExpired.classList.remove("invisible");
-    errorMsgValidityExpiredError.classList.add("invisible");
-    validMsgValidity.classList.add("invisible");
-    errorMsgValidity.classList.add("invisible");
-    document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("valid-input");
-    document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.add("error-input");
-    document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("valid-input");
-    document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.add("error-input");
-}
-
-selectbox_month.on('hide.bfhselectbox', () => validationMonth());
-selectbox_year.on('hide.bfhselectbox', () => validationYear());
-
-selectbox_month.on('show.bfhselectbox', () => resetValidity());
-selectbox_year.on('show.bfhselectbox', () => resetValidity());
+month.addEventListener('click', resetMonth);
+month.addEventListener('blur', validationMonth);
+month.addEventListener('keyup', validationMonth);
+month.addEventListener('change', validationMonth);
 
 function validationMonth() {
-    resetValidity();
+    resetMonth();
 
-    month.value = $(selectbox_month).val();
-    if (month.value.trim() === null || month.value.trim() === "" ||
-        year.value.trim() === null || year.value.trim() === "") {
-        notValidValidity();
+    if (month.value.trim() === "" || month.value.trim().length < 2) {
+        notValidMonth();
+    } else if (month.value.match(/[^0-9]/g) != null) {
+        notValidMonth();
     } else {
-        if (validationDate(year.value, month.value)) {
-            validValidity();
-        } else {
-            validityExpired();
-        }
+        validMonth();
     }
 }
+
+/**
+ * Year validation
+ */
+let validMsgYear = document.querySelector("#valid-msg-year"),
+    errorMsgYear = document.querySelector("#error-msg-year");
+
+function resetYear() {
+    validMsgYear.classList.add("invisible");
+    errorMsgYear.classList.add("invisible");
+    year.classList.remove("valid-input");
+    year.classList.remove("error-input");
+}
+
+function validYear() {
+    validMsgYear.classList.remove("invisible");
+    errorMsgYear.classList.add("invisible");
+    year.classList.add("valid-input");
+    year.classList.remove("error-input");
+}
+
+function notValidYear() {
+    validMsgYear.classList.add("invisible");
+    errorMsgYear.classList.remove("invisible");
+    year.classList.remove("valid-input");
+    year.classList.add("error-input");
+}
+
+year.addEventListener('click', resetYear);
+year.addEventListener('blur', validationYear);
+year.addEventListener('keyup', validationYear);
+year.addEventListener('change', validationYear);
 
 function validationYear() {
-    resetValidity();
+    resetYear();
 
-    year.value = $(selectbox_year).val();
-    if (month.value.trim() === null || month.value.trim() === "" ||
-        year.value.trim() === null || year.value.trim() === "") {
-        notValidValidity();
+    if (year.value.trim() === "" || year.value.trim().length < 2) {
+        notValidYear();
+    } else if (year.value.match(/[^0-9]/g) != null) {
+        notValidYear();
     } else {
-        if (validationDate(year.value, month.value)) {
-            validValidity();
-        } else {
-            validityExpired();
-        }
+        validYear();
     }
 }
 
-function validationDate(year, month) {
-    let date = new Date();
-    let current_month = date.getMonth();
-    let current_year = date.getFullYear();
-
-    if (year > current_year) {
-        return true;
-    } else if (year == current_year) {
-        return month - 1 > current_month;
-    } else {
-        return false;
-    }
-}
+/**
+ * Month and year validation
+ */
+// let validMsgValidity = document.querySelector("#valid-msg-validity"),
+//     errorMsgValidity = document.querySelector("#error-msg-validity"),
+//     errorMsgValidityExpired = document.querySelector("#error-msg-validityExpired"),
+//     errorMsgValidityExpiredError = document.querySelector("#error-msg-validityExpiredError");
+//
+// function resetValidity() {
+//     errorMsgValidityExpired.classList.add("invisible");
+//     errorMsgValidityExpiredError.classList.add("invisible");
+//     validMsgValidity.classList.add("invisible");
+//     errorMsgValidity.classList.add("invisible");
+//     document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("valid-input");
+//     document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("error-input");
+//     document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("valid-input");
+//     document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("error-input");
+// }
+//
+// function validValidity() {
+//     validMsgValidity.classList.remove("invisible");
+//     errorMsgValidity.classList.add("invisible");
+//     document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.add("valid-input");
+//     document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("error-input");
+//     document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.add("valid-input");
+//     document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("error-input");
+// }
+//
+// function notValidValidity() {
+//     validMsgValidity.classList.add("invisible");
+//     errorMsgValidity.classList.remove("invisible");
+//     document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("valid-input");
+//     document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.add("error-input");
+//     document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("valid-input");
+//     document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.add("error-input");
+// }
+//
+// function validityExpired() {
+//     errorMsgValidityExpired.classList.remove("invisible");
+//     errorMsgValidityExpiredError.classList.add("invisible");
+//     validMsgValidity.classList.add("invisible");
+//     errorMsgValidity.classList.add("invisible");
+//     document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.remove("valid-input");
+//     document.querySelector(".bfh-selectbox-month .bfh-selectbox-toggle").classList.add("error-input");
+//     document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.remove("valid-input");
+//     document.querySelector(".bfh-selectbox-year .bfh-selectbox-toggle").classList.add("error-input");
+// }
+//
+// selectbox_month.on('hide.bfhselectbox', () => validationMonth());
+// selectbox_year.on('hide.bfhselectbox', () => validationYear());
+//
+// selectbox_month.on('show.bfhselectbox', () => resetValidity());
+// selectbox_year.on('show.bfhselectbox', () => resetValidity());
+//
+// function validationMonth() {
+//     resetValidity();
+//
+//     month.value = $(selectbox_month).val();
+//     if (month.value.trim() === null || month.value.trim() === "" ||
+//         year.value.trim() === null || year.value.trim() === "") {
+//         notValidValidity();
+//     } else {
+//         if (validationDate(year.value, month.value)) {
+//             validValidity();
+//         } else {
+//             validityExpired();
+//         }
+//     }
+// }
+//
+// function validationYear() {
+//     resetValidity();
+//
+//     year.value = $(selectbox_year).val();
+//     if (month.value.trim() === null || month.value.trim() === "" ||
+//         year.value.trim() === null || year.value.trim() === "") {
+//         notValidValidity();
+//     } else {
+//         if (validationDate(year.value, month.value)) {
+//             validValidity();
+//         } else {
+//             validityExpired();
+//         }
+//     }
+// }
+//
+// function validationDate(year, month) {
+//     let date = new Date();
+//     let current_month = date.getMonth();
+//     let current_year = date.getFullYear();
+//
+//     if (year > current_year) {
+//         return true;
+//     } else if (year == current_year) {
+//         return month - 1 > current_month;
+//     } else {
+//         return false;
+//     }
+// }
 
 /**
  * Checks for errors on the page
@@ -272,6 +360,20 @@ submitBtn.addEventListener('click', (event) => {
     if (CVV.classList.contains("error-input")) {
         event.preventDefault();
         notValidCVV();
+        return false;
+    }
+
+    validationMonth();
+    if (month.classList.contains("error-input")) {
+        event.preventDefault();
+        notValidMonth();
+        return false;
+    }
+
+    validationYear();
+    if (year.classList.contains("error-input")) {
+        event.preventDefault();
+        notValidYear();
         return false;
     }
 

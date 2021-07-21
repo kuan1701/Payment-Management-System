@@ -10,7 +10,7 @@
 <div class="list-group list-group-flush sidebar" role="tablist">
 
     <c:if test="${user.role.id == 1}">
-        <a href="/my-account" class="list-group-item list-group-item-action sidebar-header list-group-item-sidebar">
+        <a href="${pageContext.request.contextPath}/my-account" class="list-group-item list-group-item-action sidebar-header list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/homepage-user.png"/>" class="icon-sidebar" alt=""/>
             </div>
@@ -21,7 +21,7 @@
     </c:if>
 
     <c:if test="${user.role.id == 1}">
-        <a href="/create-account" class="list-group-item list-group-item-action list-group-item-sidebar">
+        <a href="${pageContext.request.contextPath}/create-account" class="list-group-item list-group-item-action list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/create-account.png"/>" class="icon-sidebar" alt=""/>
             </div>
@@ -32,7 +32,7 @@
     </c:if>
 
     <c:if test="${user.role.id == 1}">
-        <a href="/attach-card" class="list-group-item list-group-item-action list-group-item-sidebar">
+        <a href="${pageContext.request.contextPath}/attach-card" class="list-group-item list-group-item-action list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/attach-card.png"/>" class="icon-sidebar" alt=""/>
             </div>
@@ -54,7 +54,7 @@
     </c:if>
 
     <c:if test="${user.role.id == 1}">
-        <a href="/support" class="list-group-item list-group-item-action list-group-item-sidebar">
+        <a href="${pageContext.request.contextPath}/support" class="list-group-item list-group-item-action list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/user-support.png"/>" class="icon-sidebar" alt=""/>
             </div>

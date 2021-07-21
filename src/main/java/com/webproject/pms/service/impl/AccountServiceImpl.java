@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
 	public Boolean blockAccount(Long accountId) {
 		
 		if (accountId != null) {
-			Account account = accountDao.getOne(accountId);
+			Account account = accountDao.getById(accountId);
 			account.setBlocked(true);
 			accountDao.save(account);
 			return true;
@@ -73,7 +73,7 @@ public class AccountServiceImpl implements AccountService {
 	public Boolean unblockAccount(Long accountId) {
 		
 		if (accountId != null) {
-			Account account = accountDao.getOne(accountId);
+			Account account = accountDao.getById(accountId);
 			account.setBlocked(false);
 			accountDao.save(account);
 			return true;

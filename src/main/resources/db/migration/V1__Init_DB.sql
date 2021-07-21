@@ -15,9 +15,11 @@ Hibernate:
 create table bank_card
 (
     card_id bigint not null auto_increment,
-     cvv integer,
+     cvv varchar(3),
+     month varchar(3),
+     year varchar(3),
      is_active bit,
-     number varchar(16),
+     number varchar(19),
      validity varchar(255),
      account_account_id bigint,
      primary key (card_id)

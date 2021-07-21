@@ -1,13 +1,14 @@
 package com.webproject.pms.controller;
 
+import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
+import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
 import com.webproject.pms.service.impl.BankCardServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -33,10 +34,39 @@ public class CardController {
 	 */
 	@GetMapping("/attach-card")
 	public String attachCard(Model model,
-	                         Principal principal)
-	{
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+	                         Principal principal
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		List<Account> accounts = accountService.findAllAccountsByUserId(user.getUserId());
+		
+		model.addAttribute("user", user);
+		model.addAttribute("accounts", accounts);
 		model.addAttribute("bankCard", new BankCard());
+		return "user/userAttachCard";
+	}
+	
+	@PostMapping("/attach-card")
+	public String attachCard(
+			Model model,
+			Principal principal,
+			@RequestParam("accountNumber") String accountNumber,
+			@ModelAttribute("card") BankCard bankCard
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		List<Account> accounts = accountService.findAllAccountsByUserId(user.getUserId());
+		Account account = accountService.findAccountByAccountId(Long.parseLong(accountNumber));
+		
+		model.addAttribute("user", user);
+		model.addAttribute("accounts", accounts);
+		model.addAttribute("card", bankCard);
+		
+		
+		if (!bankCardService.addNewBankCard(bankCard, account)){
+			model.addAttribute("cardError", "Card attachment error");
+			return "user/userAttachCard";
+		} else {
+			model.addAttribute("accountError", "Card attached successfully");
+		}
 		return "user/userAttachCard";
 	}
 	
@@ -53,8 +83,7 @@ public class CardController {
 	                                @PathVariable("accountNumber") String number
 	) {
 		List<BankCard> bankCardList = bankCardService.findCardsByAccountId(
-				accountService.findAccountByAccountNumber(number).getAccountId()
-		);
+				accountService.findAccountByAccountNumber(number).getAccountId());
 		
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		model.addAttribute("bankCardList", bankCardList);
@@ -62,5 +91,6 @@ public class CardController {
 		model.addAttribute("account", accountService.findAccountByAccountNumber(number));
 		return "user/userShowAccountCards";
 	}
+	
 	
 }

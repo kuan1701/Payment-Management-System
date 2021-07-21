@@ -77,7 +77,7 @@ public class UserController {
 		}
 		userService.updateUser(user, userId);
 		model.addAttribute("updateInfo", "Update data successfully");
-		return "user/userUpdatePersonalData";
+		return "redirect:/profile-info/{userId}";
 	}
 	
 	/**

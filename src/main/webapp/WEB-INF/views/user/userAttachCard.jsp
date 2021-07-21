@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -36,7 +37,7 @@
     </c:if>
 
     <!-- Alert Success -->
-    <c:if test="${response eq 'cardAttachedSuccess'}">
+    <c:if test="${cardError eq 'Card attached successfully'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p><strong><fmt:message key="user.page.success"/>!</strong>
                 <fmt:message key="user.page.alertCardAttachedSuccess"/>
@@ -60,7 +61,7 @@
     </c:if>
 
     <!-- Alert cardAlreadyAttachedError -->
-    <c:if test="${response eq 'cardAlreadyAttachedError'}">
+    <c:if test="${cardError eq 'cardAlreadyAttachedError'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertCardAlreadyAttachedError"/>
@@ -84,7 +85,7 @@
     </c:if>
 
     <!-- Alert cardAttachedError -->
-    <c:if test="${response eq 'cardAttachedError'}">
+    <c:if test="${cardError eq 'Card attachment error'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/></strong>
                 <fmt:message key="user.page.alertCardAttachedError"/>
@@ -113,10 +114,14 @@
                 <fmt:message key="user.attach_card.accountIdError" var="accountIdError"/>
                 <fmt:message key="user.attach_card.numberError" var="numberError"/>
                 <fmt:message key="user.attach_card.cvvError" var="cvvError"/>
+                <fmt:message key="user.attach_card.monthError" var="monthError"/>
+                <fmt:message key="user.attach_card.yearError" var="yearError"/>
                 <fmt:message key="user.attach_card.validityError" var="validityError"/>
                 <fmt:message key="user.attach_card.validityExpiredError" var="validityExpiredError"/>
                 <fmt:message key="user.attach_card.tooltipCardNumber" var="tooltipCardNumber"/>
                 <fmt:message key="user.attach_card.tooltipCVV" var="tooltipCVV"/>
+                <fmt:message key="user.attach_card.tooltipMonth" var="tooltipMonth"/>
+                <fmt:message key="user.attach_card.tooltipYear" var="tooltipYear"/>
                 <fmt:message key="registration.correct" var="correct"/>
 
                 <div class="page-content container-fluid">
@@ -129,40 +134,21 @@
                                         <h4>
                                             ${formHeader}
                                         </h4>
-
-                                        <form action="" method="POST" role="form">
-                                            <input type="hidden" name="command" value="attachCard"/>
-
-                                            <!-- AccountId -->
-                                            <input type="hidden" id="accountId" name="accountId"
-                                                   value="${accountIdValue}"/>
+                                        <c:url value="/attach-card" var="var"/>
+                                        <form:form action="${var}" method="POST" role="form" modelAttribute="bankCard">
+                                            <input type="hidden" name="accountId" value="${bankCard.account.accountId}">
 
                                             <!-- Select AccountId -->
-                                            <div>
+                                            <div style="height: 61px; margin-bottom: 30px">
                                                 <label class="for-form-label">
-                                                    ${selectAccount}:
+                                                        ${selectAccount}:
                                                 </label>
-                                                <div class="bfh-selectbox selectbox-account-id">
-                                                    <c:choose>
-                                                        <c:when test="${accountIdValue == null}">
-                                                            <div data-value=""></div>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <div data-value="${accountIdValue}">${numberByAccountIdValue}</div>
-                                                        </c:otherwise>
-                                                    </c:choose>
+
+                                                <select name="accountNumber" class="selectAccount">
                                                     <c:forEach items="${accounts}" var="account">
-                                                        <div data-value="${account.accountId}">${account.number}</div>
+                                                        <option value="${account.accountId}">${account.number}</option>
                                                     </c:forEach>
-                                                </div>
-                                                <label for="accountId" class="default-label">
-                                                    <span id="valid-msg-accountId" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
-                                                    </span>
-                                                    <span id="error-msg-accountId" class="error-msg invisible">
-                                                        ${accountIdError}
-                                                    </span>
-                                                </label>
+                                                </select>
                                             </div>
 
                                             <!-- Number -->
@@ -196,103 +182,69 @@
                                                         ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                     </span>
                                                     <span id="error-msg-cvv" class="error-msg invisible">
-                                                        ${cvvError}
+                                                            ${cvvError}
                                                     </span>
                                                 </label>
                                             </div>
 
-                                            <!-- Month -->
-                                            <input type="hidden" id="month" name="month" value="${monthValue}"/>
-
-                                            <!-- Year -->
-                                            <input type="hidden" id="year" name="year" value="${yearValue}"/>
-
                                             <!-- Select Month and Year -->
                                             <div>
                                                 <div class="form-group" id="expiration-date"
-                                                     style="display: flex; align-items: center; margin: 10px 0 0 0;">
-                                                    <label class="for-form-label" style="width: 50%;">
-                                                        ${validity}:
+                                                     style="display: flex; justify-content: center;
+                                                     align-items: center; margin: 0 0 0 0;">
+                                                    <label class="for-form-label" style="width: 15%;">
+                                                            ${validity}:
                                                     </label>
 
                                                     <!-- Select Month -->
-                                                    <div class="bfh-selectbox bfh-selectbox-month">
-                                                        <c:choose>
-                                                            <c:when test="${monthValue == null}">
-                                                                <div data-value="">${month}</div>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <div data-value="${monthValue}">${monthValue}</div>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                        <div data-value="01">01</div>
-                                                        <div data-value="02">02</div>
-                                                        <div data-value="03">03</div>
-                                                        <div data-value="04">04</div>
-                                                        <div data-value="05">05</div>
-                                                        <div data-value="06">06</div>
-                                                        <div data-value="07">07</div>
-                                                        <div data-value="08">08</div>
-                                                        <div data-value="09">09</div>
-                                                        <div data-value="10">10</div>
-                                                        <div data-value="11">11</div>
-                                                        <div data-value="12">12</div>
+                                                    <div style="width: 100px;">
+                                                        <input id="month" name="month" type="text" class="form-control"
+                                                               data-toggle="tooltip"
+                                                               data-title="${tooltipMonth}"
+                                                               maxlength="2" onkeypress="inputOnlyNumbers();"
+                                                               placeholder="${month}*"/>
+                                                        <label for="month" class="default-label">
+                                                    <span id="valid-msg-month" class="valid-msg invisible">
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt=""/>
+                                                    </span>
+                                                            <span id="error-msg-month" class="error-msg invisible">
+                                                                    ${monthError}
+                                                            </span>
+                                                        </label>
+                                                    </div>
+
+                                                    <div style="margin-left: 10px">
+                                                        <h2>/</h2>
                                                     </div>
 
                                                     <!-- Select Year -->
-                                                    <div class="bfh-selectbox bfh-selectbox-year">
-                                                        <c:choose>
-                                                            <c:when test="${yearValue == null}">
-                                                                <div data-value="">${year}</div>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <div data-value="${yearValue}">${yearValue}</div>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                        <div data-value="2020">2020</div>
-                                                        <div data-value="2021">2021</div>
-                                                        <div data-value="2022">2022</div>
-                                                        <div data-value="2023">2023</div>
-                                                        <div data-value="2024">2024</div>
-                                                        <div data-value="2025">2025</div>
-                                                        <div data-value="2026">2026</div>
-                                                        <div data-value="2027">2027</div>
+                                                    <div style="width: 100px; margin-left: 10px;">
+                                                        <input id="year" name="year" type="text" class="form-control"
+                                                               data-toggle="tooltip"
+                                                               data-title="${tooltipYear}"
+                                                               maxlength="2" onkeypress="inputOnlyNumbers();"
+                                                               placeholder="${year}*"/>
+                                                        <label for="year" class="default-label">
+                                                    <span id="valid-msg-year" class="valid-msg invisible">
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt=""/>
+                                                    </span>
+                                                            <span id="error-msg-year" class="error-msg invisible">
+                                                                    ${yearError}
+                                                            </span>
+                                                        </label>
                                                     </div>
                                                 </div>
-
-                                                <label for="expiration-date" class="default-label">
-                                                    <span id="valid-msg-validity" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
-                                                    </span>
-                                                    <span id="error-msg-validity" class="error-msg invisible">
-                                                        ${validityError}
-                                                    </span>
-                                                    <span id="error-msg-validityExpired" class="error-msg invisible">
-                                                        ${validityExpiredError}
-                                                    </span>
-                                                    <span id="error-msg-validityExpiredError"
-                                                          class="error-msg invisible">
-                                                        ${validityExpiredError}
-
-                                                        <c:if test="${response eq 'validityExpiredError'}">
-                                                            <script>
-                                                                document.querySelector("#error-msg-validityExpiredError").classList.remove("invisible");
-                                                                document.querySelector("#error-msg-validityExpired").classList.add("invisible");
-                                                                document.querySelector("#valid-msg-validity").classList.add("invisible");
-                                                                document.querySelector("#error-msg-validity").classList.add("invisible");
-                                                            </script>
-                                                        </c:if>
-                                                    </span>
-                                                </label>
                                             </div>
 
                                             <!-- Submit -->
                                             <div class="action" style="padding: 20px 0 5px 0">
                                                 <button id="submit" type="submit" class="btn btn-primary signup">
-                                                    ${attachCard}
+                                                        ${attachCard}
                                                 </button>
                                             </div>
-                                        </form>
+                                        </form:form>
                                     </div>
                                 </div>
                             </div>
