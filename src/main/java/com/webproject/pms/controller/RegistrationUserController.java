@@ -36,11 +36,10 @@ public class RegistrationUserController {
 	}
 	
 	@PostMapping("/registration")
-	public String registrationUser(
-			@ModelAttribute("user") @Valid User user,
-			BindingResult bindingResult,
-			Model model) {
-		
+	public String registrationUser(Model model,
+	                               BindingResult bindingResult,
+	                               @ModelAttribute("user") @Valid User user
+	) {
 		if (bindingResult.hasErrors()){
 			model.addAttribute("registrationError", "Invalid data");
 			return "registration";
@@ -65,8 +64,9 @@ public class RegistrationUserController {
 	 * @return activationSuccess page
 	 */
 	@GetMapping("/activate/{code}")
-	public String activate(Model model, @PathVariable String code) {
-		
+	public String activate(Model model,
+	                       @PathVariable String code
+	) {
 		boolean isActivated = userService.activateUser(code);
 		
 		if (isActivated) {

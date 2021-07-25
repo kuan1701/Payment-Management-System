@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -63,17 +64,17 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form action="/" method="POST" role="form">
-                        <input type="hidden" name="command" value="makePayment"/>
-                        <input type="hidden" name="caseValue" value="on"/>
-                        <input type="hidden" name="accountId" id="accountIdParam-AN"/>
-                        <input type="hidden" name="accountNumber" id="accountNumberParam-AN"/>
+                    <form:form action="/make-payments" method="POST" role="form" modelAttribute="payment">
+                        <%--                        <input type="hidden" name="command" value="makePayment"/>--%>
+<%--                        <input type="hidden" name="caseValue" value="on"/>--%>
+                        <input type="hidden" name="accountFromId" id="accountIdParam-AN"/>
+                        <input type="hidden" name="accountToNumber" id="accountNumberParam-AN"/>
                         <input type="hidden" name="amount" id="amountParam-AN"/>
                         <input type="hidden" name="appointment" id="appointmentParam-AN"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
                         </button>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>
@@ -121,8 +122,10 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form action="" method="POST" role="form">
-                        <input type="hidden" name="command" value="makePayment">
+
+                    <c:url value="/make-payments" var="var"/>
+                    <form:form action="${var}" method="POST" role="form" modelAttribute="payment">
+                        <%--                        <input type="hidden" name="command" value="makePayment">--%>
                         <input type="hidden" name="caseValue" value="off"/>
                         <input type="hidden" name="accountId" id="accountIdParam-CN"/>
                         <input type="hidden" name="cardNumber" id="cardNumberParam-CN"/>
@@ -132,7 +135,7 @@
                                 onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
                         </button>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>
@@ -143,7 +146,7 @@
     <jsp:include page="../template/header.jsp"/>
 
     <!-- Alert unableGetData -->
-    <c:if test="${response eq 'unableGetData'}">
+    <c:if test="${paymentError eq 'unableGetData'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertUnableGetData"/>
@@ -155,7 +158,7 @@
     </c:if>
 
     <!-- Alert unableGetPaymentId -->
-    <c:if test="${response eq 'unableGetPaymentId'}">
+    <c:if test="${paymentError eq 'unableGetPaymentId'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/></strong>
                 <fmt:message key="user.page.alertUnableGetPaymentIdError"/>
@@ -167,7 +170,7 @@
     </c:if>
 
     <!-- Alert unableGetPayment -->
-    <c:if test="${response eq 'unableGetPayment'}">
+    <c:if test="${paymentError eq 'unableGetPayment'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/></strong>
                 <fmt:message key="user.page.alertUnableGetPaymentError"/>
@@ -179,7 +182,7 @@
     </c:if>
 
     <!-- Alert invalidData -->
-    <c:if test="${response eq 'invalidData'}">
+    <c:if test="${paymentError eq '00'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertInvalidDataError"/>
@@ -191,7 +194,7 @@
     </c:if>
 
     <!-- Alert Success -->
-    <c:if test="${response eq 'paymentCompletedSuccess'}">
+    <c:if test="${paymentError eq 'paymentCompletedSuccess'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p><strong><fmt:message key="user.page.success"/>!</strong>
                 <fmt:message key="user.page.alertPaymentCompletedSuccess"/>
@@ -203,7 +206,7 @@
     </c:if>
 
     <!-- Alert recipientAccountNotExistError -->
-    <c:if test="${response eq 'recipientAccountNotExistError'}">
+    <c:if test="${paymentError eq 'recipientAccountNotExistError'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertRecipientAccountNotExistError"/>
@@ -215,7 +218,7 @@
     </c:if>
 
     <!-- Alert paymentToYourAccountError -->
-    <c:if test="${response eq 'paymentToYourAccountError'}">
+    <c:if test="${paymentError eq 'paymentToYourAccountError'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertPaymentToYourAccountError"/>
@@ -227,7 +230,7 @@
     </c:if>
 
     <!-- Alert senderAccountBlockedError -->
-    <c:if test="${response eq 'senderAccountBlockedError'}">
+    <c:if test="${paymentError eq 'senderAccountBlockedError'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertSenderAccountBlockedError"/>
@@ -239,7 +242,7 @@
     </c:if>
 
     <!-- Alert recipientAccountBlockedError -->
-    <c:if test="${response eq 'recipientAccountBlockedError'}">
+    <c:if test="${paymentError eq 'recipientAccountBlockedError'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertRecipientAccountBlockedError"/>
@@ -251,7 +254,7 @@
     </c:if>
 
     <!-- Alert recipientCardNotExistOrBlockedError -->
-    <c:if test="${response eq 'recipientCardNotExistOrBlockedError'}">
+    <c:if test="${paymentError eq 'recipientCardNotExistOrBlockedError'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertRecipientCardNotExistOrBlockedError"/>
@@ -263,7 +266,7 @@
     </c:if>
 
     <!-- Alert insufficientFundsError -->
-    <c:if test="${response eq 'insufficientFundsError'}">
+    <c:if test="${paymentError eq 'insufficientFundsError'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertInsufficientFundsError"/>
@@ -309,54 +312,52 @@
                                         <h4>
                                             ${formHeader}
                                         </h4>
-
-                                        <form action="/" method="POST" role="form">
-                                            <input type="hidden" name="command" value="makePayment"/>
+                                        <c:url value="/make-payments" var="var"/>
+                                        <form:form action="${var}" method="POST"
+                                                   role="form" modelAttribute="payment">
 
                                             <!-- A variable that allows you to determine which command was invoked -->
                                             <input type="hidden" id="isRepeatCommand" name="isRepeatCommand"
                                                    value="${isRepeatCommandValue}"/>
 
                                             <!-- AccountId -->
-                                            <input type="hidden" id="accountId" name="accountId"
-                                                   value="${accountIdValue}"/>
+                                            <input type="hidden" id="accountId" name="accountFromId"
+                                                   value="${account.accountId}"/>
 
                                             <!-- Number by AccountId -->
                                             <input type="hidden" id="numberByAccountId" name="numberByAccountId"
-                                                   value="${numberByAccountIdValue}"/>
+                                                   value="${account.number}"/>
+
+                                            <!-- Exchange Rate -->
+                                            <input type="hidden" name="exchangeRate" value="1.0"/>
 
                                             <!-- Select AccountId -->
                                             <div>
                                                 <label class="for-form-label">
-                                                    ${fromAccount}:
+                                                        ${fromAccount}:
                                                 </label>
                                                 <div>
                                                     <div class="bfh-selectbox">
-                                                        <c:choose>
-                                                            <c:when test="${accountIdValue == null}">
-                                                                <div data-value=""></div>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <div data-value="${accountIdValue}">${numberByAccountIdValue}</div>
-                                                            </c:otherwise>
-                                                        </c:choose>
                                                         <c:forEach items="${accounts}" var="account">
                                                             <div data-value="${account.accountId}">${account.number}</div>
                                                         </c:forEach>
+<%--                                                            <select name="accountFromId" class="selectAccount">--%>
+<%--                                                                <c:forEach items="${accounts}" var="account">--%>
+<%--                                                                    <option value="${account.accountId}">${account.number}</option>--%>
+<%--                                                                </c:forEach>--%>
+<%--                                                            </select>--%>
                                                     </div>
                                                 </div>
                                                 <label for="accountId" class="default-label">
                                                     <span id="valid-msg-accountId" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt=""/>
                                                     </span>
                                                     <span id="error-msg-accountId" class="error-msg invisible">
-                                                        ${accountIdError}
+                                                            ${accountIdError}
                                                     </span>
                                                 </label>
                                             </div>
-
-                                            <!-- Switch position -->
-                                            <input type="hidden" id="case" name="case" value="${caseValue}"/>
 
                                             <!-- Switch -->
                                             <input id="switcher" class="toggle-btn" type="checkbox"/>
@@ -369,11 +370,13 @@
                                                     <span class="switcher-case-1">${recipientsAccount}</span>
 
                                                     <div style="margin-top: 4px;">
-                                                        <input id="accountNumber" name="accountNumber" type="text"
+                                                        <input id="accountNumber" name="accountToNumber" type="text"
                                                                class="form-control" style="margin-top: 0;"
                                                                data-toggle="tooltip-left"
                                                                data-title="${tooltipAccountNumber}"
-                                                               maxlength="20" onkeypress="inputOnlyNumbers();"
+                                                               maxlength="20"
+                                                               autocomplete="on"
+                                                               onkeypress="inputOnlyNumbers();"
                                                                placeholder="${numberAccount}*"
                                                                value="${accountNumberValue}"/>
                                                         <label for="accountNumber" class="default-label">
@@ -400,6 +403,7 @@
                                                                data-toggle="tooltip"
                                                                data-title="${tooltipCardNumber}"
                                                                maxlength="19"
+                                                               disabled="disabled"
                                                                oninput="this.value=inputCardNumber(this.value)"
                                                                placeholder="${numberCard}*"
                                                                value="${cardNumberValue}"/>
@@ -451,10 +455,10 @@
                                             <!-- Submit -->
                                             <div class="action" style="padding: 30px 0 5px 0">
                                                 <button id="submit" type="button" class="btn btn-primary signup">
-                                                    ${makePaymentButton}
+                                                        ${makePaymentButton}
                                                 </button>
                                             </div>
-                                        </form>
+                                        </form:form>
                                     </div>
                                 </div>
                             </div>
@@ -468,7 +472,8 @@
 </div>
 </body>
 <script src="<c:url value="/js/validator_userMakePayment.js"/>"></script>
-<script src="<c:url value="/js/modalWindow_userMakePayment.js"/>"></script></script>
+<script src="<c:url value="/js/modalWindow_userMakePayment.js"/>"></script>
+
 <script>
     $(function () {
         $('#amount').spinner({
@@ -491,11 +496,11 @@
         on_off = document.querySelector("#case").value;
         console.log("load: " + on_off);
 
-        if (on_off === 'off') {
-            off();
-            resetAccountNumber();
-        } else if (on_off === 'on') {
+        if (on_off === 'on') {
             on();
+            resetAccountNumber();
+        } else if (on_off === 'off') {
+            off();
             resetCardNumber();
         }
 
@@ -503,10 +508,10 @@
             validationAccountId();
             validationAmount();
 
-            if (on_off === 'off') {
+            if (on_off === 'on') {
                 validationCardNumber();
                 $('.toggle-btn-label').css('transform', 'rotate(180deg)');
-            } else if (on_off === 'on') {
+            } else if (on_off === 'off') {
                 validationAccountNumber();
             }
         }
@@ -515,40 +520,40 @@
     document.querySelector(".toggle-btn-label").addEventListener('click', function () {
         clear();
 
-        if (on_off === 'off') {
-            off();
-        } else if (on_off === 'on') {
+        if (on_off === 'on') {
             on();
+        } else if (on_off === 'off') {
+            off();
         }
 
         console.log(on_off);
     });
 
     function clear() {
-        switcher_case_1.classList.remove("on");
         switcher_case_1.classList.remove("off");
-        switcher_case_2.classList.remove("on");
+        switcher_case_1.classList.remove("on");
         switcher_case_2.classList.remove("off");
+        switcher_case_2.classList.remove("on");
         accountNumberInput.disabled = false;
         cardNumberInput.disabled = false;
-    }
-
-    function off() {
-        switcher_case_1.classList.add("on");
-        switcher_case_2.classList.add("off");
-        cardNumberInput.disabled = true;
-        resetCardNumber();
-        validationAccountNumber();
-        on_off = 'on';
     }
 
     function on() {
         switcher_case_1.classList.add("off");
         switcher_case_2.classList.add("on");
+        cardNumberInput.disabled = true
+        resetCardNumber();
+        validationAccountNumber();
+        on_off = 'off';
+    }
+
+    function off() {
+        switcher_case_1.classList.add("on");
+        switcher_case_2.classList.add("off");
         accountNumberInput.disabled = true;
         resetAccountNumber();
         validationCardNumber();
-        on_off = 'off';
+        on_off = 'on';
     }
 </script>
 </html>

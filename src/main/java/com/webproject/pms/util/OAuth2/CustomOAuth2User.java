@@ -40,11 +40,11 @@ public class CustomOAuth2User implements OAuth2User {
         return oauth2User.getAttribute("email");
     }
 
-    public String lastName() {
+    public String surname() {
         return oauth2User.getAttribute("family_name");
     }
 
-    public String firstName() {
+    public String name() {
         return oauth2User.getAttribute("given_name");
     }
 

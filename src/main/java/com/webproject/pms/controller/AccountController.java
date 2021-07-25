@@ -1,15 +1,14 @@
 package com.webproject.pms.controller;
 
 import com.webproject.pms.model.entities.Account;
+import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
+import com.webproject.pms.service.impl.BankCardServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,10 +18,12 @@ public class AccountController {
 	
 	private final AccountServiceImpl accountService;
 	private final UserServiceImpl userService;
+	private final BankCardServiceImpl bankCardService;
 	
-	public AccountController(AccountServiceImpl accountService, UserServiceImpl userService) {
+	public AccountController(AccountServiceImpl accountService, UserServiceImpl userService, BankCardServiceImpl bankCardService) {
 		this.accountService = accountService;
 		this.userService = userService;
+		this.bankCardService = bankCardService;
 	}
 	
 	/**
@@ -72,6 +73,32 @@ public class AccountController {
 		model.addAttribute("user", user);
 		return "user/userShowAccounts";
 	}
+
+	@PostMapping("/show-accounts")
+	public String showFoundAccounts(Model model,
+	                                Principal principal,
+                                    @RequestParam("accountNumber") String accountNumber,
+                                    @RequestParam("min_value") String min_value,
+                                    @RequestParam("max_value") String max_value,
+                                    @RequestParam("currency") String currency
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		List<Account> accountList = accountService.searchByCriteria(
+				user.getUserId(),
+				accountNumber,
+				min_value,
+				max_value,
+				currency);
+		
+		model.addAttribute("accountNumber", accountNumber);
+		model.addAttribute("min_value", min_value);
+		model.addAttribute("max_value", max_value);
+		model.addAttribute("currency", currency);
+		model.addAttribute("accountsEmpty", accountList.isEmpty());
+		model.addAttribute("accountList", accountList);
+		model.addAttribute("user", user);
+		return "user/userShowAccounts";
+	}
 	
 	/**
 	 * Show account settings
@@ -88,5 +115,54 @@ public class AccountController {
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		model.addAttribute("account", accountService.findAccountByAccountNumber(number));
 		return "user/userShowAccountSettings";
+	}
+	
+	/**
+	 * Block unblock account
+	 * @param model
+	 * @param principal
+	 * @param number
+	 * @return /show-accounts view
+	 */
+	@PostMapping("/account-setting/{accountNumber}")
+	public String blockAccount(Model model,
+	                           Principal principal,
+	                           @PathVariable("accountNumber") String number
+	) {
+		Account account = accountService.findAccountByAccountNumber(number);
+		
+		if (!account.getBlocked()) {
+			accountService.blockAccount(account);
+		} else if(account.getBlocked()) {
+			accountService.unblockAccount(account);
+		}
+		
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("account", account);
+		
+		return "redirect:/account-setting/{accountNumber}";
+	}
+	
+	/**
+	 * Delete account
+	 * @param model
+	 * @param principal
+	 * @param number
+	 * @return show-accounts view
+	 */
+	@PostMapping("/account-setting/delete/{accountNumber}")
+	public String deleteAccount(Model model,
+	                           Principal principal,
+	                           @PathVariable("accountNumber") String number
+	) {
+		Account account = accountService.findAccountByAccountNumber(number);
+		
+		if (account != null) {
+			accountService.deleteAccount(account);
+		}
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("account", account);
+		
+		return "redirect:/show-accounts";
 	}
 }

@@ -10,15 +10,17 @@ public interface AccountService {
 	
 	Account save(Account account);
 	
-	Boolean deleteAccountByAccountId(Long accountId);
+	Boolean deleteAccount(Account account);
 	
-	Boolean blockAccount(Long accountId);
+	Boolean blockAccount(Account account);
 	
-	Boolean unblockAccount(Long accountId);
+	Boolean unblockAccount(Account account);
 	
 	Boolean registrationAccount(Account Account, Model model, Principal principal);
 	
 	List<Account> findAllAccounts();
+	
+	List<Account> findAllActivateAccountsByUserId(Long userId);
 	
 	Account findAccountByAccountId(Long accountId);
 	

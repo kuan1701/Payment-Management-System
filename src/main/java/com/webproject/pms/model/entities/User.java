@@ -1,5 +1,6 @@
 package com.webproject.pms.model.entities;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +30,6 @@ public class User implements UserDetails {
 	@Size(min = 2)
 	private String surname;
 	
-	@NotEmpty
 	@Size(min = 7)
 	private String phone;
 	
@@ -37,7 +37,6 @@ public class User implements UserDetails {
 	@Email
 	private String email;
 	
-	@NotEmpty
 	@Size(min = 2)
 	private String username;
 	
@@ -55,6 +54,9 @@ public class User implements UserDetails {
 	private String registrationDate;
 	
 	private Boolean active;
+	
+	@Enumerated(EnumType.STRING)
+	private AuthenticationProvider authProvider;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Role role;
@@ -83,9 +85,9 @@ public class User implements UserDetails {
 	
 	public User(@NotEmpty @Size(min = 2) String name,
 	            @NotEmpty @Size(min = 2) String surname,
-	            @NotEmpty @Size(min = 7) String phone,
+	            @Size(min = 7) String phone,
 	            @NotEmpty @Email String email,
-	            @NotEmpty @Size(min = 2) String username
+	            @Size(min = 2) String username
 	) {
 		this.name = name;
 		this.surname = surname;
@@ -268,5 +270,13 @@ public class User implements UserDetails {
 	
 	public void setLogEntries(List<LogEntry> logEntries) {
 		this.logEntries = logEntries;
+	}
+	
+	public AuthenticationProvider getAuthProvider() {
+		return authProvider;
+	}
+	
+	public void setAuthProvider(AuthenticationProvider authProvider) {
+		this.authProvider = authProvider;
 	}
 }

@@ -11,6 +11,8 @@ public interface BankCardDao extends JpaRepository<BankCard, Long> {
 	
 	Boolean deleteBankCardByNumber(String cardNumber);
 	
+	void delete(BankCard card);
+	
 	BankCard findBankCardByNumber(String number);
 	
 	List<BankCard> findBankCardsByAccount_AccountId(Long accountId);

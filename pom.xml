@@ -101,6 +101,18 @@
             <version>2.2.6.RELEASE</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-oauth2-client</artifactId>-->
+<!--            <version>5.3.4.RELEASE</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-oauth2-jose</artifactId>-->
+<!--            <version>5.3.4.RELEASE</version>-->
+<!--        </dependency>-->
+
         <!--Additional dependencies-->
         <dependency>
             <groupId>org.hibernate.validator</groupId>

@@ -216,14 +216,14 @@ submitBtn.addEventListener('click', (event) => {
         return false;
     }
 
-    if (on_off === 'off') {
+    if (on_off === 'on') {
         validationCardNumber();
         if (cardNumber.classList.contains("error-input")) {
             event.preventDefault();
             notValidCardNumber();
             return false;
         }
-    } else if (on_off === 'on') {
+    } else if (on_off === 'off') {
         validationAccountNumber();
         if (accountNumber.classList.contains("error-input")) {
             event.preventDefault();
@@ -248,7 +248,7 @@ submitBtn.addEventListener('click', (event) => {
         CN - card number
         AN - account number
     */
-    if (on_off === 'off') {
+    if (on_off === 'on') {
         document.querySelector("#numberByAccountIdModal-CN").value = numberByAccountId.value;
         document.querySelector("#cardNumberModal-CN").value = cardNumber.value;
         document.querySelector("#amountModal-CN").value = amount.value;
@@ -259,7 +259,8 @@ submitBtn.addEventListener('click', (event) => {
         document.querySelector("#appointmentParam-CN").value = appointment.value;
 
         showModal_CN();
-    } else if (on_off === 'on') {
+
+    } else if (on_off === 'off') {
         document.querySelector("#numberByAccountIdModal-AN").value = numberByAccountId.value;
         document.querySelector("#accountNumberModal-AN").value = accountNumber.value;
         document.querySelector("#amountModal-AN").value = amount.value;

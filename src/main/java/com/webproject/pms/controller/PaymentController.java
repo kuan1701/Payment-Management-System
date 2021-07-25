@@ -2,14 +2,17 @@ package com.webproject.pms.controller;
 
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.Payment;
+import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
 import com.webproject.pms.service.impl.PaymentServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -75,10 +78,51 @@ public class PaymentController {
 	 */
 	@GetMapping("/make-payments")
 	public String makePaymentPage(Model model,
-	                              Principal principal
-			
+	                              Principal principal,
+                                  @ModelAttribute("account") Account account,
+                                  @ModelAttribute("payment") Payment payment
 	) {
-		userService.findUserByUsername(principal.getName());
+		User user = userService.findUserByUsername(principal.getName());
+		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
+		
+		model.addAttribute("user", user);
+		model.addAttribute("accounts", accounts);
+		model.addAttribute("payment", new Payment());
+		
+		return "user/userMakePayment";
+	}
+	
+	@PostMapping("/make-payments")
+	public String makePayment(Model model,
+	                          Principal principal,
+	                          @ModelAttribute("payment") @Valid Payment payment,
+	                          BindingResult bindingResult,
+	                          @RequestParam("accountFromId") Long accountFromId,
+	                          @RequestParam("accountToNumber") String accountToNumber,
+	                          @RequestParam("amount") BigDecimal amount,
+	                          @RequestParam("exchangeRate") BigDecimal exchangeRate,
+	                          @RequestParam("appointment") String appointment
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("paymentError", "invalidData");
+			return "user/userMakePayment";
+		}
+		if (!paymentService.makePaymentOnAccount(accountFromId, accountToNumber, amount, exchangeRate, appointment, model)) {
+			model.addAttribute("paymentError", "errorMakePayment");
+			return "user/userMakePayment";
+		} else {
+			model.addAttribute("paymentError", "paymentCompletedSuccess");
+		}
+		
+		model.addAttribute("accountFromId", accountFromId);
+		model.addAttribute("accountToNumber", accountToNumber);
+		model.addAttribute("amount", amount);
+		model.addAttribute("exchangeRate", exchangeRate);
+		model.addAttribute("appointment", appointment);
+		model.addAttribute("user", user);
+		model.addAttribute("accounts", accounts);
 		
 		return "user/userMakePayment";
 	}

@@ -15,20 +15,27 @@ public interface AccountDao extends JpaRepository<Account, Long> {
 	
 	List<Account> findAllAccountsByUser_UserId(Long userId);
 	
-	@Query("select a from Account a inner join User u on u.userId = :userId and"
-			+ " a.isDeleted = false and a.number like concat(:number, '%')"
-			+ " and a.balance >= :min_value and a.balance <= :max_value"
-			+ " and a.currency like concat(:currency, '%') order by a.accountId asc")
+	@Query(value= "SELECT * FROM account WHERE user_user_id = ?"
+			+ " AND is_deleted = 0 AND is_blocked = 0 ORDER BY account_id ASC",
+	nativeQuery = true)
+	List<Account> findAllActivateAccountByUserId(@Param("userId") Long userId);
+	
+	@Query(value = "SELECT * FROM account"
+			+ " WHERE user_user_id = ? AND is_deleted = 0 AND"
+			+ " number LIKE CONCAT(?, '%') AND balance >= ? AND balance <= ? AND"
+			+ " currency LIKE CONCAT(?, '%') ORDER BY account_id ASC",
+			nativeQuery = true)
 	List<Account> searchByCriteria(@Param("userId") Long userId,
 	                               @Param("number") String number,
 	                               @Param("min_value") String min_value,
 	                               @Param("max_value") String max_value,
 	                               @Param("currency") String currency);
 	
-	@Query("select a from Account a where a.isDeleted = false"
-			+ " and a.number like concat(:number, '%')"
-			+ " and a.balance >= :min_value and a.balance <= :max_value"
-			+ " and a.currency like concat(:currency, '%') order by a.accountId asc")
+	@Query(value = "SELECT * FROM account"
+			+ " WHERE user_user_id = ? AND is_deleted = 0 AND"
+			+ " number LIKE CONCAT(?, '%') AND balance >= ? AND balance <= ? AND"
+			+ " currency LIKE CONCAT(?, '%') ORDER BY account_id ASC",
+	nativeQuery = true)
 	List<Account> searchByCriteria(@Param("number") String number,
 	                               @Param("min_value") String min_value,
 	                               @Param("max_value") String max_value,

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -49,10 +50,10 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
+
                     <form action="" method="POST" role="form">
-                        <input type="hidden" name="command" value="detachCard"/>
                         <input type="hidden" name="accountId" value="${account.accountId}"/>
-                        <input type="hidden" name="cardId" id="cardId"/>
+                        <input type="hidden" name="cardNumber" id="cardNumber"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
                         </button>
@@ -103,7 +104,7 @@
     </c:if>
 
     <!-- Alert cardBlockedSuccess -->
-    <c:if test="${response eq 'cardBlockedSuccess'}">
+    <c:if test="${alert eq 'cardBlockedSuccess'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p><strong><fmt:message key="user.page.success"/>!</strong>
                 <fmt:message key="user.page.alertCardBlockedSuccess"/>
@@ -127,7 +128,7 @@
     </c:if>
 
     <!-- Alert cardUnblockedSuccess -->
-    <c:if test="${response eq 'cardUnblockedSuccess'}">
+    <c:if test="${alert eq 'cardUnblockedSuccess'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p><strong><fmt:message key="user.page.success"/>!</strong>
                 <fmt:message key="user.page.alertCardUnblockedSuccess"/>
@@ -328,7 +329,7 @@
                                                     <div class="col-xl-12">
 
                                                         <c:choose>
-                                                            <c:when test="${cardsEmpty == false}">
+                                                            <c:when test="${bankCardsEmpty == false}">
 
                                                                 <h4 style="margin-top: 10px;">
                                                                         ${allAttachedCards}
@@ -337,12 +338,12 @@
                                                                 <div class="card-container"
                                                                      style="width: 100% !important;">
                                                                     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2">
-                                                                        <c:forEach items="${bankCardList}" var="card">
+                                                                        <c:forEach items="${bankCardsList}" var="bankCard">
                                                                             <div class="col mb-4">
                                                                                 <div class="card bg-light">
                                                                                     <div class="card-header">
                                                                                         <c:choose>
-                                                                                            <c:when test="${card.active}">
+                                                                                            <c:when test="${bankCard.active}">
                                                                                                 <small class="text-success float-right">
                                                                                                         ${statusActive}
                                                                                                 </small>
@@ -357,29 +358,50 @@
                                                                                     <div class="card-body"
                                                                                          style="padding: 0.75rem 1.25rem;">
                                                                                         <p class="card-title text-muted">
-                                                                                                ${card.number}<br/>
-                                                                                                ${validity}: ${card.validity}
-                                                                                            <a href="#detachCardModal?cardId=${card.cardId}&cardNumber=${card.number}"
+                                                                                                ${bankCard.number}<br/>
+                                                                                                ${validity}: ${bankCard.validity}
+                                                                                            <a href="#detachCardModal?cardId=${bankCard.cardId}&cardNumber=${bankCard.number}"
                                                                                                onclick="showDetachCardModal();"
-                                                                                               class="float-right">
+                                                                                               class="float-right" role="tab">
                                                                                                 <img src="<c:url value="/images/detach-card.png"/>"
                                                                                                      style="margin-left: 7px;"
-                                                                                                     alt="${detach}"/>
+                                                                                                     alt="${detach}" title="${detach}"/>
                                                                                             </a>
                                                                                             <c:choose>
-                                                                                                <c:when test="${card.active}">
-                                                                                                    <a href="?command=blockCard&accountId=${account.accountId}&cardId=${card.cardId}"
-                                                                                                       class="float-right">
+                                                                                                <c:when test="${bankCard.active}">
+                                                                                                    <a href="/attached-cards/${account.number}/${bankCard.cardId}"
+                                                                                                       class="float-right"
+                                                                                                       role="tab"
+                                                                                                       onclick="document.getElementById('form-blockCard').submit(); return false;">
                                                                                                         <img src="<c:url value="/images/block.png"/>"
-                                                                                                             alt="${blockCard}"/>
+                                                                                                             alt="${blockCard}" title="${blockCard}"/>
                                                                                                     </a>
+                                                                                                    <form action="/attached-cards/${account.number}/${bankCard.cardId}"
+                                                                                                          method="POST"
+                                                                                                          id="form-blockCard"
+                                                                                                          role="form">
+                                                                                                        <input type="hidden"
+                                                                                                               name="cardId"
+                                                                                                               value="${bankCard.cardId}"/>
+                                                                                                    </form>
                                                                                                 </c:when>
+
                                                                                                 <c:otherwise>
-                                                                                                    <a href="?command=unblockCard&accountId=${account.accountId}&cardId=${card.cardId}"
-                                                                                                       class="float-right">
+                                                                                                    <a href="#"
+                                                                                                             class="float-right"
+                                                                                                             role="tab"
+                                                                                                             onclick="document.getElementById('form-unblockCard').submit(); return false;">
                                                                                                         <img src="<c:url value="/images/unblock.png"/>"
-                                                                                                             alt="${unblockCard}"/>
+                                                                                                             alt="${unblockCard}" title="${unblockCard}"/>
                                                                                                     </a>
+                                                                                                    <form action="/attached-cards/${account.number}/${bankCard.cardId}"
+                                                                                                          method="POST"
+                                                                                                          id="form-unblockCard"
+                                                                                                          role="form">
+                                                                                                        <input type="hidden"
+                                                                                                               name="cardId"
+                                                                                                               value="${bankCard.cardId}"/>
+                                                                                                    </form>
                                                                                                 </c:otherwise>
                                                                                             </c:choose>
                                                                                         </p>

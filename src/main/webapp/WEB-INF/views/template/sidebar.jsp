@@ -43,7 +43,7 @@
     </c:if>
 
     <c:if test="${user.role.id == 1}">
-        <a href="?command=makePayment" class="list-group-item list-group-item-action list-group-item-sidebar">
+        <a href="${pageContext.request.contextPath}/make-payments" class="list-group-item list-group-item-action list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/make-payment.png"/>" class="icon-sidebar" alt=""/>
             </div>

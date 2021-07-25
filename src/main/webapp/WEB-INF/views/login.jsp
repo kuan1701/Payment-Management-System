@@ -91,9 +91,9 @@
                                 <div class="form-group group-btn" style="height: 60px; margin-bottom: 24px;">
                                     <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
-                                        <input type="hidden" name="username" value="robert2018"/>
-                                        <input type="hidden" name="phone" value="+375292852775"/>
-                                        <input type="hidden" name="password" value="14082018"/>
+                                        <input type="hidden" name="username" value="kuan17011993"/>
+                                        <input type="hidden" name="email" value="kuan0077@mail.ru"/>
+                                        <input type="hidden" name="password" value="123456"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-User
                                         </button>
@@ -152,7 +152,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <a class="button btn-lg button-google btn-block text-uppercase btn-outline"
-                                               href="${pageContext.request.contextPath}/login/google">
+                                               href="${pageContext.request.contextPath}/oauth2/authorization/google">
                                                 <img src="https://img.icons8.com/color/16/000000/google-logo.png">
                                                 <fmt:message key="login.singUpWithGoogle"/>
                                             </a>

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -36,17 +37,21 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	public synchronized Payment makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, BigDecimal exchangeRate, String appointment) {
+	public synchronized boolean makePaymentOnAccount(Long accountFromId, String accountToNumber, BigDecimal amount, BigDecimal exchangeRate, String appointment, Model model) {
 		
-		Account accountFrom = accountDao.getOne(accountId);
-		Account accountTo = accountDao.findAccountByNumber(accountNumber);
+		Account accountFrom = accountDao.getById(accountFromId);
+		Account accountTo = accountDao.findAccountByNumber(accountToNumber);
 		
 		if (checkAvailableAccount(accountFrom)) {
+			model.addAttribute("paymentError", "senderAccountBlockedError");
 			LOGGER.error("Sender account is blocked");
+			return false;
 		}
 		
 		if (checkAvailableAccount(accountTo)) {
+			model.addAttribute("paymentError", "recipientAccountBlockedError");
 			LOGGER.error("Recipient account is blocked");
+			return false;
 		}
 		
 		// Outgoing payment details
@@ -56,7 +61,7 @@ public class PaymentServiceImpl implements PaymentService {
 		payment.setSenderNumber(accountFrom.getNumber());
 		payment.setSenderAmount(amount);
 		payment.setSenderCurrency(accountFrom.getCurrency());
-		payment.setRecipientNumber(accountNumber);
+		payment.setRecipientNumber(accountToNumber);
 		payment.setRecipientAmount(amount.multiply(exchangeRate));
 		payment.setRecipientCurrency(accountTo.getCurrency());
 		payment.setExchangeRate(exchangeRate);
@@ -79,7 +84,7 @@ public class PaymentServiceImpl implements PaymentService {
 		} else {
 			LOGGER.error("Payment arrangement error!");
 		}
-		return payment;
+		return true;
 	}
 	
 	@Override

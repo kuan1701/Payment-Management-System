@@ -37,7 +37,7 @@ public class CardController {
 	                         Principal principal
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accounts = accountService.findAllAccountsByUserId(user.getUserId());
+		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
 		
 		model.addAttribute("user", user);
 		model.addAttribute("accounts", accounts);
@@ -53,12 +53,12 @@ public class CardController {
 			@ModelAttribute("card") BankCard bankCard
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accounts = accountService.findAllAccountsByUserId(user.getUserId());
+		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
 		Account account = accountService.findAccountByAccountId(Long.parseLong(accountNumber));
 		
 		model.addAttribute("user", user);
 		model.addAttribute("accounts", accounts);
-		model.addAttribute("card", bankCard);
+		model.addAttribute("bankCard", bankCard);
 		
 		
 		if (!bankCardService.addNewBankCard(bankCard, account)){
@@ -82,15 +82,53 @@ public class CardController {
 	                                Principal principal,
 	                                @PathVariable("accountNumber") String number
 	) {
-		List<BankCard> bankCardList = bankCardService.findCardsByAccountId(
+		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(
 				accountService.findAccountByAccountNumber(number).getAccountId());
 		
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-		model.addAttribute("bankCardList", bankCardList);
-		model.addAttribute("cardsEmpty", bankCardList.isEmpty());
+		model.addAttribute("bankCardsList", bankCardsList);
+		model.addAttribute("bankCardsEmpty", bankCardsList.isEmpty());
 		model.addAttribute("account", accountService.findAccountByAccountNumber(number));
 		return "user/userShowAccountCards";
 	}
 	
+	@PostMapping("/attached-cards/{accountNumber}/{cardId}")
+	public String detachCard(Model model,
+	                         Principal principal,
+	                         @PathVariable("accountNumber") String accountNumber,
+	                         @PathVariable("cardId") Long cardId
+	) {
+		Account account = accountService.findAccountByAccountNumber(accountNumber);
+		BankCard bankCard = bankCardService.findCardByCardId(cardId);
+		
+		if (bankCard.getActive()) {
+			bankCardService.blockCard(cardId);
+			model.addAttribute("alert", "cardBlockedSuccess");
+		} else if (!bankCard.getActive()) {
+			bankCardService.unblockCard(cardId);
+			model.addAttribute("alert", "cardUnblockedSuccess");
+		}
+		
+		model.addAttribute("bankCard", bankCard);
+		model.addAttribute("account", account);
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		return "redirect:/attached-cards/{accountNumber}";
+	}
 	
+	@PostMapping("/detach/{cardNumber}")
+	public String deleteAccount(Model model,
+	                            Principal principal,
+                                @PathVariable String accountNumber,
+                                @PathVariable("cardNumber") String cardNumber
+	) {
+		Account account = accountService.findAccountByAccountNumber(accountNumber);
+		BankCard bankCard = bankCardService.findCardByCardNumber(cardNumber);
+		
+		bankCardService.deleteCard(bankCard);
+		model.addAttribute("bankCard", bankCard);
+		model.addAttribute("account", account);
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		
+		return "redirect:/attached-cards/{accountNumber}";
+	}
 }

@@ -41,8 +41,8 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form action="" method="POST" role="form">
-                        <input type="hidden" name="command" value="deleteAccount"/>
+                    <c:url value="/account-setting/delete/${account.number}" var="var"/>
+                    <form action="${var}" method="POST" role="form">
                         <input type="hidden" name="accountId" value="${account.accountId}"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
@@ -316,7 +316,7 @@
                                                                         <c:when test="${account.blocked}">
                                                                             <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                                id="list-unblockAccount-list" role="tab"
-                                                                               href="?command=unblockAccount"
+                                                                               href="/account-setting/${account.number}"
                                                                                onclick="document.getElementById('form-unblockAccount').submit(); return false;"
                                                                                aria-controls="unblockAccount">
                                                                                 <span class="forward-right-link-img">
@@ -327,12 +327,11 @@
                                                                             </a>
                                                                             <form action="" method="POST"
                                                                                   id="form-unblockAccount" role="form">
-                                                                                <input type="hidden" name="command"
-                                                                                       value="unblockAccount"/>
                                                                                 <input type="hidden" name="accountId"
                                                                                        value="${account.accountId}"/>
                                                                             </form>
                                                                         </c:when>
+
                                                                         <c:otherwise>
                                                                             <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                                id="list-blockAccount-list" role="tab"

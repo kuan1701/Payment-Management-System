@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -130,13 +131,13 @@
                                                             <label>
                                                                     ${searchCriteria}:
                                                             </label>
-                                                            <form action="" method="POST" role="form">
-                                                                <input type="hidden" name="command"
-                                                                       value="searchAccounts"/>
+
+                                                            <c:url value="/show-accounts" var="var"/>
+                                                            <form:form action="${var}" method="POST" role="form" modelAttribute="accountList">
 
                                                                 <!-- AccountDto Number -->
                                                                 <div>
-                                                                    <input id="number" name="number" type="text"
+                                                                    <input id="number" name="accountNumber" type="text"
                                                                            class="form-control"
                                                                            data-toggle="tooltip-left"
                                                                            data-title="${tooltipOnlyDigits}"
@@ -147,11 +148,11 @@
                                                                 </div>
 
                                                                 <!-- Min value Balance -->
-                                                                <input type="hidden" id="min-value" name="min-value"
+                                                                <input type="hidden" id="min-value" name="min_value"
                                                                        value="${minValue}"/>
 
                                                                 <!-- Max value Balance -->
-                                                                <input type="hidden" id="max-value" name="max-value"
+                                                                <input type="hidden" id="max-value" name="max_value"
                                                                        value="${maxValue}"/>
 
                                                                 <!-- Balance Range -->
@@ -184,7 +185,7 @@
                                                                             ${searchButton}
                                                                     </button>
                                                                 </div>
-                                                            </form>
+                                                            </form:form>
                                                         </div>
                                                     </div>
 

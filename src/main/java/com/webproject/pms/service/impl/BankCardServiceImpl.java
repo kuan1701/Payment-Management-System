@@ -67,8 +67,8 @@ public class BankCardServiceImpl implements BankCardService {
 	
 	@Override
 	public Boolean blockCard(Long cardId) {
-		
-		if (cardId != null) {
+	
+		if (bankCardDao.findById(cardId).isPresent()) {
 			BankCard bankCard = bankCardDao.getById(cardId);
 			bankCard.setActive(false);
 			bankCardDao.save(bankCard);
@@ -80,13 +80,13 @@ public class BankCardServiceImpl implements BankCardService {
 	@Override
 	public Boolean unblockCard(Long cardId) {
 		
-		if (cardId != null) {
+		if (bankCardDao.findById(cardId).isPresent()) {
 			BankCard bankCard = bankCardDao.getById(cardId);
-			bankCard.setActive(false);
+			bankCard.setActive(true);
 			bankCardDao.save(bankCard);
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -107,6 +107,11 @@ public class BankCardServiceImpl implements BankCardService {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public void deleteCard(BankCard card) {
+		bankCardDao.delete(card);
 	}
 	
 	@Override

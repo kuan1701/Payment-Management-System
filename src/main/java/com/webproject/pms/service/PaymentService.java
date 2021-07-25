@@ -3,13 +3,14 @@ package com.webproject.pms.service;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.Payment;
+import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface PaymentService {
 	
-	Payment makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, BigDecimal exchangeRate, String appointment);
+	boolean makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, BigDecimal exchangeRate, String appointment, Model model);
 	
 	void makePaymentOnCard(Long accountId, String cardNumber, BigDecimal amount, String appointment);
 	

@@ -1,15 +1,13 @@
 package com.webproject.pms.config;
 
-import com.webproject.pms.service.impl.UserServiceImpl;
+import com.webproject.pms.model.dao.UserDao;
+import com.webproject.pms.model.entities.Role;
+import com.webproject.pms.model.entities.User;
 import com.webproject.pms.util.AuthProvider;
 import com.webproject.pms.util.OAuth2.CustomOAuth2UserService;
-import com.webproject.pms.util.OAuth2.CustomUserInfoTokenServices;
 import com.webproject.pms.util.OAuth2.OAuth2LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -21,15 +19,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.Filter;
+import java.util.Date;
 
 @Configuration
 @EnableWebSecurity
@@ -39,22 +31,11 @@ import javax.servlet.Filter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Autowired
-	private UserServiceImpl userServiceImpl;
-	
-	@Autowired
 	private AuthProvider authProvider;
-	
-	@Autowired
-	@Qualifier("oauth2ClientContext")
-	private OAuth2ClientContext oAuth2ClientContext;
-	@Autowired
-	private CustomUserInfoTokenServices customUserInfoTokenServices;
 	@Autowired
 	private CustomOAuth2UserService oAuth2UserService;
-	@Autowired
-	private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+//	@Autowired
+//	private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 	
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
@@ -63,37 +44,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
-	public FilterRegistrationBean oAuth2ClientFilterRegistration(OAuth2ClientContextFilter oAuth2ClientContextFilter) {
-		FilterRegistrationBean registration = new FilterRegistrationBean();
-		registration.setFilter(oAuth2ClientContextFilter);
-		registration.setOrder(-100);
-		return registration;
-	}
-	
-	private Filter ssoFilter() {
-		OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter(
-				"/login/google");
-		
-		OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oAuth2ClientContext);
-		googleFilter.setRestTemplate(googleTemplate);
-		customUserInfoTokenServices.customUserInfoTokenServices(googleResource().getUserInfoUri(),
-				google().getClientId());
-		customUserInfoTokenServices.setRestTemplate(googleTemplate);
-		googleFilter.setTokenServices(customUserInfoTokenServices);
-		
-		return googleFilter;
-	}
-	
-	@Bean
-	@ConfigurationProperties("google.client")
-	public AuthorizationCodeResourceDetails google() {
-		return new AuthorizationCodeResourceDetails();
-	}
-	
-	@Bean
-	@ConfigurationProperties("google.resource")
-	public ResourceServerProperties googleResource() {
-		return new ResourceServerProperties();
+	public PrincipalExtractor principalExtractor(UserDao userDao) {
+		return map -> {
+			Long id = (Long) map.get("sub");
+
+			User user = userDao.findById(id).orElseGet(() -> {
+				User newUser = new User();
+
+				newUser.setUserId(id);
+				newUser.setName((String) map.get("given_name"));
+				newUser.setSurname((String) map.get("family_name"));
+				newUser.setEmail((String) map.get("email"));
+				newUser.setEmailVerified((Boolean) map.get("email_verified"));
+				newUser.setUsername(null);
+				newUser.setPhone("+375291111111");
+				newUser.setRegistrationDate(new Date().toString());
+				newUser.setRole(new Role(1L, "ROLE_USER"));
+				newUser.setActivationCode(null);
+				newUser.setActive(true);
+
+				return newUser;
+			});
+			return userDao.save(user);
+		};
 	}
 	
 	@Override
@@ -101,14 +74,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.csrf()
 				.disable()
-				.addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
 				//Доступ только для не зарегистрированных пользователей
 				.antMatchers(
 						"/forgot-password",
 						"/registration",
 						"/registration-message",
-						"/activate/*"
+						"/activate/*",
+						"/oauth2/**"
 				).not().fullyAuthenticated()
 				//Доступ только для пользователей с ролью Администратор
 				.antMatchers("/admin/**").hasRole("ADMIN")
@@ -134,10 +107,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.oauth2Login()
 				.loginPage("/login")
+				.defaultSuccessUrl("/my-account", true)
 				.userInfoEndpoint()
 				.userService(oAuth2UserService)
 				.and()
-				.successHandler(oAuth2LoginSuccessHandler)
+//				.successHandler(oAuth2LoginSuccessHandler)
 				.and()
 				.logout()
 				.permitAll()

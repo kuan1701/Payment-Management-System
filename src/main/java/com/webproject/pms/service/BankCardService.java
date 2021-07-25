@@ -19,6 +19,8 @@ public interface BankCardService {
 	
 	Boolean deleteCardByCardNumber(String cardNumber);
 	
+	void deleteCard(BankCard card);
+	
 	BankCard findCardByCardId(Long cardId);
 	
 	BankCard findCardByCardNumber(String number);

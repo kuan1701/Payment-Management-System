@@ -19,37 +19,29 @@ public class Payment {
 	private Boolean isOutgoing;
 	
 	@NotEmpty
-	@Size(min = 1, max = 255)
+	@Size(min = 1, max = 20)
 	private String senderNumber;
 	
-	@NotEmpty
 	private BigDecimal senderAmount;
 	
-	@NotEmpty
 	private String senderCurrency;
 	
 	@NotEmpty
-	@Size(min = 1, max = 255)
+	@Size(min = 1, max = 20)
 	private String recipientNumber;
 	
-	@NotEmpty
 	private BigDecimal recipientAmount;
 	
-	@NotEmpty
 	private String recipientCurrency;
 	
-	@NotEmpty
 	private BigDecimal exchangeRate;
 	
-	@NotEmpty
 	private BigDecimal newBalance;
 	
 	private String appointment;
 	
-	@NotEmpty
 	private String date;
 	
-	@NotEmpty
 	private Boolean status;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

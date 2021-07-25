@@ -58,37 +58,26 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public Boolean blockAccount(Long accountId) {
+	public Boolean blockAccount(Account account) {
 		
-		if (accountId != null) {
-			Account account = accountDao.getById(accountId);
-			account.setBlocked(true);
-			accountDao.save(account);
-			return true;
-		}
-		return false;
+		account.setBlocked(true);
+		accountDao.save(account);
+		return true;
 	}
 	
 	@Override
-	public Boolean unblockAccount(Long accountId) {
+	public Boolean unblockAccount(Account account) {
 		
-		if (accountId != null) {
-			Account account = accountDao.getById(accountId);
-			account.setBlocked(false);
-			accountDao.save(account);
-			return true;
-		}
-		return false;
+		account.setBlocked(false);
+		accountDao.save(account);
+		return true;
 	}
 	
 	@Override
-	public Boolean deleteAccountByAccountId(Long accountId) {
+	public Boolean deleteAccount(Account account) {
 		
-		if (accountDao.existsById(accountId)) {
-			accountDao.deleteById(accountId);
-			return true;
-		}
-		return false;
+		accountDao.delete(account);
+		return true;
 	}
 	
 	@Override
@@ -113,6 +102,12 @@ public class AccountServiceImpl implements AccountService {
 	public List<Account> findAllAccountsByUserId(Long userId) {
 		
 		return accountDao.findAllAccountsByUser_UserId(userId);
+	}
+	
+	@Override
+	public List<Account> findAllActivateAccountsByUserId(Long userId) {
+		
+		return accountDao.findAllActivateAccountByUserId(userId);
 	}
 	
 	@Override

@@ -5,7 +5,6 @@ import com.webproject.pms.model.entities.Letter;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +38,8 @@ public class UserController {
 	public String accountPage(Model model,
 	                          Principal principal
 	) {
-		List<Account> accountList = accountService.findAllAccountsByUserId(userService.findUserByUsername(principal.getName()).getUserId());
+		List<Account> accountList = accountService.findAllAccountsByUserId(
+				userService.findUserByUsername(principal.getName()).getUserId());
 		
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		model.addAttribute("accountsEmpty", accountList.isEmpty());
