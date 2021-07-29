@@ -1,4 +1,4 @@
-package com.webproject.pms.controller;
+package com.webproject.pms.controller.user;
 
 import com.webproject.pms.model.entities.LogEntry;
 import com.webproject.pms.service.impl.ActionLogServiceImpl;

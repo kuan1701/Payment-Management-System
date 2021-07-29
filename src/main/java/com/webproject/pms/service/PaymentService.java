@@ -6,13 +6,14 @@ import com.webproject.pms.model.entities.Payment;
 import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 public interface PaymentService {
 	
-	boolean makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, BigDecimal exchangeRate, String appointment, Model model);
+	boolean makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, String appointment, Model model, Principal principal);
 	
-	void makePaymentOnCard(Long accountId, String cardNumber, BigDecimal amount, String appointment);
+	void makePaymentOnCard(Long accountId, String cardNumber, BigDecimal amount, String appointment, Principal principal);
 	
 	boolean checkAvailableAccount(Account account);
 	
@@ -36,5 +37,5 @@ public interface PaymentService {
 	
 	List<Payment> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate);
 	
-	List<Payment> searchByCriteria(Long userId, String startDate, String finalDate);
+	List<Payment> searchByCriteriaWithoutOutgoing(Long userId, String startDate, String finalDate);
 }

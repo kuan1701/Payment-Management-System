@@ -369,14 +369,14 @@
                                                                                             </a>
                                                                                             <c:choose>
                                                                                                 <c:when test="${bankCard.active}">
-                                                                                                    <a href="/attached-cards/${account.number}/${bankCard.cardId}"
+                                                                                                    <a href="/attached-cards/${account.number}"
                                                                                                        class="float-right"
                                                                                                        role="tab"
                                                                                                        onclick="document.getElementById('form-blockCard').submit(); return false;">
                                                                                                         <img src="<c:url value="/images/block.png"/>"
                                                                                                              alt="${blockCard}" title="${blockCard}"/>
                                                                                                     </a>
-                                                                                                    <form action="/attached-cards/${account.number}/${bankCard.cardId}"
+                                                                                                    <form action="/attached-cards/${account.number}"
                                                                                                           method="POST"
                                                                                                           id="form-blockCard"
                                                                                                           role="form">
@@ -394,7 +394,7 @@
                                                                                                         <img src="<c:url value="/images/unblock.png"/>"
                                                                                                              alt="${unblockCard}" title="${unblockCard}"/>
                                                                                                     </a>
-                                                                                                    <form action="/attached-cards/${account.number}/${bankCard.cardId}"
+                                                                                                    <form action="/attached-cards/${account.number}"
                                                                                                           method="POST"
                                                                                                           id="form-unblockCard"
                                                                                                           role="form">

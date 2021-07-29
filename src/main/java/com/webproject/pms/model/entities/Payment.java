@@ -18,15 +18,13 @@ public class Payment {
 	
 	private Boolean isOutgoing;
 	
-	@NotEmpty
 	@Size(min = 1, max = 20)
 	private String senderNumber;
 	
 	private BigDecimal senderAmount;
 	
 	private String senderCurrency;
-	
-	@NotEmpty
+
 	@Size(min = 1, max = 20)
 	private String recipientNumber;
 	
@@ -180,11 +178,11 @@ public class Payment {
 		this.date = date;
 	}
 	
-	public Boolean getCondition() {
+	public Boolean getStatus() {
 		return status;
 	}
 	
-	public void setCondition(Boolean status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 	

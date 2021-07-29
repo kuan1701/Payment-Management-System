@@ -222,7 +222,7 @@
                                                                                                 ${payment.date}
                                                                                         </small>
                                                                                         <c:choose>
-                                                                                            <c:when test="${payment.condition}">
+                                                                                            <c:when test="${payment.status}">
                                                                                                 <small class="text-success float-right">
                                                                                                         ${success}
                                                                                                 </small>

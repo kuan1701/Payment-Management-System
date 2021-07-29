@@ -43,7 +43,7 @@
     </c:if>
 
     <c:if test="${user.role.id == 1}">
-        <a href="${pageContext.request.contextPath}/make-payments" class="list-group-item list-group-item-action list-group-item-sidebar">
+        <a href="${pageContext.request.contextPath}/make-payment" class="list-group-item list-group-item-action list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/make-payment.png"/>" class="icon-sidebar" alt=""/>
             </div>
@@ -65,7 +65,7 @@
     </c:if>
 
     <c:if test="${user.role.id == 2}">
-        <a href="/" class="list-group-item list-group-item-action sidebar-header list-group-item-sidebar">
+        <a href="${pageContext.request.contextPath}/my-account" class="list-group-item list-group-item-action sidebar-header list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/homepage-admin.png"/>" class="icon-sidebar" alt=""/>
             </div>

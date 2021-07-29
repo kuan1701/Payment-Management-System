@@ -1,4 +1,4 @@
-package com.webproject.pms.controller;
+package com.webproject.pms.controller.user;
 
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
@@ -92,11 +92,11 @@ public class CardController {
 		return "user/userShowAccountCards";
 	}
 	
-	@PostMapping("/attached-cards/{accountNumber}/{cardId}")
+	@PostMapping("/attached-cards/{accountNumber}")
 	public String detachCard(Model model,
 	                         Principal principal,
 	                         @PathVariable("accountNumber") String accountNumber,
-	                         @PathVariable("cardId") Long cardId
+	                         @RequestParam("cardId") Long cardId
 	) {
 		Account account = accountService.findAccountByAccountNumber(accountNumber);
 		BankCard bankCard = bankCardService.findCardByCardId(cardId);
@@ -109,12 +109,21 @@ public class CardController {
 			model.addAttribute("alert", "cardUnblockedSuccess");
 		}
 		
+		model.addAttribute("cardId", cardId);
 		model.addAttribute("bankCard", bankCard);
 		model.addAttribute("account", account);
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "redirect:/attached-cards/{accountNumber}";
 	}
 	
+	/**
+	 * Detach card
+	 * @param model
+	 * @param principal
+	 * @param accountNumber
+	 * @param cardNumber
+	 * @return redirect:/attached-cards/{accountNumber}
+	 */
 	@PostMapping("/detach/{cardNumber}")
 	public String deleteAccount(Model model,
 	                            Principal principal,

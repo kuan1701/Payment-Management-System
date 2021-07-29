@@ -148,11 +148,13 @@
                                                                 </div>
 
                                                                 <!-- Min value Balance -->
-                                                                <input type="hidden" id="min-value" name="min_value"
+                                                                <input type="hidden" id="min-value"
+                                                                       name="min_value"
                                                                        value="${minValue}"/>
 
                                                                 <!-- Max value Balance -->
-                                                                <input type="hidden" id="max-value" name="max_value"
+                                                                <input type="hidden" id="max-value"
+                                                                       name="max_value"
                                                                        value="${maxValue}"/>
 
                                                                 <!-- Balance Range -->
@@ -164,11 +166,12 @@
                                                                          data-toggle="tooltip-left"
                                                                          data-title="${balanceRange}"></div>
                                                                     <label for="slider-range"
-                                                                           class="default-label">&nbsp;</label>
+                                                                           class="default-label"> </label>
                                                                 </div>
 
                                                                 <!-- Currency -->
-                                                                <input type="hidden" id="currency" name="currency"
+                                                                <input type="hidden" id="currency"
+                                                                       name="currency"
                                                                        value="${currencyValue}"/>
 
                                                                 <!-- Select Currency -->

@@ -163,16 +163,8 @@
                                 <div class="box">
                                     <div class="content-wrap">
 
-                                        <!-- Perhaps there was an error or the viewableUser was deleted from the system -->
+
                                         <c:choose>
-                                            <c:when test="${response ne 'unableGetUserId' &&
-                                                            response ne 'showUserError' &&
-                                                            response ne 'userDeletedError'}">
-
-                                                <jsp:useBean id="viewableUser" scope="request"
-                                                             type="com.webproject.pms.model.entities.User"/>
-
-                                                <c:choose>
                                                     <c:when test="${userIsAdmin == false}">
 
                                                         <div class="row">
@@ -320,16 +312,16 @@
                                                                                 <div class="card-container"
                                                                                      style="width: 75%;">
                                                                                     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1">
-                                                                                        <c:forEach items="${platezhis}"
-                                                                                                   var="platezhi">
+                                                                                        <c:forEach items="${paymentList}"
+                                                                                                   var="payment">
                                                                                             <div class="col mb-4">
                                                                                                 <div class="card bg-light">
                                                                                                     <div class="card-header">
                                                                                                         <small class="text-muted float-left">
-                                                                                                                ${platezhi.date}
+                                                                                                                ${payment.date}
                                                                                                         </small>
                                                                                                         <c:choose>
-                                                                                                            <c:when test="${platezhi.condition}">
+                                                                                                            <c:when test="${payment.status}">
                                                                                                                 <small class="text-success float-right">
                                                                                                                         ${success}
                                                                                                                 </small>
@@ -346,26 +338,26 @@
 
                                                                                                         <!-- Outgoing and Incoming Payments -->
                                                                                                         <c:choose>
-                                                                                                            <c:when test="${platezhi.isOutgoing}">
+                                                                                                            <c:when test="${payment.outgoing}">
 
                                                                                                                 <!-- Sender and Recipient -->
                                                                                                                 <p class="card-title text-muted">
-                                                                                                                        ${platezhi.senderNumber}
+                                                                                                                        ${payment.senderNumber}
                                                                                                                     <span class="forward-right-link-img">&Longrightarrow;</span>
-                                                                                                                        ${platezhi.recipientNumber}
+                                                                                                                        ${payment.recipientNumber}
                                                                                                                 </p>
 
                                                                                                                 <!-- Sent Funds -->
                                                                                                                 <p class="card-title text-muted">
-                                                                                                                        ${sentFunds}: ${platezhi.senderAmount} ${platezhi.senderCurrency}
+                                                                                                                        ${sentFunds}: ${payment.senderAmount} ${payment.senderCurrency}
                                                                                                                 </p>
 
                                                                                                                 <!-- New balance -->
                                                                                                                 <p class="card-title text-muted">
-                                                                                                                        ${remained}: ${platezhi.newBalance} ${platezhi.senderCurrency}
+                                                                                                                        ${remained}: ${payment.newBalance} ${payment.senderCurrency}
 
                                                                                                                     <!-- Show Platezhi Info -->
-                                                                                                                    <a href="?command=showPaymentInfo&userId=${viewableUser.userId}&paymentId=${platezhi.paymentId}"
+                                                                                                                    <a href="?command=showPaymentInfo&userId=${viewableUser.userId}&paymentId=${payment.paymentId}"
                                                                                                                        class="float-right">
                                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                                              alt=""/>
@@ -376,22 +368,22 @@
 
                                                                                                                 <!-- Sender and Recipient -->
                                                                                                                 <p class="card-title text-muted">
-                                                                                                                        ${platezhi.recipientNumber}
+                                                                                                                        ${payment.recipientNumber}
                                                                                                                     <span class="forward-left-link-img">&Longleftarrow;</span>
-                                                                                                                        ${platezhi.senderNumber}
+                                                                                                                        ${payment.senderNumber}
                                                                                                                 </p>
 
                                                                                                                 <!-- Received Funds -->
                                                                                                                 <p class="card-title text-muted">
-                                                                                                                        ${receivedFunds}: ${platezhi.recipientAmount} ${platezhi.recipientCurrency}
+                                                                                                                        ${receivedFunds}: ${payment.recipientAmount} ${payment.recipientCurrency}
                                                                                                                 </p>
 
                                                                                                                 <!-- New balance -->
                                                                                                                 <p class="card-title text-muted">
-                                                                                                                        ${remained}: ${platezhi.newBalance} ${platezhi.recipientCurrency}
+                                                                                                                        ${remained}: ${payment.newBalance} ${payment.recipientCurrency}
 
                                                                                                                     <!-- Show Platezhi Info -->
-                                                                                                                    <a href="?command=showPaymentInfo&userId=${viewableUser.userId}&paymentId=${platezhi.paymentId}"
+                                                                                                                    <a href="?command=showPaymentInfo&userId=${viewableUser.userId}&paymentId=${payment.paymentId}"
                                                                                                                        class="float-right">
                                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                                              alt="${showInfo}"/>
@@ -439,13 +431,13 @@
                                                                                 <div class="card-container"
                                                                                      style="width: 100% !important;">
                                                                                     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3">
-                                                                                        <c:forEach items="${accounts}"
+                                                                                        <c:forEach items="${accountList}"
                                                                                                    var="account">
                                                                                             <div class="col mb-4">
                                                                                                 <div class="card bg-light">
                                                                                                     <div class="card-header">
                                                                                                         <c:choose>
-                                                                                                            <c:when test="${account.isBlocked}">
+                                                                                                            <c:when test="${account.blocked}">
                                                                                                                 <small class="text-danger float-right">
                                                                                                                         ${statusBlocked}
                                                                                                                 </small>
@@ -553,8 +545,8 @@
                                                     </c:otherwise>
                                                 </c:choose>
 
-                                            </c:when>
-                                            <c:otherwise>
+
+                                        <c:otherwise>
                                                 <h4>
                                                         ${userProfile}
                                                 </h4>
@@ -570,7 +562,7 @@
                                                     </span>
                                                 </div>
                                             </c:otherwise>
-                                        </c:choose>
+
                                     </div>
                                 </div>
                             </div>

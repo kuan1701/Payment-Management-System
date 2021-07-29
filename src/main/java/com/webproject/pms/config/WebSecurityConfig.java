@@ -84,11 +84,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/oauth2/**"
 				).not().fullyAuthenticated()
 				//Доступ только для пользователей с ролью Администратор
-				.antMatchers("/admin/**").hasRole("ADMIN")
+				.antMatchers("/my-account").hasRole("ADMIN")
 				//Доступ только для пользователей с ролью Пользователь
 				.antMatchers("/my-account").hasRole("USER")
 				//Доступ разрешен всем пользователям
 				.antMatchers(
+						"/my-account",
 						"/login",
 						"/user/**",
 						"/resources/**",

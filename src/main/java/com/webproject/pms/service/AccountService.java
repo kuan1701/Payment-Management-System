@@ -30,7 +30,7 @@ public interface AccountService {
 	
 	String findAccountNumberByAccountId(Long accountId);
 	
-	List<Account> searchByCriteria(String number, String min_value, String max_value, String currency);
+	List<Account> searchByCriteriaWithoutId(String number, String min_value, String max_value, String currency);
 	
 	List<Account> searchByCriteria(Long userId, String number, String min_value, String max_value, String currency);
 }

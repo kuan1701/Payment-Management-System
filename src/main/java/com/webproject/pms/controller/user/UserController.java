@@ -1,4 +1,4 @@
-package com.webproject.pms.controller;
+package com.webproject.pms.controller.user;
 
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.Letter;
@@ -38,13 +38,20 @@ public class UserController {
 	public String accountPage(Model model,
 	                          Principal principal
 	) {
-		List<Account> accountList = accountService.findAllAccountsByUserId(
-				userService.findUserByUsername(principal.getName()).getUserId());
+		List<User> userList = userService.findAllUsers();
+		List<Account> accountList = accountService.findAllAccounts();
+		User user = userService.findUserByUsername(principal.getName());
 		
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-		model.addAttribute("accountsEmpty", accountList.isEmpty());
+		model.addAttribute("user", user);
+		model.addAttribute("userList", userList);
 		model.addAttribute("accountList", accountList);
+		model.addAttribute("accountsEmpty", accountList.isEmpty());
+		
+		if (user.getRole().getId() == 2) {
+			return "admin/admin";
+		}
 		return "user/user";
+		
 	}
 	
 	/**

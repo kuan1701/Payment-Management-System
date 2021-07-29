@@ -234,7 +234,7 @@
                                                                                         <!-- Show AccountDto Payments -->
                                                                                         <div class="col-md-4">
                                                                                             <span class="forward-top-link-img">
-                                                                                                <a href="?command=showAccountPayments&accountId=${account.accountId}"
+                                                                                                <a href="/show-account-payments/${account.number}"
                                                                                                    class="float-right">
                                                                                                     <img src="<c:url value="/images/payments.png"/>"
                                                                                                          alt=""/>

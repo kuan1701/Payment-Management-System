@@ -101,9 +101,9 @@
 
                                     <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
-                                        <input type="hidden" name="command" value="username"/>
-                                        <input type="hidden" name="phone" value="+393524594551"/>
-                                        <input type="hidden" name="password" value="111111"/>
+                                        <input type="hidden" name="username" value="robert2018"/>
+                                        <input type="hidden" name="email" value="kuancc@yandex.ru"/>
+                                        <input type="hidden" name="password" value="14082018"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-Admin
                                         </button>

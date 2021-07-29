@@ -25,9 +25,11 @@ public interface UserDao extends JpaRepository<User, Long> {
 	User findUserByPhoneAndEmail(@Param("phone") String phone,
 	                             @Param("email") String email);
 	
-	@Query("select u from User u"
-			+ " where u.name = :name and u.surname = :surname"
-			+ " and u.phone = :phone and u.email = :email")
+	@Query(value = "SELECT user.*, role.* FROM user"
+			+ " INNER JOIN role ON user.role_id = role.id"
+			+ " WHERE user.role_id = 1 AND user.name LIKE CONCAT(?,'%') AND user.surname LIKE CONCAT(?,'%') AND"
+			+ " user.phone LIKE CONCAT(?,'%') AND user.email LIKE CONCAT(?,'%') ORDER BY registration_date DESC",
+	nativeQuery = true)
 	List<User> searchByCriteria(@Param("name") String name,
 	                            @Param("surname") String surname,
 	                            @Param("phone") String phone,

@@ -64,7 +64,7 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form:form action="/make-payments" method="POST" role="form" modelAttribute="payment">
+                    <form:form action="/make-payment" method="POST" role="form" modelAttribute="payment">
                         <%--                        <input type="hidden" name="command" value="makePayment"/>--%>
 <%--                        <input type="hidden" name="caseValue" value="on"/>--%>
                         <input type="hidden" name="accountFromId" id="accountIdParam-AN"/>
@@ -123,7 +123,7 @@
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
 
-                    <c:url value="/make-payments" var="var"/>
+                    <c:url value="/make-payment" var="var"/>
                     <form:form action="${var}" method="POST" role="form" modelAttribute="payment">
                         <%--                        <input type="hidden" name="command" value="makePayment">--%>
                         <input type="hidden" name="caseValue" value="off"/>
@@ -312,7 +312,7 @@
                                         <h4>
                                             ${formHeader}
                                         </h4>
-                                        <c:url value="/make-payments" var="var"/>
+                                        <c:url value="/make-payment" var="var"/>
                                         <form:form action="${var}" method="POST"
                                                    role="form" modelAttribute="payment">
 
@@ -328,8 +328,8 @@
                                             <input type="hidden" id="numberByAccountId" name="numberByAccountId"
                                                    value="${account.number}"/>
 
-                                            <!-- Exchange Rate -->
-                                            <input type="hidden" name="exchangeRate" value="1.0"/>
+<%--                                            <!-- Exchange Rate -->--%>
+<%--                                            <input type="hidden" name="exchangeRate" value="1.0"/>--%>
 
                                             <!-- Select AccountId -->
                                             <div>

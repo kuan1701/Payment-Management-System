@@ -117,9 +117,9 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public List<Account> searchByCriteria(String number, String min_value, String max_value, String currency) {
+	public List<Account> searchByCriteriaWithoutId(String number, String min_value, String max_value, String currency) {
 		
-		return accountDao.searchByCriteria(number, min_value, max_value, currency);
+		return accountDao.searchByCriteriaWithoutId(number, min_value, max_value, currency);
 	}
 	
 	@Override

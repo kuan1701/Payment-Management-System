@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -13,7 +14,7 @@
     <title><fmt:message key="admin.page.title"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="shortcut icon" href="<c:url value="/images/favicon-black.ico"/>" type="image/x-icon"/>">
+    <link rel="shortcut icon" href="<c:url value="/images/favicon-black.ico"/>" type="image/x-icon"/>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap-formhelpers.min.css"/>">
@@ -25,7 +26,7 @@
     <jsp:include page="../template/header.jsp"/>
 
     <!-- Alert showAccountsError and noUsersError -->
-    <c:if test="${response eq 'showAccountsError' || totalUsers == null || totalUsers == 0}">
+    <c:if test="${response eq 'showAccountsError' || userList == null || userList.size() == 0}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="admin.page.failed"/>!</strong>
                 <fmt:message key="admin.page.alertNoUsersError"/>
@@ -42,7 +43,7 @@
             <p>
                 <fmt:message key="admin.page.alertSearchAccountsSuccess"/>
                     ${numberOfAccounts}
-                <fmt:message key="admin.user_accounts.accounts"/>.
+                <fmt:message key="admin.user_accounts.accounts"/>
             </p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -112,10 +113,11 @@
                                                          style="width: 21px; height: 21px; top: -1px;" alt=""/>
                                                     ${allUsers}
                                                     <span class="badge badge-pill badge-light">
-                                                        ${totalUsers}
+                                                        ${userList.size()}
                                                     </span>
                                                 </a>
-                                                <form action="" method="GET" id="form-showUsers" role="form"></form>
+                                                <form action="${pageContext.request.contextPath}/my-account"
+                                                      method="GET" id="form-showUsers" role="form"></form>
                                             </li>
                                             <li class="nav-item-active">
                                                 <a class="nav-link" role="tab" data-toggle="tab" aria-selected="true"
@@ -124,22 +126,21 @@
                                                          style="width: 20px; height: 20px;" alt=""/>
                                                     ${allAccounts}
                                                     <span class="badge badge-pill badge-light">
-                                                        ${totalAccounts}
+                                                        ${accountList.size()}
                                                     </span>
                                                 </a>
-                                                <form action="" method="GET" role="form" id="form-showAccounts">
-                                                    <input type="hidden" name="command" value="showAccounts"/>
+                                                <form action="${pageContext.request.contextPath}/admin/accounts"
+                                                      method="GET" role="form" id="form-showAccounts">
                                                 </form>
                                             </li>
                                         </ul>
                                     </div>
 
                                     <c:choose>
-                                        <c:when test="${totalUsers != null && totalUsers != 0}">
+                                        <c:when test="${userList != null && userList.size() != 0}">
 
                                             <c:choose>
-                                                <c:when test="${response ne 'showAccountsError' &&
-                                                                accountsEmpty == false}">
+                                                <c:when test="${accountsEmpty == false}">
 
                                                     <div class="card-body card-body-main">
                                                         <div class="row">
@@ -148,13 +149,14 @@
                                                                     <label>
                                                                             ${searchCriteria}:
                                                                     </label>
-                                                                    <form action="" method="POST" role="form">
-                                                                        <input type="hidden" name="command"
-                                                                               value="searchAccounts"/>
+
+                                                                    <c:url value="/admin/accounts" var="var"/>
+                                                                    <form:form action="${var}" method="POST" role="form"
+                                                                               modelAttribute="accountList">
 
                                                                         <!-- AccountDto Number -->
                                                                         <div>
-                                                                            <input id="number" name="number" type="text"
+                                                                            <input id="number" name="accountNumber" type="text"
                                                                                    class="form-control"
                                                                                    data-toggle="tooltip-left"
                                                                                    data-title="${tooltipOnlyDigits}"
@@ -166,12 +168,12 @@
 
                                                                         <!-- Min value Balance -->
                                                                         <input type="hidden" id="min-value"
-                                                                               name="min-value"
+                                                                               name="min_value"
                                                                                value="${minValue}"/>
 
                                                                         <!-- Max value Balance -->
                                                                         <input type="hidden" id="max-value"
-                                                                               name="max-value"
+                                                                               name="max_value"
                                                                                value="${maxValue}"/>
 
                                                                         <!-- Balance Range -->
@@ -206,7 +208,7 @@
                                                                                     ${searchButton}
                                                                             </button>
                                                                         </div>
-                                                                    </form>
+                                                                    </form:form>
                                                                 </div>
                                                             </div>
 
@@ -217,13 +219,13 @@
                                                                              style="width: 100% !important;">
                                                                             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-2 row-cols-xl-3">
 
-                                                                                <c:forEach items="${accounts}"
+                                                                                <c:forEach items="${accountList}"
                                                                                            var="account">
                                                                                     <div class="col mb-4">
                                                                                         <div class="card bg-light">
                                                                                             <div class="card-header">
                                                                                                 <c:choose>
-                                                                                                    <c:when test="${account.isBlocked}">
+                                                                                                    <c:when test="${account.blocked}">
                                                                                                         <small class="text-danger float-right">
                                                                                                                 ${statusBlocked}
                                                                                                         </small>
@@ -242,7 +244,7 @@
                                                                                                         ${balance}: ${account.balance} ${account.currency}
 
                                                                                                     <!-- Show AccountDto Info -->
-                                                                                                    <a href="?command=showAccountInfo&userId=${account.userId}&accountId=${account.accountId}"
+                                                                                                    <a href="/admin/accountInfo/${account.accountId}"
                                                                                                        class="float-right">
                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                              alt="${showInfo}"/>

@@ -24,7 +24,7 @@
     <jsp:include page="../template/header.jsp"/>
 
     <!-- Alert noUsersError -->
-    <c:if test="${totalUsers == null || totalUsers == 0}">
+    <c:if test="${userList == null || userList.size() == 0}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="admin.page.failed"/>!</strong>
                 <fmt:message key="admin.page.alertNoUsersError"/>
@@ -123,10 +123,12 @@
                                                          style="width: 21px; height: 21px; top: -1px;" alt=""/>
                                                     ${allUsers}
                                                     <span class="badge badge-pill badge-light">
-                                                        ${totalUsers}
+                                                        ${userList.size()}
                                                     </span>
                                                 </a>
-                                                <form action="" method="GET" id="form-showUsers" role="form"></form>
+                                                <form action="${pageContext.request.contextPath}/my-account" method="GET"
+                                                      id="form-showUsers" role="form">
+                                                </form>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link nav-link-hover" role="tab" data-toggle="tab"
@@ -137,18 +139,18 @@
                                                          style="width: 20px; height: 20px;" alt=""/>
                                                     ${allAccounts}
                                                     <span class="badge badge-pill badge-light">
-                                                        ${totalAccounts}
+                                                        ${accountList.size()}
                                                     </span>
                                                 </a>
-                                                <form action="" method="GET" role="form" id="form-showAccounts">
-                                                    <input type="hidden" name="command" value="showAccounts"/>
+                                                <form action="${pageContext.request.contextPath}/admin/accounts" method="GET"
+                                                      role="form" id="form-showAccounts">
                                                 </form>
                                             </li>
                                         </ul>
                                     </div>
 
                                     <c:choose>
-                                        <c:when test="${totalUsers != null && totalUsers != 0}">
+                                        <c:when test="${userList != null && userList.size() != 0}">
                                             <div class="card-body" style="margin-top: 25px;">
                                                 <div class="row" style="padding: 0 20px 0 35px;">
                                                     <div class="col-lg-3 col-xl-3">
@@ -156,9 +158,9 @@
                                                             <label>
                                                                     ${searchCriteria}:
                                                             </label>
-                                                            <form action="" method="POST" role="form">
-                                                                <input type="hidden" name="command"
-                                                                       value="searchUsers"/>
+
+                                                            <c:url value="/my-account" var="var"/>
+                                                            <form action="${var}" method="POST" role="form">
 
                                                                 <div>
                                                                     <input id="name" name="name" type="text"
@@ -222,9 +224,9 @@
                                                             <div class="card-container">
                                                                 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
 
-                                                                    <c:forEach items="${users}" var="user">
+                                                                    <c:forEach items="${userList}" var="user">
                                                                         <c:choose>
-                                                                            <c:when test="${user.role.roleId == 1}">
+                                                                            <c:when test="${user.role.id == 1}">
                                                                                 <div class="col mb-4">
                                                                                     <div class="card bg-light">
                                                                                         <div class="card-body">
@@ -237,7 +239,7 @@
                                                                                         </div>
                                                                                         <div class="card-footer">
                                                                                             <span class="forward-right-link-img">
-                                                                                                <a href="?command=showUser&userId=${user.userId}">
+                                                                                                <a href="admin/userInfo/${user.userId}">
                                                                                                     ${gotoProfile}
                                                                                                     <img src="<c:url value="/images/forward.png"/>"
                                                                                                          alt=""/>
@@ -263,7 +265,7 @@
                                                                                         </div>
                                                                                         <div class="card-footer">
                                                                                             <span class="forward-right-link-img">
-                                                                                                <a href="?command=showUser&userId=${user.userId}"
+                                                                                                <a href="admin/userInfo/${user.userId}"
                                                                                                    class="text-white">
                                                                                                     ${gotoProfile}
                                                                                                     <img src="<c:url value="/images/forward-white.png"/>"

@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -136,15 +138,16 @@
                                                             <label>
                                                                     ${searchCriteria}:
                                                             </label>
-                                                            <form action="" method="POST" role="form">
-                                                                <input type="hidden" name="command"
-                                                                       value="searchPayments"/>
 
-                                                                <input type="hidden" id="isIncoming" name="isIncoming"
-                                                                       value="${isIncomingValue}"/>
+                                                            <c:url value="/show-payments" var="var"/>
+                                                            <form:form action="${var}"
+                                                                       method="POST" role="form" modelAttribute="paymentList">
 
-                                                                <input type="hidden" id="isOutgoing" name="isOutgoing"
-                                                                       value="${isOutgoingValue}"/>
+                                                                <input type="hidden" id="isIncoming" name="checkbox"
+                                                                       value="isIncoming"/>
+
+                                                                <input type="hidden" id="isOutgoing" name="checkbox"
+                                                                       value="isOutgoing"/>
 
                                                                 <!-- Choice of payment type -->
                                                                 <div class="group-btn"
@@ -165,7 +168,7 @@
                                                                 </div>
 
                                                                 <!-- Min value Date -->
-                                                                <input id="datepicker-start-date" name="start-date"
+                                                                <input id="datepicker-start-date" name="startDate"
                                                                        data-toggle="tooltip-left"
                                                                        data-title="${tooltipStartDate}"
                                                                        readonly="readonly"
@@ -174,7 +177,7 @@
                                                                        class="default-label">&nbsp;</label>
 
                                                                 <!-- Max value Date -->
-                                                                <input id="datepicker-final-date" name="final-date"
+                                                                <input id="datepicker-final-date" name="finalDate"
                                                                        data-toggle="tooltip-left"
                                                                        data-title="${tooltipFinalDate}"
                                                                        readonly="readonly"
@@ -207,7 +210,7 @@
                                                                             ${searchButton}
                                                                     </button>
                                                                 </div>
-                                                            </form>
+                                                            </form:form>
                                                         </div>
                                                     </div>
 
@@ -225,7 +228,7 @@
                                                                                                 ${payment.date}
                                                                                         </small>
                                                                                         <c:choose>
-                                                                                            <c:when test="${payment.condition}">
+                                                                                            <c:when test="${payment.status}">
                                                                                                 <small class="text-success float-right">
                                                                                                         ${success}
                                                                                                 </small>
@@ -262,15 +265,15 @@
                                                                                                         ${remained}: ${payment.newBalance} ${payment.senderCurrency}
                                                                                                     </span>
 
-                                                                                                    <!-- Show Platezhi Info -->
-                                                                                                    <a href="?command=showPaymentInfo&paymentId=${payment.paymentId}"
+                                                                                                    <!-- Show Payment Info -->
+                                                                                                    <a href="/paymentInfo/${payment.paymentId}"
                                                                                                        class="float-right">
                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                              alt="${showInfo}"/>
                                                                                                     </a>
 
-                                                                                                    <!-- Repeat Platezhi -->
-                                                                                                    <a href="?command=repeatPayment&paymentId=${payment.paymentId}"
+                                                                                                    <!-- Repeat Payment -->
+                                                                                                    <a href="${pageContext.request.contextPath}/make-payment"
                                                                                                        class="float-right">
                                                                                                         <img src="<c:url value="/images/repeat-payment.png"/>"
                                                                                                              alt="${repeat}"/>
@@ -297,8 +300,8 @@
                                                                                                         ${remained}: ${payment.newBalance} ${payment.recipientCurrency}
                                                                                                      </span>
 
-                                                                                                    <!-- Show Platezhi Info -->
-                                                                                                    <a href="?command=showPaymentInfo&paymentId=${payment.paymentId}"
+                                                                                                    <!-- Show Payment Info -->
+                                                                                                    <a href="/paymentInfo/${payment.paymentId}"
                                                                                                        class="float-right">
                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                              alt="${showInfo}"/>

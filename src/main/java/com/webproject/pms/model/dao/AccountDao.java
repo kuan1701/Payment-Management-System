@@ -32,12 +32,12 @@ public interface AccountDao extends JpaRepository<Account, Long> {
 	                               @Param("currency") String currency);
 	
 	@Query(value = "SELECT * FROM account"
-			+ " WHERE user_user_id = ? AND is_deleted = 0 AND"
-			+ " number LIKE CONCAT(?, '%') AND balance >= ? AND balance <= ? AND"
+			+ " WHERE is_deleted = 0 AND number LIKE CONCAT(?, '%') AND"
+			+ " balance >= ? AND balance <= ? AND"
 			+ " currency LIKE CONCAT(?, '%') ORDER BY account_id ASC",
 	nativeQuery = true)
-	List<Account> searchByCriteria(@Param("number") String number,
-	                               @Param("min_value") String min_value,
-	                               @Param("max_value") String max_value,
-	                               @Param("currency") String currency);
+	List<Account> searchByCriteriaWithoutId(@Param("number") String number,
+	                                        @Param("min_value") String min_value,
+	                                        @Param("max_value") String max_value,
+	                                        @Param("currency") String currency);
 }

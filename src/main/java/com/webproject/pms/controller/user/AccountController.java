@@ -1,7 +1,6 @@
-package com.webproject.pms.controller;
+package com.webproject.pms.controller.user;
 
 import com.webproject.pms.model.entities.Account;
-import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
 import com.webproject.pms.service.impl.BankCardServiceImpl;
@@ -68,9 +67,9 @@ public class AccountController {
 		User user = userService.findUserByUsername(principal.getName());
 		List<Account> accountList = accountService.findAllAccountsByUserId(user.getUserId());
 		
-		model.addAttribute("accountsEmpty", accountList.isEmpty());
-		model.addAttribute("accountList", accountList);
 		model.addAttribute("user", user);
+		model.addAttribute("accountList", accountList);
+		model.addAttribute("accountsEmpty", accountList.isEmpty());
 		return "user/userShowAccounts";
 	}
 
@@ -90,13 +89,13 @@ public class AccountController {
 				max_value,
 				currency);
 		
-		model.addAttribute("accountNumber", accountNumber);
+		model.addAttribute("user", user);
+		model.addAttribute("currency", currency);
 		model.addAttribute("min_value", min_value);
 		model.addAttribute("max_value", max_value);
-		model.addAttribute("currency", currency);
-		model.addAttribute("accountsEmpty", accountList.isEmpty());
 		model.addAttribute("accountList", accountList);
-		model.addAttribute("user", user);
+		model.addAttribute("accountNumber", accountNumber);
+		model.addAttribute("accountsEmpty", accountList.isEmpty());
 		return "user/userShowAccounts";
 	}
 	
