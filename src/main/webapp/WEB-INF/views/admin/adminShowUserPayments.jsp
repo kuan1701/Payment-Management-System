@@ -157,9 +157,8 @@
                                                     <div class="row">
                                                         <div class="col-lg-3 col-xl-3">
                                                             <div>
-                                                                <form action="" method="GET" role="form">
-                                                                    <input type="hidden" name="command"
-                                                                           value="showUser"/>
+                                                                <form action="/admin/userInfo/${viewableUser.userId}" method="GET" role="form">
+
                                                                     <input type="hidden" name="userId"
                                                                            value="${userId}"/>
                                                                     <div class="action" style="padding: 0 0 20px 0;">
@@ -193,7 +192,7 @@
                                                                            name="isOutgoing"
                                                                            value="${isOutgoingValue}"/>
 
-                                                                    <!-- Choice of platezhi type -->
+                                                                    <!-- Choice of payment type -->
                                                                     <div class="group-btn"
                                                                          data-toggle="tooltip-left-hover"
                                                                          data-title="${tooltipTypeOfPayment}">
@@ -267,16 +266,16 @@
                                                                         <div class="card-container">
 
                                                                             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1">
-                                                                                <c:forEach items="${platezhis}"
-                                                                                           var="platezhi">
+                                                                                <c:forEach items="${paymentList}"
+                                                                                           var="payment">
                                                                                     <div class="col mb-4">
                                                                                         <div class="card bg-light">
                                                                                             <div class="card-header">
                                                                                                 <small class="text-muted float-left">
-                                                                                                        ${platezhi.date}
+                                                                                                        ${payment.date}
                                                                                                 </small>
                                                                                                 <c:choose>
-                                                                                                    <c:when test="${platezhi.condition}">
+                                                                                                    <c:when test="${payment.status}">
                                                                                                         <small class="text-success float-right">
                                                                                                                 ${success}
                                                                                                         </small>
@@ -293,26 +292,26 @@
 
                                                                                                 <!-- Outgoing and Incoming Payments -->
                                                                                                 <c:choose>
-                                                                                                    <c:when test="${platezhi.isOutgoing}">
+                                                                                                    <c:when test="${payment.outgoing}">
 
                                                                                                         <!-- Sender and Recipient -->
                                                                                                         <p class="card-title text-muted">
-                                                                                                                ${platezhi.senderNumber}
+                                                                                                                ${payment.senderNumber}
                                                                                                             <span class="forward-right-link-img">&Longrightarrow;</span>
-                                                                                                                ${platezhi.recipientNumber}
+                                                                                                                ${payment.recipientNumber}
                                                                                                         </p>
 
                                                                                                         <!-- Sent Funds -->
                                                                                                         <p class="card-title text-muted">
-                                                                                                                ${sentFunds}: ${platezhi.senderAmount} ${platezhi.senderCurrency}
+                                                                                                                ${sentFunds}: ${payment.senderAmount} ${payment.senderCurrency}
                                                                                                         </p>
 
                                                                                                         <!-- New balance -->
                                                                                                         <p class="card-title text-muted">
-                                                                                                                ${remained}: ${platezhi.newBalance} ${platezhi.senderCurrency}
+                                                                                                                ${remained}: ${payment.newBalance} ${payment.senderCurrency}
 
-                                                                                                            <!-- Show Platezhi Info -->
-                                                                                                            <a href="?command=showPaymentInfo&userId=${userId}&paymentId=${platezhi.paymentId}"
+                                                                                                            <!-- Show Payment Info -->
+                                                                                                            <a href="/admin/paymentInfo/${payment.paymentId}"
                                                                                                                class="float-right">
                                                                                                                 <img src="<c:url value="/images/info.png"/>"
                                                                                                                      alt="${showInfo}"/>
@@ -323,22 +322,22 @@
 
                                                                                                         <!-- Sender and Recipient -->
                                                                                                         <p class="card-title text-muted">
-                                                                                                                ${platezhi.recipientNumber}
+                                                                                                                ${payment.recipientNumber}
                                                                                                             <span class="forward-left-link-img">&Longleftarrow;</span>
-                                                                                                                ${platezhi.senderNumber}
+                                                                                                                ${payment.senderNumber}
                                                                                                         </p>
 
                                                                                                         <!-- Received Funds -->
                                                                                                         <p class="card-title text-muted">
-                                                                                                                ${receivedFunds}: ${platezhi.recipientAmount} ${platezhi.recipientCurrency}
+                                                                                                                ${receivedFunds}: ${payment.recipientAmount} ${payment.recipientCurrency}
                                                                                                         </p>
 
                                                                                                         <!-- New balance -->
                                                                                                         <p class="card-title text-muted">
-                                                                                                                ${remained}: ${platezhi.newBalance} ${platezhi.recipientCurrency}
+                                                                                                                ${remained}: ${payment.newBalance} ${payment.recipientCurrency}
 
-                                                                                                            <!-- Show Platezhi Info -->
-                                                                                                            <a href="?command=showPaymentInfo&userId=${userId}&paymentId=${platezhi.paymentId}"
+                                                                                                            <!-- Show Payment Info -->
+                                                                                                            <a href="/admin/paymentInfo/${payment.paymentId}"
                                                                                                                class="float-right">
                                                                                                                 <img src="<c:url value="/images/info.png"/>"
                                                                                                                      alt="${showInfo}"/>

@@ -37,9 +37,9 @@ public class RegistrationUserController {
 	
 	@PostMapping("/registration")
 	public String registrationUser(Model model,
-	                               BindingResult bindingResult,
-	                               @ModelAttribute("user") @Valid User user
-	) {
+	                               @ModelAttribute("user") @Valid User user,
+	                               BindingResult bindingResult
+	                               ) {
 		if (bindingResult.hasErrors()){
 			model.addAttribute("registrationError", "Invalid data");
 			return "registration";

@@ -121,12 +121,9 @@
 
                                         <!-- Perhaps there was an error or the letter was processed -->
                                         <c:choose>
-                                            <c:when test="${response ne 'unableGetLetterId' &&
-                                                            response ne 'showLetterError' &&
-                                                            response ne 'letterProcessedSuccess'}">
-
-                                                <form action="" method="POST" role="form">
-                                                    <input type="hidden" name="command" value="showLetterInfo"/>
+                                            <c:when test="${totalLetters != 0}">
+                                                <c:url value="/admin/support/letter/${letter.letterId}/processed" var="var"/>
+                                                <form action="${var}" method="POST" role="form">
 
                                                     <!-- Letter Id -->
                                                     <input type="hidden" id="letterId" name="letterId"
@@ -143,7 +140,7 @@
                                                                 <input id="bio" name="bio" type="text"
                                                                        class="form-control" style="margin-top: 0;"
                                                                        readonly="readonly"
-                                                                       value="${bioValue}"/>
+                                                                       value="${userLetter.name}"/>
                                                                 <label for="bio" class="default-label">&nbsp;</label>
                                                             </div>
 
@@ -155,7 +152,7 @@
                                                                 <input id="phone" name="phone" type="tel"
                                                                        class="form-control"
                                                                        readonly="readonly"
-                                                                       value="${phoneValue}"/>
+                                                                       value="${userLetter.phone}"/>
                                                                 <label for="phone" class="default-label">&nbsp;</label>
                                                             </div>
 
@@ -167,7 +164,7 @@
                                                                 <input id="email" name="email" type="email"
                                                                        class="form-control" style="margin-top: 0;"
                                                                        readonly="readonly"
-                                                                       value="${emailValue}"/>
+                                                                       value="${userLetter.email}"/>
                                                                 <label for="email" class="default-label">&nbsp;</label>
                                                             </div>
                                                         </div>
@@ -181,34 +178,34 @@
                                                                 </label>
 
                                                                 <c:choose>
-                                                                    <c:when test="${typeQuestionValue == 1}">
+                                                                    <c:when test="${letter.typeQuestion == 1}">
                                                                         <c:set var="typeQuestion" value="${option_1}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 2}">
+                                                                    <c:when test="${letter.typeQuestion == 2}">
                                                                         <c:set var="typeQuestion" value="${option_2}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 3}">
+                                                                    <c:when test="${letter.typeQuestion == 3}">
                                                                         <c:set var="typeQuestion" value="${option_3}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 4}">
+                                                                    <c:when test="${letter.typeQuestion == 4}">
                                                                         <c:set var="typeQuestion" value="${option_4}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 5}">
+                                                                    <c:when test="${letter.typeQuestion == 5}">
                                                                         <c:set var="typeQuestion" value="${option_5}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 6}">
+                                                                    <c:when test="${letter.typeQuestion == 6}">
                                                                         <c:set var="typeQuestion" value="${option_6}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 7}">
+                                                                    <c:when test="${letter.typeQuestion == 7}">
                                                                         <c:set var="typeQuestion" value="${option_7}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 8}">
+                                                                    <c:when test="${letter.typeQuestion == 8}">
                                                                         <c:set var="typeQuestion" value="${option_8}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 9}">
+                                                                    <c:when test="${letter.typeQuestion == 9}">
                                                                         <c:set var="typeQuestion" value="${option_9}"/>
                                                                     </c:when>
-                                                                    <c:when test="${typeQuestionValue == 10}">
+                                                                    <c:when test="${letter.typeQuestion == 10}">
                                                                         <c:set var="typeQuestion" value="${option_10}"/>
                                                                     </c:when>
                                                                     <c:otherwise>
@@ -234,7 +231,7 @@
                                                                               class="form-control"
                                                                               style="min-height: 123px; padding-right: .75rem; resize: none;"
                                                                               readonly="readonly"
-                                                                    >${descriptionValue}</textarea>
+                                                                    >${letter.description}</textarea>
                                                                 </div>
                                                                 <label for="description" class="default-label">
                                                                     &nbsp;</label>
@@ -267,8 +264,7 @@
 
                                                 <!-- Return to Letters -->
                                                 <div class="action back-btn">
-                                                    <form action="" method="GET" role="form">
-                                                        <input type="hidden" name="command" value="support"/>
+                                                    <form action="${pageContext.request.contextPath}/admin/support" method="GET" role="form">
                                                         <button type="submit" class="btn btn-primary signup btn-default"
                                                                 style="width: 62%;">
                                                                 ${returnToLetters}
@@ -281,7 +277,7 @@
                                                 <!-- Return to Letters -->
                                                 <div class="message-block">
                                                     <span class="title-label forward-left-link-img">
-                                                        <a href="?command=support" class="float-left">
+                                                        <a href="${pageContext.request.contextPath}/admin/support" class="float-left">
                                                             <img src="<c:url value="/images/return.png"/>"
                                                                  class="icon-return" alt=""/>
                                                                 ${returnToLetters}

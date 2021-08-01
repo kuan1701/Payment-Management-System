@@ -47,8 +47,8 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form action="/" method="POST" role="form">
-                        <input type="hidden" name="command" value="deleteAccount"/>
+                    <c:url value="/admin/accountInfo/delete/${viewableAccount.accountId}" var="var"/>
+                    <form action="${var}" method="POST" role="form">
                         <input type="hidden" name="userId" value="${viewableUser.userId}"/>
                         <input type="hidden" name="accountId" value="${viewableAccount.accountId}"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
@@ -89,9 +89,9 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form action="" method="POST" role="form">
-                        <input type="hidden" name="command" value="detachCard"/>
-                        <input type="hidden" name="userId" value="${viewableUser.userId}"/>
+
+                    <c:url value="/admin/accountInfo/${viewableAccount.accountId}/detach/${card.cardId}" var="var"/>
+                    <form action="${var}" method="POST" role="form">
                         <input type="hidden" name="accountId" value="${viewableAccount.accountId}"/>
                         <input type="hidden" name="cardId" id="cardId"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
@@ -380,45 +380,6 @@
                                             ${formHeader}
                                         </h4>
 
-                                        <!-- Return to Users -->
-                                        <c:if test="${response eq 'unableGetUserId'}">
-                                            <div class="message-block">
-                                                <span class="title-label forward-left-link-img">
-                                                    <a href="" class="float-left">
-                                                        <img src="<c:url value="/images/return.png"/>"
-                                                             class="icon-return" alt=""/>
-                                                            ${returnToUsers}
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </c:if>
-
-                                        <!-- Return to User -->
-                                        <c:if test="${response eq 'unableGetAccountId' ||
-                                                      response eq 'unableGetAccountByUserId' ||
-                                                      response eq 'showAccountError' ||
-                                                      response eq 'accountDeletedSuccess'}">
-                                            <div class="message-block">
-                                                <span class="title-label forward-left-link-img">
-                                                    <a href="?command=showUser&userId=${userId}" class="float-left">
-                                                        <img src="<c:url value="/images/return.png"/>"
-                                                             class="icon-return" alt=""/>
-                                                            ${returnToUserProfile}
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </c:if>
-
-                                        <c:if test="${response ne 'unableGetUserId' &&
-                                                      response ne 'unableGetAccountId' &&
-                                                      response ne 'unableGetAccountByUserId' &&
-                                                      response ne 'showAccountError' &&
-                                                      response ne 'accountDeletedSuccess'}">
-
-                                            <jsp:useBean id="viewableAccount" scope="request"
-                                                         type="com.webproject.pms.model.entities.Account"/>
-                                            <jsp:useBean id="viewableUser" scope="request"
-                                                         type="com.webproject.pms.model.entities.User"/>
 
                                             <div class="row">
                                                 <div class="col-xl-12">
@@ -427,7 +388,7 @@
 
                                                             <!-- AccountDto Status -->
                                                             <c:choose>
-                                                                <c:when test="${viewableAccount.isBlocked}">
+                                                                <c:when test="${viewableAccount.blocked}">
                                                                     <label class="for-form-label text-center"
                                                                            style="margin-top:10px; font-size: 18px;">
                                                                             ${accountStatus}:
@@ -500,7 +461,7 @@
                                                                  style="margin-top: 24px;">
                                                                 <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                    id="list-unblockAccount-list" role="tab"
-                                                                   href="?command=showUser&userId=${viewableUser.userId}"
+                                                                   href="/admin/userInfo/${viewableUser.userId}"
                                                                    aria-controls="unblockAccount">
                                                                     <span class="forward-right-link-img">
                                                                          ${accountOwner}
@@ -510,7 +471,7 @@
                                                                 </a>
                                                                 <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                    id="list-platezhis-list" data-toggle="list"
-                                                                   href="#list-platezhis" role="tab"
+                                                                   href="#list-payments" role="tab"
                                                                    aria-controls="showPayments">
                                                                     <span class="forward-right-link-img">
                                                                          ${showPayments}
@@ -529,7 +490,7 @@
                                                                     </span>
                                                                 </a>
                                                                 <c:choose>
-                                                                    <c:when test="${viewableAccount.isBlocked}">
+                                                                    <c:when test="${viewableAccount.blocked}">
                                                                         <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                            id="list-unblockAccount-list" role="tab"
                                                                            href="?command=unblockAccount"
@@ -593,12 +554,12 @@
                                                 <div class="col-xl-12 tab-content" id="nav-tabContent">
 
                                                     <!-- Show Payments -->
-                                                    <div class="tab-pane fade show" id="list-platezhis"
+                                                    <div class="tab-pane fade show" id="list-payments"
                                                          role="tabpanel" aria-labelledby="list-home-list">
                                                         <div class="col-xl-12" style="margin-top: 30px;">
 
                                                             <h4>
-                                                                    ${allPayments}
+                                                                ${allPayments}
                                                             </h4>
 
                                                             <c:choose>
@@ -607,16 +568,16 @@
                                                                          style="width: 75% !important;">
                                                                         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1">
 
-                                                                            <c:forEach items="${platezhis}"
-                                                                                       var="platezhi">
+                                                                            <c:forEach items="${paymentList}"
+                                                                                       var="payment">
                                                                                 <div class="col mb-4">
                                                                                     <div class="card bg-light">
                                                                                         <div class="card-header">
                                                                                             <small class="text-muted float-left">
-                                                                                                    ${platezhi.date}
+                                                                                                    ${payment.date}
                                                                                             </small>
                                                                                             <c:choose>
-                                                                                                <c:when test="${platezhi.condition}">
+                                                                                                <c:when test="${payment.status}">
                                                                                                     <small class="text-success float-right">
                                                                                                             ${success}
                                                                                                     </small>
@@ -633,26 +594,26 @@
 
                                                                                             <!-- Outgoing and Incoming Payments -->
                                                                                             <c:choose>
-                                                                                                <c:when test="${platezhi.isOutgoing}">
+                                                                                                <c:when test="${payment.outgoing}">
 
                                                                                                     <!-- Sender and Recipient -->
                                                                                                     <p class="card-title text-muted">
-                                                                                                            ${platezhi.senderNumber}
+                                                                                                            ${payment.senderNumber}
                                                                                                         <span class="forward-right-link-img">&Longrightarrow;</span>
-                                                                                                            ${platezhi.recipientNumber}
+                                                                                                            ${payment.recipientNumber}
                                                                                                     </p>
 
                                                                                                     <!-- Sent Funds -->
                                                                                                     <p class="card-title text-muted">
-                                                                                                            ${sentFunds}: ${platezhi.senderAmount} ${platezhi.senderCurrency}
+                                                                                                            ${sentFunds}: ${payment.senderAmount} ${payment.senderCurrency}
                                                                                                     </p>
 
                                                                                                     <!-- New balance -->
                                                                                                     <p class="card-title text-muted">
-                                                                                                            ${remained}: ${platezhi.newBalance} ${platezhi.senderCurrency}
+                                                                                                            ${remained}: ${payment.newBalance} ${payment.senderCurrency}
 
-                                                                                                        <!-- Show Platezhi Info -->
-                                                                                                        <a href="?command=showPaymentInfo&userId=${viewableUser.userId}&paymentId=${platezhi.paymentId}"
+                                                                                                        <!-- Show Payment Info -->
+                                                                                                        <a href="/admin/paymentInfo/${payment.paymentId}"
                                                                                                            class="float-right">
                                                                                                             <img src="<c:url value="/images/info.png"/>"
                                                                                                                  alt="${showInfo}"/>
@@ -663,22 +624,22 @@
 
                                                                                                     <!-- Sender and Recipient -->
                                                                                                     <p class="card-title text-muted">
-                                                                                                            ${platezhi.recipientNumber}
+                                                                                                            ${payment.recipientNumber}
                                                                                                         <span class="forward-left-link-img">&Longleftarrow;</span>
-                                                                                                            ${platezhi.senderNumber}
+                                                                                                            ${payment.senderNumber}
                                                                                                     </p>
 
                                                                                                     <!-- Received Funds -->
                                                                                                     <p class="card-title text-muted">
-                                                                                                            ${receivedFunds}: ${platezhi.recipientAmount} ${platezhi.recipientCurrency}
+                                                                                                            ${receivedFunds}: ${payment.recipientAmount} ${payment.recipientCurrency}
                                                                                                     </p>
 
                                                                                                     <!-- New balance -->
                                                                                                     <p class="card-title text-muted">
-                                                                                                            ${remained}: ${platezhi.newBalance} ${platezhi.recipientCurrency}
+                                                                                                            ${remained}: ${payment.newBalance} ${payment.recipientCurrency}
 
-                                                                                                        <!-- Show Platezhi Info -->
-                                                                                                        <a href="?command=showPaymentInfo&userId=${viewableUser.userId}&paymentId=${platezhi.paymentId}"
+                                                                                                        <!-- Show Payment Info -->
+                                                                                                        <a href="/admin/paymentInfo/${payment.paymentId }"
                                                                                                            class="float-right">
                                                                                                             <img src="<c:url value="/images/info.png"/>"
                                                                                                                  alt=""/>
@@ -721,12 +682,12 @@
                                                                     <div class="card-container"
                                                                          style="width: 100% !important;">
                                                                         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2">
-                                                                            <c:forEach items="${cards}" var="card">
+                                                                            <c:forEach items="${cardList}" var="card">
                                                                                 <div class="col mb-4">
                                                                                     <div class="card bg-light">
                                                                                         <div class="card-header">
                                                                                             <c:choose>
-                                                                                                <c:when test="${card.isActive}">
+                                                                                                <c:when test="${card.active}">
                                                                                                     <small class="text-success float-right">
                                                                                                             ${statusActive}
                                                                                                     </small>
@@ -748,22 +709,42 @@
                                                                                                    class="float-right">
                                                                                                     <img src="<c:url value="/images/detach-card.png"/>"
                                                                                                          style="margin-left: 7px;"
-                                                                                                         alt="${detach}"/>
+                                                                                                         alt="${detach}" title="Detach card"/>
                                                                                                 </a>
                                                                                                 <c:choose>
-                                                                                                    <c:when test="${card.isActive}">
-                                                                                                        <a href="?command=blockCard&userId=${viewableUser.userId}&accountId=${viewableAccount.accountId}&cardId=${card.cardId}"
-                                                                                                           class="float-right">
+                                                                                                    <c:when test="${card.active}">
+                                                                                                        <a href="#"
+                                                                                                           class="float-right"
+                                                                                                           role="tab"
+                                                                                                           onclick="document.getElementById('form-blockCard').submit(); return false;">
                                                                                                             <img src="<c:url value="/images/block.png"/>"
-                                                                                                                 alt="${blockCard}"/>
+                                                                                                                 alt="${blockCard}" title="${blockCard}"/>
                                                                                                         </a>
+                                                                                            <form action="/admin/accountInfo/${viewableAccount.accountId}/block/${card.cardId}"
+                                                                                                  method="POST"
+                                                                                                  id="form-blockCard"
+                                                                                                  role="form">
+                                                                                                <input type="hidden"
+                                                                                                       name="cardId"
+                                                                                                       value="${card.cardId}"/>
+                                                                                            </form>
                                                                                                     </c:when>
                                                                                                     <c:otherwise>
-                                                                                                        <a href="?command=unblockCard&userId=${viewableUser.userId}&accountId=${viewableAccount.accountId}&cardId=${card.cardId}"
-                                                                                                           class="float-right">
+                                                                                                        <a href="#"
+                                                                                                           class="float-right"
+                                                                                                           role="tab"
+                                                                                                           onclick="document.getElementById('form-unblockCard').submit(); return false;">
                                                                                                             <img src="<c:url value="/images/unblock.png"/>"
-                                                                                                                 alt="${unblockCard}"/>
+                                                                                                                 alt="${unblockCard}" title="${unblockCard}"/>
                                                                                                         </a>
+                                                                                                        <form action="/admin/accountInfo/${viewableAccount.accountId}/block/${card.cardId}"
+                                                                                                              method="POST"
+                                                                                                              id="form-unblockCard"
+                                                                                                              role="form">
+                                                                                                            <input type="hidden"
+                                                                                                                   name="cardId"
+                                                                                                                   value="${bankCard.cardId}"/>
+                                                                                                        </form>
                                                                                                     </c:otherwise>
                                                                                                 </c:choose>
                                                                                             </p>
@@ -789,7 +770,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </c:if>
+
                                     </div>
                                 </div>
                             </div>

@@ -1,7 +1,9 @@
 package com.webproject.pms.service.impl;
 
 import com.webproject.pms.model.dao.LetterDao;
+import com.webproject.pms.model.dao.UserDao;
 import com.webproject.pms.model.entities.Letter;
+import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.LetterService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,30 +19,34 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Service
+@Transactional
 public class LetterServiceImpl implements LetterService {
 	
 	private static final Logger LOGGER = LogManager.getLogger(LetterServiceImpl.class);
 	private final LetterDao letterDao;
+	private final UserDao userDao;
 	
 	@Autowired
-	public LetterServiceImpl(LetterDao letterDao) {
+	public LetterServiceImpl(LetterDao letterDao, UserDao userDao) {
 		this.letterDao = letterDao;
+		this.userDao = userDao;
 	}
 	
 	@Override
-	@Transactional
-	public Letter addNewLetter(Letter letter) {
+	public Boolean addNewLetter(Letter letter, Principal principal) {
+		
+		User user = userDao.findUserByUsername(principal.getName());
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		letter.setDate(formatter.format(new Date()));
+		letter.setUser(user);
 		letter.setProcessed(false);
-		
-		return letterDao.save(letter);
+		letterDao.save(letter);
+		return true;
 	}
 	
 	@Override
-	@Transactional
 	public Boolean updateLetterByLetterId(Long letterId) {
 		
 		if (letterId != null) {
@@ -52,7 +59,6 @@ public class LetterServiceImpl implements LetterService {
 	}
 	
 	@Override
-	@Transactional
 	public Boolean deleteLetterByLetterId(Long letterId) {
 		
 		if (letterDao.existsById(letterId)) {
@@ -63,20 +69,16 @@ public class LetterServiceImpl implements LetterService {
 	}
 	
 	@Override
-	@Transactional
 	public Letter findLetterByLetterId(Long letterId) {
-		return letterDao.getOne(letterId);
+		return letterDao.getById(letterId);
 	}
 	
 	@Override
-	@Transactional
 	public List<Letter> findLettersByUserId(Long userId) {
-		
 		return letterDao.findLettersByUser_UserId(userId);
 	}
 	
 	@Override
-	@Transactional
 	public List<Letter> findUnprocessedLetters() {
 		
 		List<Letter> letters = findAllLetters();
@@ -90,19 +92,16 @@ public class LetterServiceImpl implements LetterService {
 	}
 	
 	@Override
-	@Transactional
 	public List<Letter> findAllLetters() {
 		return letterDao.findAll();
 	}
 	
 	@Override
-	@Transactional
 	public List<Letter> searchByCriteria(String typeQuestion, String startDate, String finalDate) {
 		return letterDao.searchByCriteria(typeQuestion, startDate, finalDate);
 	}
 	
 	@Override
-	@Transactional
 	public List<Letter> searchByCriteria(String startDate, String finalDate) {
 		return letterDao.searchByCriteria(startDate, finalDate);
 	}

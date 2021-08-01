@@ -4,6 +4,7 @@ import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.Letter;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
+import com.webproject.pms.service.impl.LetterServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,13 @@ public class UserController {
 	
 	private final UserServiceImpl userService;
 	private final AccountServiceImpl accountService;
+	private final LetterServiceImpl letterService;
 	private final PasswordEncoder passwordEncoder;
 	
-	public UserController(UserServiceImpl userService, AccountServiceImpl accountService, PasswordEncoder passwordEncoder) {
+	public UserController(UserServiceImpl userService, AccountServiceImpl accountService, LetterServiceImpl letterService, PasswordEncoder passwordEncoder) {
 		this.userService = userService;
 		this.accountService = accountService;
+		this.letterService = letterService;
 		this.passwordEncoder = passwordEncoder;
 	}
 	
@@ -38,20 +41,24 @@ public class UserController {
 	public String accountPage(Model model,
 	                          Principal principal
 	) {
+		User user = userService.findUserByUsername(principal.getName());
 		List<User> userList = userService.findAllUsers();
 		List<Account> accountList = accountService.findAllAccounts();
-		User user = userService.findUserByUsername(principal.getName());
+		List<Account> userAccountList = accountService.findAllAccountsByUserId(user.getUserId());
+		List<Letter> unprocessedLetters = letterService.findUnprocessedLetters();
 		
 		model.addAttribute("user", user);
 		model.addAttribute("userList", userList);
-		model.addAttribute("accountList", accountList);
+		model.addAttribute("totalAccounts", accountList.size());
+		model.addAttribute("userAccountList", userAccountList);
+		model.addAttribute("totalLetters", unprocessedLetters.size());
 		model.addAttribute("accountsEmpty", accountList.isEmpty());
+		model.addAttribute("userAccountEmpty", userAccountList.isEmpty());
 		
 		if (user.getRole().getId() == 2) {
 			return "admin/admin";
 		}
 		return "user/user";
-		
 	}
 	
 	/**
@@ -73,7 +80,8 @@ public class UserController {
 	public String updateUser(@ModelAttribute("user") @Valid User user,
 	                         BindingResult bindingResult,
 	                         @PathVariable("userId") Long userId,
-	                         Model model) {
+	                         Model model
+	) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("updateInfo", "invalidData");
 			return "user/userUpdatePersonalData";
@@ -110,7 +118,7 @@ public class UserController {
 	public String updatePasswordPage(Model model,
 	                                 Principal principal,
 	                                 @PathVariable("userId") Long userId
-	                                 ) {
+	) {
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "user/userUpdatePassword";
 	}
@@ -137,20 +145,5 @@ public class UserController {
 			model.addAttribute("passwordError", "Update password successfully.");
 		}
 		return "user/userUpdatePassword";
-	}
-	
-	/**
-	 * Support
-	 *
-	 * @param model
-	 * @param principal
-	 * @return userSupport page
-	 */
-	@GetMapping("/support")
-	public String support(Model model,
-	                      Principal principal) {
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-		model.addAttribute("support", new Letter());
-		return "user/userSupport";
 	}
 }

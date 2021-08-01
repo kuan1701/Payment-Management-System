@@ -21,9 +21,10 @@ public interface UserDao extends JpaRepository<User, Long> {
 	
 	Boolean existsUserByEmail(String email);
 
-	@Query("select u from User u where u.phone = :phone and u.email = :email")
-	User findUserByPhoneAndEmail(@Param("phone") String phone,
-	                             @Param("email") String email);
+	@Query(value = "SELECT user.*, role.* FROM user"
+			+ " INNER JOIN role ON user.role_id = role.id ORDER BY role_id DESC",
+	nativeQuery = true)
+	List<User> searchAllUser();
 	
 	@Query(value = "SELECT user.*, role.* FROM user"
 			+ " INNER JOIN role ON user.role_id = role.id"

@@ -13,14 +13,14 @@
     <title><fmt:message key="admin.support.title"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="shortcut icon" href=<"<c:url value="/static/images/favicon-black.ico"/>" type="image/x-icon">
+    <link rel="shortcut icon" href=<"<c:url value="/images/favicon-black.ico"/>" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css"/>
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap-formhelpers.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/styles.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/style_adminSupport.css"/>">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap-formhelpers.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/styles.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/style_adminSupport.css"/>">
 </head>
 <body>
 <div class="main">
@@ -115,15 +115,14 @@
                                                 </h4>
 
                                                 <c:choose>
-                                                    <c:when test="${response ne 'showLettersError' &&
-                                                                    lettersEmpty == false}">
+                                                    <c:when test="${lettersEmpty == false}">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-xl-3">
                                                                 <div class="search-block">
                                                                     <label>
                                                                             ${searchCriteria}:
                                                                     </label>
-                                                                    <form action="/static" method="POST" role="form">
+                                                                    <form action="" method="POST" role="form">
                                                                         <input type="hidden" name="command"
                                                                                value="searchLetters"/>
 
@@ -208,9 +207,10 @@
                                                                     <div class="card-container">
                                                                         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1">
 
-                                                                            <c:forEach items="${letters}" var="letter">
+                                                                            <c:forEach items="${unprocessedLetters}"
+                                                                                       var="letter">
                                                                                 <div class="col mb-4">
-                                                                                    <a href="?command=showLetterInfo&letterId=${letter.letterId}">
+                                                                                    <a href="support/letter/${letter.letterId}">
                                                                                         <div class="card bg-light">
                                                                                             <div class="card-body"
                                                                                                  style="padding: 0.75rem 1.25rem;">
@@ -257,7 +257,7 @@
                                                                                                     </span>
                                                                                                     <span class="float-right"
                                                                                                           style="padding-left: 28px;">
-                                                                                                        <img src="<c:url value="/static/images/forward.png"/>"
+                                                                                                        <img src="<c:url value="/images/forward.png"/>"
                                                                                                              alt=""/>
                                                                                                     </span>
                                                                                                 </p>
@@ -281,7 +281,8 @@
                                                                     </label>
                                                                 </span>
                                                                 <div class="w-100" style="height:172px;">
-                                                                    <img src="<c:url value="/static/images/mail-empty.png"/>" alt=""
+                                                                    <img src="<c:url value="/images/mail-empty.png"/>"
+                                                                         alt=""
                                                                          style="width: 172px; height: 172px; position: absolute; bottom: 35px; right: 50px;"/>
                                                                 </div>
                                                             </div>
@@ -302,5 +303,5 @@
     <jsp:include page="../template/footer.jsp"/>
 </div>
 </body>
-<script src="<c:url value="/static/js/searcher_adminSupport.js"/>"></script>
+<script src="<c:url value="/js/searcher_adminSupport.js"/>"></script>
 </html>

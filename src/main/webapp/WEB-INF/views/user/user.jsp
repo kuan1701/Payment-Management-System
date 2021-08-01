@@ -65,13 +65,13 @@
                                 </div>
 
                                 <c:choose>
-                                    <c:when test="${accountsEmpty == false}">
+                                    <c:when test="${userAccountEmpty == false}">
 
                                         <div class="card-body card-container">
                                             <div id="carouselAccounts" class="carousel slide" data-ride="carousel">
 
                                                 <ol class="carousel-indicators">
-                                                    <c:forEach items="${accountList}" varStatus="loop">
+                                                    <c:forEach items="${userAccountList}" varStatus="loop">
                                                         <c:choose>
                                                             <c:when test="${loop.first == true}">
                                                                 <li data-target="#carouselAccounts"
@@ -88,7 +88,7 @@
 
                                                 <div class="col-md-12 h-100">
                                                     <div class="carousel-inner h-100">
-                                                        <c:forEach items="${accountList}" var="account" varStatus="loop">
+                                                        <c:forEach items="${userAccountList}" var="account" varStatus="loop">
                                                             <c:choose>
                                                                 <c:when test="${loop.first == true}">
                                                                     <div class="carousel-item active h-100">

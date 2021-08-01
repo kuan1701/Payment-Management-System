@@ -1,20 +1,19 @@
 package com.webproject.pms.controller.admin;
 
 import com.webproject.pms.model.entities.Account;
+import com.webproject.pms.model.entities.Letter;
 import com.webproject.pms.model.entities.Payment;
-import com.webproject.pms.model.entities.Role;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
+import com.webproject.pms.service.impl.LetterServiceImpl;
 import com.webproject.pms.service.impl.PaymentServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -24,22 +23,18 @@ public class AdminUserController {
 	private final UserServiceImpl userService;
 	private final AccountServiceImpl accountService;
 	private final PaymentServiceImpl paymentService;
+	private final LetterServiceImpl letterService;
 	
-	public AdminUserController(UserServiceImpl userService, AccountServiceImpl accountService, PaymentServiceImpl paymentService) {
+	public AdminUserController(UserServiceImpl userService,
+	                           AccountServiceImpl accountService,
+	                           PaymentServiceImpl paymentService,
+	                           LetterServiceImpl letterService
+	) {
 		this.userService = userService;
 		this.accountService = accountService;
 		this.paymentService = paymentService;
+		this.letterService = letterService;
 	}
-	
-	@GetMapping("/admin")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String adminPage(Model model,
-	                        Principal principal
-	) {
-		List<User> userList = userService.findAllUsers();
-		
-		return "admin/admin";
-	};
 	
 	/**
 	 * Admin search users
@@ -71,24 +66,147 @@ public class AdminUserController {
 		return "admin/admin";
 	}
 	
-	@GetMapping("/userInfo/{userId}")
+	/**
+	 * Admin show user info
+	 * @param model
+	 * @param principal
+	 * @param userId
+	 * @return admin/adminShowUser
+	 */
+	@GetMapping("/admin/userInfo/{userId}")
 	public String adminShowUserInfo(Model model,
 	                                Principal principal,
 	                                @PathVariable("userId") Long userId
 	) {
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
-		Role userIsAdmin = user.getRole();
 		List<Account> accountList = accountService.findAllAccountsByUserId(userId);
 		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(userId);
+		List<Letter> letterList = letterService.findUnprocessedLetters();
+		
+		boolean userIsAdmin = false;
+		if (viewableUser.getRole().getId() == 2) {
+			userIsAdmin = true;
+		}
 		
 		model.addAttribute("user", user);
 		model.addAttribute("userIsAdmin", userIsAdmin);
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("accountList", accountList);
 		model.addAttribute("viewableUser", viewableUser);
+		model.addAttribute("totalLetters", letterList.size());
 		model.addAttribute("paymentsEmpty", paymentList.isEmpty());
 		model.addAttribute("accountsEmpty", accountList.isEmpty());
 		return "admin/adminShowUser";
 	}
+	
+	/**
+	 * Admin update user data page
+	 * @param model
+	 * @param principal
+	 * @param userId
+	 * @return admin/adminUpdateUserData
+	 */
+	@GetMapping("/admin/updateUserData/{userId}")
+	public String adminUpdateUserDataPage(Model model,
+                                          Principal principal,
+                                          @PathVariable("userId") Long userId
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		User updateUser = userService.findUserByUserId(userId);
+		List<Letter> letterList = letterService.findUnprocessedLetters();
+		
+		model.addAttribute("user", user);
+		model.addAttribute("updateUser", updateUser);
+		model.addAttribute("totalLetters", letterList.size());
+		return "admin/adminUpdateUserData";
+	}
+	
+	/**
+	 * Admin updates user data
+	 * @param model
+	 * @param principal
+	 * @param user
+	 * @param userId
+	 * @return redirect:/my-account
+	 */
+	@PostMapping("/admin/updateUserData/{userId}")
+	public String adminUpdateUserData(Model model,
+	                                  Principal principal,
+	                                  @ModelAttribute("user") User user,
+	                                  @PathVariable("userId") Long userId
+	) {
+		User userAdmin = userService.findUserByUsername(principal.getName());
+		User updateUser = userService.findUserByUserId(userId);
+		List<Letter> letterList = letterService.findUnprocessedLetters();
+		
+		if (!userService.updateUser(user, userId)) {
+			model.addAttribute("response", "dataUpdatedError");
+			return "user/userUpdatePersonalData";
+		}
+		userService.updateUser(user, userId);
+		model.addAttribute("response", "dataUpdatedSuccess");
+		model.addAttribute("userAdmin", userAdmin);
+		model.addAttribute("updateUser", updateUser);
+		model.addAttribute("totalLetters", letterList.size());
+		return "redirect:/my-account";
+	}
+	
+	/**
+	 * Admin delete user
+	 * @param model
+	 * @param principal
+	 * @param userId
+	 * @return redirect:/my-account
+	 */
+	@PostMapping("/admin/delete/{userId}")
+	public String adminDeleteUser(Model model,
+                                  Principal principal,
+                                  @PathVariable("userId") Long userId
+	) {
+		User viewableUser = userService.findUserByUserId(userId);
+		
+		if (viewableUser != null) {
+			userService.deleteUser(viewableUser);
+		}
+		model.addAttribute("viewableUser", viewableUser);
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		return "redirect:/my-account";
+	}
+	
+	/**
+	 * Admin create page user
+	 * @param model
+	 * @param principal
+	 * @return admin/adminAddUser
+	 */
+	@GetMapping("/admin/createUser")
+	public String adminCreateUserPage(Model model,
+                                  Principal principal
+	) {
+		List<Letter> letterList = letterService.findUnprocessedLetters();
+		
+		model.addAttribute("totalLetters", letterList.size());
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("newUser", new User());
+		return "admin/adminAddUser";
+	}
+	
+	@PostMapping("/admin/createUser")
+	public String adminCreateUser(Model model,
+                                  Principal principal,
+                                  @ModelAttribute("newUser") User newUser
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		
+		if (!userService.adminCreateUser(newUser, model)){
+			model.addAttribute("response", "addUserError");
+			return "admin/adminAddUser";
+		} else {
+			model.addAttribute("response", "addUserSuccess");
+		}
+		model.addAttribute("user", user);
+		return "admin/adminAddUser";
+	}
+	
 }

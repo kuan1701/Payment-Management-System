@@ -137,7 +137,7 @@
                                                 <c:if test="${ response eq 'showUserAccountsError'}">
                                                     <div class="message-block">
                                                         <span class="title-label forward-left-link-img">
-                                                            <a href="?command=showUser&userId=${userId}"
+                                                            <a href="/admin/userInfo/${viewableUser.userId}"
                                                                class="float-left">
                                                                 <img src="<c:url value="/images/return.png"/>"
                                                                      class="icon-return" alt=""/>
@@ -152,11 +152,8 @@
                                                     <div class="row">
                                                         <div class="col-lg-3 col-xl-3">
                                                             <div>
-                                                                <form action="/" method="GET" role="form">
-                                                                    <input type="hidden" name="command"
-                                                                           value="showUser"/>
-                                                                    <input type="hidden" name="userId"
-                                                                           value="${userId}"/>
+                                                                <form action="/admin/userInfo/${viewableUser.userId}" method="GET" role="form">
+
                                                                     <div class="action" style="padding: 0 0 20px 0;">
                                                                         <button id="submit" type="submit"
                                                                                 class="btn btn-primary signup btn-default"
@@ -173,16 +170,14 @@
                                                                 <label style="margin-bottom: 15px;">
                                                                         ${searchCriteria}:
                                                                 </label>
-                                                                <form action="/" method="POST" role="form">
-                                                                    <input type="hidden" name="command"
-                                                                           value="searchUserAccounts"/>
+                                                                <form action="/admin/showUserAccounts/${viewableUser.userId}" method="POST" role="form">
 
                                                                     <input type="hidden" name="userId"
                                                                            value="${userId}"/>
 
                                                                     <!-- AccountDto Number -->
                                                                     <div>
-                                                                        <input id="number" name="number" type="text"
+                                                                        <input id="number" name="accountNumber" type="text"
                                                                                class="form-control"
                                                                                data-toggle="tooltip-left"
                                                                                data-title="${tooltipOnlyDigits}"
@@ -193,11 +188,11 @@
                                                                     </div>
 
                                                                     <!-- Min value Balance -->
-                                                                    <input type="hidden" id="min-value" name="min-value"
+                                                                    <input type="hidden" id="min-value" name="min_value"
                                                                            value="${minValue}"/>
 
                                                                     <!-- Max value Balance -->
-                                                                    <input type="hidden" id="max-value" name="max-value"
+                                                                    <input type="hidden" id="max-value" name="max_value"
                                                                            value="${maxValue}"/>
 
                                                                     <!-- Balance Range -->
@@ -250,7 +245,7 @@
                                                                                             <div class="card bg-light">
                                                                                                 <div class="card-header">
                                                                                                     <c:choose>
-                                                                                                        <c:when test="${account.isBlocked}">
+                                                                                                        <c:when test="${account.blocked}">
                                                                                                             <small class="text-danger float-right">
                                                                                                                     ${statusBlocked}
                                                                                                             </small>
@@ -269,7 +264,7 @@
                                                                                                             ${balance}: ${account.balance} ${account.currency}
 
                                                                                                         <!-- Show AccountDto Info -->
-                                                                                                        <a href="?command=showAccountInfo&userId=${userId}&accountId=${account.accountId}"
+                                                                                                        <a href="/admin/accountInfo/${account.accountId}"
                                                                                                            class="float-right">
                                                                                                             <img src="<c:url value="/images/info.png"/>"
                                                                                                                  alt="${showInfo}"/>

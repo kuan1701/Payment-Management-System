@@ -11,6 +11,8 @@ public interface UserService {
 	
 	User saveUser(User user);
 	
+	void deleteUser(User user);
+	
 	boolean updateUser(User user, Long id);
 	
 	void updatePassword(User user, String password);
@@ -23,11 +25,11 @@ public interface UserService {
 	
 	User findUserByEmail(String email);
 	
-	User findUserByPhoneAndEmail(String phone, String email);
-	
 	User findByActivationCode(String code);
 	
 	boolean registrationUser(User user, Model model);
+
+	boolean adminCreateUser(User user, Model model);
 	
 	boolean activateUser(String code);
 	

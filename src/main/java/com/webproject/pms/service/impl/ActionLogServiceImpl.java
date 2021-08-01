@@ -13,18 +13,17 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Service
+@Transactional
 public class ActionLogServiceImpl implements ActionLogService {
 	
 	private final ActionLogDao actionLogDao;
 	
 	@Autowired
 	public ActionLogServiceImpl(ActionLogDao actionLogDao) {
-		
 		this.actionLogDao = actionLogDao;
 	}
 	
 	@Override
-	@Transactional
 	public LogEntry save(LogEntry logEntry) {
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -35,7 +34,6 @@ public class ActionLogServiceImpl implements ActionLogService {
 	}
 	
 	@Override
-	@Transactional
 	public Boolean clearActionLog(Long userId) {
 		
 		if (userId != null) {
@@ -46,19 +44,16 @@ public class ActionLogServiceImpl implements ActionLogService {
 	}
 	
 	@Override
-	@Transactional
 	public LogEntry findLogEntryByLogEntryId(Long logEntryId) {
 		return actionLogDao.getOne(logEntryId);
 	}
 	
 	@Override
-	@Transactional
 	public List<LogEntry> findLogEntriesByUserId(Long userId) {
 		return actionLogDao.findLogEntriesByUser_UserId(userId);
 	}
 	
 	@Override
-	@Transactional
 	public List<LogEntry> searchByCriteria(Long userId, String startDate, String finalDate) {
 		return actionLogDao.searchByCriteria(userId, startDate, finalDate);
 	}

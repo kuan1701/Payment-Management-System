@@ -51,9 +51,10 @@
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
 
-                    <form action="" method="POST" role="form">
+                    <c:url value="/attached-cards/${account.number}/detach/${bankCard.cardId}" var="var"/>
+                    <form action="${var}" method="POST" role="form">
                         <input type="hidden" name="accountId" value="${account.accountId}"/>
-                        <input type="hidden" name="cardNumber" id="cardNumber"/>
+                        <input type="hidden" name="cardId" id="cardNumber"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
                         </button>

@@ -58,6 +58,24 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
+	public Boolean adminAttachAccount(Account account, Model model, Long userId) {
+		
+		User user = userDao.getById(userId);
+		
+		if (accountDao.findAccountByNumber(account.getNumber()) != null) {
+			return false;
+		}
+		model.addAttribute("accountNumberError", "This account already exist");
+		account.setUser(user);
+		account.setBalance(new BigDecimal("0.00"));
+		account.setBlocked(false);
+		account.setDeleted(false);
+		
+		accountDao.save(account);
+		return true;
+	}
+	
+	@Override
 	public Boolean blockAccount(Account account) {
 		
 		account.setBlocked(true);
@@ -82,37 +100,31 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	public Account findAccountByAccountId(Long accountId) {
-		
 		return accountDao.getById(accountId);
 	}
 	
 	@Override
 	public Account findAccountByAccountNumber(String number) {
-		
 		return accountDao.findAccountByNumber(number);
 	}
 	
 	@Override
 	public String findAccountNumberByAccountId(Long accountId) {
-		
 		return findAccountByAccountId(accountId).getNumber();
 	}
 	
 	@Override
 	public List<Account> findAllAccountsByUserId(Long userId) {
-		
 		return accountDao.findAllAccountsByUser_UserId(userId);
 	}
 	
 	@Override
 	public List<Account> findAllActivateAccountsByUserId(Long userId) {
-		
 		return accountDao.findAllActivateAccountByUserId(userId);
 	}
 	
 	@Override
 	public List<Account> findAllAccounts() {
-		
 		return accountDao.findAll();
 	}
 	

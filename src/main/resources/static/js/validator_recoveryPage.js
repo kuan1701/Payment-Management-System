@@ -1,81 +1,64 @@
 /**
  * Elements on recovery.jsp page for validation
  */
+let email = document.querySelector("#email");
 let login = document.querySelector("#login");
 let submitBtn = document.querySelector("#submit");
 
 /**
- * Configuring the phone number input field.
- * "token" must be obtained on the API website.
+ * Email validation
  */
-let iti = window.intlTelInput(login, {
-    separateDialCode: true,
-    hiddenInput: "full_phone",
-    initialCountry: "auto",
-    geoIpLookup: (callback) => {
-        $.get('https://ipinfo.io', () => {
-        }, "jsonp").always((response) => {
-            let countryCode = (response && response.country) ? response.country : "";
-            callback(countryCode);
-        });
-    },
-});
+let validMsgEmail = document.querySelector("#valid-msg-email"),
+    errorMsgEmail = document.querySelector("#error-msg-email");
 
-/**
- * Login (phone number) validation
- */
-let validMsgLogin = document.querySelector("#valid-msg-login"),
-    errorMsgLogin = document.querySelector("#error-msg-login");
-
-function resetLogin() {
-    validMsgLogin.classList.add("invisible");
-    errorMsgLogin.classList.add("invisible");
-    login.classList.remove("valid-input");
-    login.classList.remove("error-input");
+function resetEmail() {
+    validMsgEmail.classList.add("invisible");
+    errorMsgEmail.classList.add("invisible");
+    email.classList.remove("valid-input");
+    email.classList.remove("error-input");
 }
 
-function validLogin() {
-    validMsgLogin.classList.remove("invisible");
-    errorMsgLogin.classList.add("invisible");
-    login.classList.add("valid-input");
-    login.classList.remove("error-input");
+function validEmail() {
+    validMsgEmail.classList.remove("invisible");
+    errorMsgEmail.classList.add("invisible");
+    email.classList.add("valid-input");
+    email.classList.remove("error-input");
 }
 
-function notValidLogin() {
-    validMsgLogin.classList.add("invisible");
-    errorMsgLogin.classList.remove("invisible");
-    login.classList.remove("valid-input");
-    login.classList.add("error-input");
+function notValidEmail() {
+    validMsgEmail.classList.add("invisible");
+    errorMsgEmail.classList.remove("invisible");
+    email.classList.remove("valid-input");
+    email.classList.add("error-input");
 }
 
-login.addEventListener('click', resetLogin);
-login.addEventListener('blur', validationLogin);
-login.addEventListener('keyup', validationLogin);
-login.addEventListener('change', validationLogin);
+email.addEventListener('click', resetEmail);
+email.addEventListener('blur', validationEmail);
+email.addEventListener('keyup', validationEmail);
+email.addEventListener('change', validationEmail);
 
-function validationLogin() {
-    resetLogin();
+function validationEmail() {
+    resetEmail();
 
-    if (login.value.trim() === "") {
-        notValidLogin();
+    if (email.value.trim() === "") {
+        notValidEmail();
     } else {
-        if (iti.isValidNumber()) {
-            validLogin();
+        if (email.value.trim().search(/[a-zA-Z0-9._-]+@[a-z0-9.-]+.[a-z]{2,}$/) === -1) {
+            notValidEmail();
         } else {
-            notValidLogin();
+            validEmail();
         }
     }
 }
-
 /**
  * Checks for errors on the page
  */
 submitBtn.addEventListener('click', (event) => {
 
-    validationLogin();
-    if (login.classList.contains("error-input")) {
+    validationEmail();
+    if (email.classList.contains("error-input")) {
         event.preventDefault();
-        notValidLogin();
+        notValidEmail();
         return false;
     }
 });

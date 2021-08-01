@@ -76,7 +76,7 @@
     </c:if>
 
     <c:if test="${user.role.id == 2}">
-        <a href="?command=addUser" class="list-group-item list-group-item-action list-group-item-sidebar">
+        <a href="/admin/createUser" class="list-group-item list-group-item-action list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/add-user.png"/>" class="icon-sidebar" alt=""/>
             </div>
@@ -87,7 +87,7 @@
     </c:if>
 
     <c:if test="${user.role.id == 2}">
-        <a href="?command=support" class="list-group-item list-group-item-action list-group-item-sidebar">
+        <a href="${pageContext.request.contextPath}/admin/support" class="list-group-item list-group-item-action list-group-item-sidebar">
             <div>
                 <img src="<c:url value="/images/admin-support.png"/>" class="icon-sidebar" alt=""/>
             </div>

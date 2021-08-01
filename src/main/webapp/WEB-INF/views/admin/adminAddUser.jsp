@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -106,18 +107,19 @@
                                             ${addNewUser}
                                         </h4>
 
-                                        <form action="" method="POST" role="form">
-                                            <input type="hidden" name="command" value="addUser"/>
+                                        <form:form action="/admin/createUser"
+                                                   method="POST" role="form" modelAttribute="newUser">
 
                                             <div class="form-row">
 
                                                 <!-- Name -->
                                                 <div class="col-md-6">
-                                                    <input id="name" name="name" type="text" class="form-control"
-                                                           data-toggle="tooltip-left"
-                                                           data-title="${tooltipOnlyLetters}"
-                                                           maxlength="24" placeholder="${name}*"
-                                                           value="${nameValue}"/>
+                                                    <form:input id="name" name="name" type="text" class="form-control"
+                                                                path="name"
+                                                                data-toggle="tooltip-left"
+                                                                data-title="${tooltipOnlyLetters}"
+                                                                maxlength="24" placeholder="${name}*"
+                                                                value="${nameValue}"></form:input>
                                                     <label for="name" class="default-label">
                                                         <span id="valid-msg-name" class="valid-msg invisible">
                                                             ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
@@ -130,11 +132,11 @@
 
                                                 <!-- Surname -->
                                                 <div class="col-md-6">
-                                                    <input id="surname" name="surname" type="text" class="form-control"
-                                                           data-toggle="tooltip"
+                                                    <form:input id="surname" name="surname" type="text" class="form-control"
+                                                           data-toggle="tooltip" path="surname"
                                                            data-title="${tooltipOnlyLetters}"
                                                            maxlength="32" placeholder="${surname}*"
-                                                           value="${surnameValue}"/>
+                                                           value="${surnameValue}"></form:input>
                                                     <label for="surname" class="default-label">
                                                         <span id="valid-msg-surname" class="valid-msg invisible">
                                                             ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
@@ -149,11 +151,11 @@
                                             <!-- Phone -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-9" style="margin-top: 8px">
-                                                    <input id="phone" name="phone" type="tel" class="form-control"
-                                                           data-toggle="tooltip"
+                                                    <form:input id="phone" name="phone" type="tel" class="form-control"
+                                                           data-toggle="tooltip" path="phone"
                                                            data-title="${tooltipPhone}"
-                                                           onkeypress="inputOnlyNumbers();"
-                                                           value="${phoneValue}"/>
+                                                           onkeypress="form:inputOnlyNumbers();"
+                                                           value="${phoneValue}"></form:input>
                                                     <label for="phone" class="default-label">
                                                         <span id="valid-msg-phone" class="valid-msg invisible">
                                                             ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
@@ -168,11 +170,11 @@
                                             <!-- Email -->
                                             <div class="row justify-content-center">
                                                 <div class="col-md-9">
-                                                    <input id="email" name="email" type="email" class="form-control"
-                                                           data-toggle="tooltip"
+                                                    <form:input id="email" name="email" type="email" class="form-control"
+                                                           data-toggle="tooltip" path="email"
                                                            data-title="${tooltipEmail}"
                                                            maxlength="45" placeholder="${email}"
-                                                           value="${emailValue}"/>
+                                                                value="${emailValue}"></form:input>
                                                     <label for="email" class="default-label">
                                                         <span id="valid-msg-email" class="valid-msg invisible">
                                                             ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
@@ -202,15 +204,13 @@
                                                     ${addUserButton}
                                                 </button>
                                             </div>
-                                        </form>
+                                        </form:form>
 
                                         <!-- Back Button -->
                                         <c:choose>
                                             <c:when test="${response eq 'addUserSuccess'}">
                                                 <div class="action back-btn">
-                                                    <form action="" method="GET" role="form">
-                                                        <input type="hidden" name="command" value="attachAccount"/>
-                                                        <input type="hidden" name="userId" value="${userId}"/>
+                                                    <form action="/admin/attachAccount/${newUser.userId}" method="GET" role="form">
                                                         <button type="submit" class="btn btn-primary signup btn-default"
                                                                 style="width: 54%;">
                                                                 ${attachAccount}
@@ -220,8 +220,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="action back-btn">
-                                                    <form action="" method="GET" role="form">
-                                                        <input type="hidden" name="command" value="attachAccount"/>
+                                                    <form action="/admin/attachAccount/${newUser.userId}" method="GET" role="form">
                                                         <button type="submit"
                                                                 class="btn btn-primary signup btn-default disabled"
                                                                 style="width: 54%;">

@@ -108,51 +108,13 @@
                                             ${formHeader}
                                         </h4>
 
-                                        <!-- Return to Users -->
-                                        <c:if test="${response eq 'unableGetUserId'}">
-                                            <div class="message-block">
-                                                <span class="title-label forward-left-link-img">
-                                                    <a href="" class="float-left">
-                                                        <img src="<c:url value="/images/return.png"/>"
-                                                             class="icon-return" alt=""/>
-                                                            ${returnToUsers}
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </c:if>
-
-                                        <!-- Return to User -->
-                                        <c:if test="${response eq 'unableGetPaymentId' ||
-                                                      response eq 'unableGetPaymentByUserId' ||
-                                                      response eq 'showPaymentError'}">
-                                            <div class="message-block">
-                                                <span class="title-label forward-left-link-img">
-                                                    <a href="?command=showUser&userId=${userId}" class="float-left">
-                                                        <img src="<c:url value="/images/return.png"/>"
-                                                             class="icon-return" alt=""/>
-                                                            ${returnToUserProfile}
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </c:if>
-
-                                        <c:if test="${response ne 'unableGetUserId' &&
-                                                      response ne 'unableGetPaymentId' &&
-                                                      response ne 'unableGetPaymentByUserId' &&
-                                                      response ne 'showPaymentError'}">
-
-                                            <jsp:useBean id="platezhi" scope="request"
-                                                         type="com.webproject.pms.model.entities.Payment"/>
-                                            <jsp:useBean id="senderUser" scope="request"
-                                                         type="com.webproject.pms.model.entities.User"/>
-
                                             <div class="col-xl-12">
                                                 <div class="row justify-content-center">
                                                     <div class="col-md-12 first-detail">
 
-                                                        <!-- Type of Platezhi -->
+                                                        <!-- Type of Payment -->
                                                         <c:choose>
-                                                            <c:when test="${platezhi.isOutgoing}">
+                                                            <c:when test="${payment.outgoing}">
                                                                 <span>${outgoingPayment}</span><br/>
                                                             </c:when>
                                                             <c:otherwise>
@@ -161,11 +123,11 @@
                                                         </c:choose>
 
                                                         <!-- Date and Time  -->
-                                                        <span>${platezhi.date}</span><br/>
+                                                        <span>${payment.date}</span><br/>
 
-                                                        <!-- Platezhi Condition  -->
+                                                        <!-- Payment Condition  -->
                                                         <c:choose>
-                                                            <c:when test="${platezhi.condition}">
+                                                            <c:when test="${payment.status}">
                                                                 <span class="text-success">
                                                                         ${success}
                                                                 </span><br/>
@@ -188,7 +150,7 @@
                                                             <input id="senderAccount" name="senderAccount"
                                                                    type="text" class="form-control"
                                                                    readonly="readonly"
-                                                                   value="${platezhi.senderNumber}"/>
+                                                                   value="${payment.senderNumber}"/>
                                                             <label for="senderAccount"
                                                                    class="default-label">&nbsp;</label>
                                                         </div>
@@ -210,9 +172,6 @@
                                                     <c:choose>
                                                         <c:when test="${recipientIsAccount == true}">
 
-                                                            <jsp:useBean id="recipientUser" scope="request"
-                                                                         type="com.webproject.pms.model.entities.User"/>
-
                                                             <div class="col-md-6">
 
                                                                 <!-- Recipient AccountDto Number -->
@@ -223,7 +182,7 @@
                                                                     <input id="recipientAccount" name="senderAccount"
                                                                            type="text" class="form-control"
                                                                            readonly="readonly"
-                                                                           value="${platezhi.recipientNumber}"/>
+                                                                           value="${payment.recipientNumber}"/>
                                                                     <label for="recipientAccount"
                                                                            class="default-label">&nbsp;</label>
                                                                 </div>
@@ -247,50 +206,50 @@
 
                                                                 <!-- Outgoing and Incoming Payments -->
                                                                 <c:choose>
-                                                                    <c:when test="${platezhi.isOutgoing}">
+                                                                    <c:when test="${payment.outgoing}">
 
                                                                         <!-- Sent Funds -->
                                                                         <span>
-                                                                            ${sentFunds}: ${platezhi.senderAmount} ${platezhi.senderCurrency}
+                                                                            ${sentFunds}: ${payment.senderAmount} ${payment.senderCurrency}
                                                                         </span><br/>
 
                                                                         <!-- Recipient Received -->
                                                                         <span>
-                                                                            ${recipientReceived}: ${platezhi.recipientAmount} ${platezhi.recipientCurrency}
+                                                                            ${recipientReceived}: ${payment.recipientAmount} ${payment.recipientCurrency}
                                                                         </span><br/>
 
                                                                         <span>
-                                                                            ${rate}: 1 ${platezhi.senderCurrency} = ${platezhi.exchangeRate} ${platezhi.recipientCurrency}
+                                                                            ${rate}: 1 ${payment.senderCurrency} = ${payment.exchangeRate} ${payment.recipientCurrency}
                                                                         </span><br/>
 
                                                                         <div style="height: 6px; margin-top: 5px; border-top: 2px solid #e9ecef;"></div>
 
                                                                         <!-- Remained -->
                                                                         <span>
-                                                                            ${remained}: ${platezhi.newBalance} ${platezhi.senderCurrency}
+                                                                            ${remained}: ${payment.newBalance} ${payment.senderCurrency}
                                                                         </span><br/>
                                                                     </c:when>
                                                                     <c:otherwise>
 
                                                                         <!-- Sent Funds -->
                                                                         <span>
-                                                                            ${receivedFunds}: ${platezhi.senderAmount} ${platezhi.senderCurrency}
+                                                                            ${receivedFunds}: ${payment.senderAmount} ${payment.senderCurrency}
                                                                         </span><br/>
 
                                                                         <!-- Conversion Result -->
                                                                         <span>
-                                                                            ${сonversion}: ${platezhi.recipientAmount} ${platezhi.recipientCurrency}
+                                                                            ${сonversion}: ${payment.recipientAmount} ${payment.recipientCurrency}
                                                                         </span><br/>
 
                                                                         <span>
-                                                                            ${rate}: 1 ${platezhi.senderCurrency} = ${platezhi.exchangeRate} ${platezhi.recipientCurrency}
+                                                                            ${rate}: 1 ${payment.senderCurrency} = ${payment.exchangeRate} ${payment.recipientCurrency}
                                                                         </span><br/>
 
                                                                         <div style="height: 6px; margin-top: 5px; border-top: 2px solid #e9ecef;"></div>
 
                                                                         <!-- New balance -->
                                                                         <span>
-                                                                            ${remained}: ${platezhi.newBalance} ${platezhi.recipientCurrency}
+                                                                            ${remained}: ${payment.newBalance} ${payment.recipientCurrency}
                                                                         </span><br/>
                                                                     </c:otherwise>
                                                                 </c:choose>
@@ -307,7 +266,7 @@
                                                                     <input id="recipientCard" name="recipientCard"
                                                                            type="text" class="form-control"
                                                                            readonly="readonly"
-                                                                           value="${platezhi.recipientNumber}"/>
+                                                                           value="${payment.recipientNumber}"/>
                                                                     <label for="recipientCard"
                                                                            class="default-label">&nbsp;</label>
                                                                 </div>
@@ -331,18 +290,18 @@
 
                                                                 <!-- Outgoing and Incoming Payments -->
                                                                 <c:choose>
-                                                                    <c:when test="${platezhi.isOutgoing}">
+                                                                    <c:when test="${payment.outgoing}">
 
                                                                         <!-- Sent Funds -->
                                                                         <span>
-                                                                            ${sentFunds}: ${platezhi.senderAmount} ${platezhi.senderCurrency}
+                                                                            ${sentFunds}: ${payment.senderAmount} ${payment.senderCurrency}
                                                                         </span><br/>
 
                                                                         <div style="height: 6px; margin-top: 5px; border-top: 2px solid #e9ecef;"></div>
 
                                                                         <!-- Remained -->
                                                                         <span>
-                                                                            ${remained}: ${platezhi.newBalance} ${platezhi.senderCurrency}
+                                                                            ${remained}: ${payment.newBalance} ${payment.senderCurrency}
                                                                         </span><br/>
                                                                     </c:when>
                                                                     <c:otherwise>
@@ -354,18 +313,8 @@
                                                             </div>
                                                         </c:otherwise>
                                                     </c:choose>
-
-                                                    <!-- More Payments -->
-                                                    <div class="col-md-12">
-                                                        <a href="?command=showUserPayments&userId=${userId}"
-                                                           class="float-right" style="padding-top: 15px;">
-                                                                ${morePayments}
-                                                        </a>
-                                                    </div>
                                                 </div>
                                             </div>
-                                        </c:if>
-
                                     </div>
                                 </div>
                             </div>

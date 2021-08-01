@@ -55,9 +55,6 @@ public class User implements UserDetails {
 	
 	private Boolean active;
 	
-	@Enumerated(EnumType.STRING)
-	private AuthenticationProvider authProvider;
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Role role;
 	
@@ -270,13 +267,5 @@ public class User implements UserDetails {
 	
 	public void setLogEntries(List<LogEntry> logEntries) {
 		this.logEntries = logEntries;
-	}
-	
-	public AuthenticationProvider getAuthProvider() {
-		return authProvider;
-	}
-	
-	public void setAuthProvider(AuthenticationProvider authProvider) {
-		this.authProvider = authProvider;
 	}
 }

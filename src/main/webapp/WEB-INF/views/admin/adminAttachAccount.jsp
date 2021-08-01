@@ -117,8 +117,8 @@
                                             <c:when test="${response ne 'unableGetUserId' &&
                                                             response ne 'unableGetUserByUserId'}">
 
-                                                <form action="" method="POST" role="form">
-                                                    <input type="hidden" name="command" value="attachAccount"/>
+                                                <c:url value="/admin/attachAccount/${viewableUser.userId}" var="var"/>
+                                                <form action="${var}" method="POST" role="form">
 
                                                     <!-- User bio -->
                                                     <div>
@@ -131,7 +131,7 @@
                                                                data-toggle="tooltip-right-hover"
                                                                data-title="${tooltipUserBio}"
                                                                readonly="readonly"
-                                                               value="${bioValue}"/>
+                                                               value="${viewableUser.name} ${viewableUser.surname}"/>
                                                         <label for="bio" class="default-label">&nbsp;</label>
                                                     </div>
 
@@ -196,9 +196,8 @@
 
                                                 <!-- Show User Accounts -->
                                                 <div class="action back-btn">
-                                                    <form action="" method="GET" role="form">
-                                                        <input type="hidden" name="command" value="showUserAccounts"/>
-                                                        <input type="hidden" name="userId" value="${userId}"/>
+                                                    <c:url value="/admin/showUserAccounts/${viewableUser.userId}" var="var"/>
+                                                    <form action="${var}" method="GET" role="form">
                                                         <button type="submit"
                                                                 class="btn btn-primary signup btn-default">
                                                                 ${showAllAccounts}
@@ -208,9 +207,7 @@
 
                                                 <!-- Return to User Profile -->
                                                 <div class="action back-btn">
-                                                    <form action="/" method="GET" role="form">
-                                                        <input type="hidden" name="command" value="showUser"/>
-                                                        <input type="hidden" name="userId" value="${userId}"/>
+                                                    <form action="/admin/userInfo/${viewableUser.userId}" method="GET" role="form">
                                                         <button type="submit"
                                                                 class="btn btn-primary signup btn-default">
                                                                 ${returnToUserProfile}
@@ -220,8 +217,7 @@
                                             </c:when>
                                             <c:otherwise>
 
-                                                <form action="" method="POST" role="form">
-                                                    <input type="hidden" name="command" value="attachAccount"/>
+                                                <form action="/admin/attachAccount/${viewableUser.userId}" method="POST" role="form">
 
                                                     <!-- User bio -->
                                                     <div>
@@ -271,8 +267,7 @@
 
                                                 <!-- Show User Accounts -->
                                                 <div class="action back-btn">
-                                                    <form action="/" method="GET" role="form">
-                                                        <input type="hidden" name="command" value="showUserAccounts"/>
+                                                    <form action="/admin/showUserAccounts/${viewableUser.userId}" method="GET" role="form">
                                                         <button type="submit"
                                                                 class="btn btn-primary signup btn-default disabled">
                                                                 ${showAllAccounts}
@@ -282,8 +277,7 @@
 
                                                 <!-- Return to User Profile -->
                                                 <div class="action back-btn">
-                                                    <form action="/" method="GET" role="form">
-                                                        <input type="hidden" name="command" value="showUser"/>
+                                                    <form action="/admin/userInfo/${viewableUser.userId}" method="GET" role="form">
                                                         <button type="submit"
                                                                 class="btn btn-primary signup btn-default disabled">
                                                                 ${returnToUserProfile}

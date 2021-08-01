@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
@@ -108,8 +109,8 @@
                                             ${formHeader}
                                         </h4>
 
-                                        <form action="" method="POST" role="form">
-                                            <input type="hidden" name="command" value="support"/>
+                                        <c:url value="/support" var="var"/>
+                                        <form:form action="${var}" method="POST" role="form" modelAttribute="letter">
 
                                             <!-- Type Question -->
                                             <input type="hidden" id="typeQuestion" name="typeQuestion"/>
@@ -164,7 +165,7 @@
                                                     ${send}
                                                 </button>
                                             </div>
-                                        </form>
+                                        </form:form>
                                     </div>
                                 </div>
                             </div>

@@ -2,11 +2,12 @@ package com.webproject.pms.service;
 
 import com.webproject.pms.model.entities.Letter;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface LetterService {
 	
-	Letter addNewLetter(Letter letter);
+	Boolean addNewLetter(Letter letter, Principal principal);
 	
 	Boolean updateLetterByLetterId(Long letterId);
 	

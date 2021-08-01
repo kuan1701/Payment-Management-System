@@ -92,6 +92,9 @@
                     <fmt:message key="login.loginError" var="loginError"/>
                     <fmt:message key="login.correct" var="correct"/>
                     <fmt:message key="registration.tooltipOnlyDigits" var="tooltipPhone"/>
+                    <fmt:message key="registration.tooltipEmail" var="tooltipEmail"/>
+                    <fmt:message key="registration.email" var="email"/>
+                    <fmt:message key="registration.emailError" var="emailError"/>
 
                     <div class="login-wrapper">
                         <div class="box">
@@ -102,23 +105,27 @@
                                 </h4>
 
                                 <form action="" method="POST" role="form">
-                                    <input type="hidden" name="command" value="recovery"/>
 
-                                    <!-- Login -->
+                                    <!-- Email -->
                                     <div>
-                                        <input id="login" name="login" type="text" class="form-control"
+                                        <input id="email"
+                                               name="email" type="email"
+                                               class="form-control"
                                                data-toggle="tooltip"
-                                               data-title="${tooltipPhone}"
-                                               value="${loginValue}"/>
-                                        <label for="login" class="default-label">
-                                            <span id="valid-msg-login" class="valid-msg invisible">
-                                                ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
-                                            </span>
-                                            <span id="error-msg-login" class="error-msg invisible">
-                                                ${loginError}
+                                               data-title="${tooltipEmail}"
+                                               maxlength="45" placeholder="${email}*"
+                                               value="${emailValue}"/>
+                                        <label for="email" class="default-label">
+                                                    <span id="valid-msg-email" class="valid-msg invisible">
+                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                       alt=""/>
+                                                    </span>
+                                            <span id="error-msg-email" class="error-msg invisible">
+                                                ${emailError}
                                             </span>
                                         </label>
                                     </div>
+
 
                                     <!-- Submit -->
                                     <div class="action" style="padding: 25px 0 10px 0">
@@ -130,7 +137,7 @@
 
                                 <!-- Back Button -->
                                 <div class="action back-btn">
-                                    <form action="/" method="GET" role="form">
+                                    <form action="${pageContext.request.contextPath}/login" method="GET" role="form">
                                         <button type="submit" class="btn btn-primary signup btn-default">
                                             ${backButton}
                                         </button>

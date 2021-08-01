@@ -12,10 +12,10 @@
 <head>
     <c:choose>
         <c:when test="${userIsAdmin}">
-            <title><fmt:message key="admin.user.titleIfAdmin"/></title>
+            <title>ADMIN PROFILE</title>
         </c:when>
         <c:otherwise>
-            <title><fmt:message key="admin.user.titleIfUser"/></title>
+            <title>USER PROFILE</title>
         </c:otherwise>
     </c:choose>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -55,8 +55,7 @@
                         <fmt:message key="user.page.closeButton"/>
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form action="" method="POST" role="form">
-                        <input type="hidden" name="command" value="deleteUser"/>
+                    <form action="/admin/delete/${viewableUser.userId}" method="POST" role="form">
                         <input type="hidden" name="userId" value="${userId}"/>
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
@@ -163,18 +162,17 @@
                                 <div class="box">
                                     <div class="content-wrap">
 
-
                                         <c:choose>
-                                                    <c:when test="${userIsAdmin == false}">
+                                            <c:when test="${userIsAdmin == false}">
 
-                                                        <div class="row">
-                                                            <div class="col-xl-12">
+                                                <div class="row">
+                                                    <div class="col-xl-12">
 
-                                                                <h4>
-                                                                        ${userProfile}
-                                                                </h4>
+                                                        <h4>
+                                                                ${userProfile}
+                                                        </h4>
 
-                                                                <div class="form-row">
+                                                        <div class="form-row">
                                                                     <div class="col-md-7 col-lg-7 col-xl-7">
 
                                                                         <!-- User bio -->
@@ -241,7 +239,7 @@
 
                                                                             <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                                id="list-platezhis-list" role="tab"
-                                                                               data-toggle="list" href="#list-platezhis"
+                                                                               data-toggle="list" href="#list-payments"
                                                                                aria-controls="platezhis">
                                                                                 <span class="forward-right-link-img">
                                                                                      ${showPayments}
@@ -261,7 +259,7 @@
                                                                             </a>
                                                                             <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                                id="list-attachAccount-list"
-                                                                               href="?command=attachAccount&userId=${viewableUser.userId}"
+                                                                               href="/admin/attachAccount/${viewableUser.userId}"
                                                                                role="tab" aria-controls="attachAccount">
                                                                                 <span class="forward-right-link-img">
                                                                                      ${attachAccount}
@@ -271,7 +269,7 @@
                                                                             </a>
                                                                             <a class="list-group-item list-group-item-action list-group-item-button-primary"
                                                                                id="list-updateData-list"
-                                                                               href="?command=updateUserData&userId=${viewableUser.userId}"
+                                                                               href="/admin/updateUserData/${viewableUser.userId}"
                                                                                role="tab" aria-controls="updateData">
                                                                                 <span class="forward-right-link-img">
                                                                                      ${updateData}
@@ -299,7 +297,7 @@
                                                             <div class="col-xl-12 tab-content" id="nav-tabContent">
 
                                                                 <!-- Show Payments -->
-                                                                <div class="tab-pane fade show" id="list-platezhis"
+                                                                <div class="tab-pane fade show" id="list-payments"
                                                                      role="tabpanel" aria-labelledby="list-home-list">
                                                                     <div class="col-xl-12" style="margin-top: 30px;">
 
@@ -356,8 +354,8 @@
                                                                                                                 <p class="card-title text-muted">
                                                                                                                         ${remained}: ${payment.newBalance} ${payment.senderCurrency}
 
-                                                                                                                    <!-- Show Platezhi Info -->
-                                                                                                                    <a href="?command=showPaymentInfo&userId=${viewableUser.userId}&paymentId=${payment.paymentId}"
+                                                                                                                    <!-- Show Payment Info -->
+                                                                                                                    <a href="/admin/paymentInfo/${payment.paymentId}"
                                                                                                                        class="float-right">
                                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                                              alt=""/>
@@ -382,8 +380,8 @@
                                                                                                                 <p class="card-title text-muted">
                                                                                                                         ${remained}: ${payment.newBalance} ${payment.recipientCurrency}
 
-                                                                                                                    <!-- Show Platezhi Info -->
-                                                                                                                    <a href="?command=showPaymentInfo&userId=${viewableUser.userId}&paymentId=${payment.paymentId}"
+                                                                                                                    <!-- Show Payment Info -->
+                                                                                                                    <a href="/admin/paymentInfo/${payment.paymentId}"
                                                                                                                        class="float-right">
                                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                                              alt="${showInfo}"/>
@@ -396,7 +394,7 @@
                                                                                             </div>
                                                                                         </c:forEach>
                                                                                     </div>
-                                                                                    <a href="?command=showUserPayments&userId=${viewableUser.userId}"
+                                                                                    <a href="/admin/showPayments/${viewableUser.userId}"
                                                                                        class="float-right">
                                                                                             ${morePayments}
                                                                                     </a>
@@ -456,7 +454,7 @@
                                                                                                                 ${balance}: ${account.balance} ${account.currency}
 
                                                                                                             <!-- Show AccountDto Info -->
-                                                                                                            <a href="?command=showAccountInfo&userId=${viewableUser.userId}&accountId=${account.accountId}"
+                                                                                                            <a href="/admin/accountInfo/${account.accountId}"
                                                                                                                class="float-right">
                                                                                                                 <img src="<c:url value="/images/info.png"/>"
                                                                                                                      alt="${showInfo}"/>
@@ -467,7 +465,7 @@
                                                                                             </div>
                                                                                         </c:forEach>
                                                                                     </div>
-                                                                                    <a href="?command=showUserAccounts&userId=${viewableUser.userId}"
+                                                                                    <a href="/admin/showUserAccounts/${viewableUser.userId}"
                                                                                        class="float-right">
                                                                                             ${userAccounts}
                                                                                     </a>
@@ -543,25 +541,9 @@
                                                             </div>
                                                         </div>
                                                     </c:otherwise>
-                                                </c:choose>
+                                        </c:choose>
 
 
-                                        <c:otherwise>
-                                                <h4>
-                                                        ${userProfile}
-                                                </h4>
-
-                                                <!-- Return to Users -->
-                                                <div class="message-block">
-                                                    <span class="title-label forward-left-link-img">
-                                                        <a href="" class="float-left">
-                                                            <img src="<c:url value="/images/return.png"/>"
-                                                                 class="icon-return" alt=""/>
-                                                                ${returnToUsers}
-                                                        </a>
-                                                    </span>
-                                                </div>
-                                            </c:otherwise>
 
                                     </div>
                                 </div>

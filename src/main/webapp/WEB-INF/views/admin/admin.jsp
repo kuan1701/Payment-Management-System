@@ -139,7 +139,7 @@
                                                          style="width: 20px; height: 20px;" alt=""/>
                                                     ${allAccounts}
                                                     <span class="badge badge-pill badge-light">
-                                                        ${accountList.size()}
+                                                        ${totalAccounts}
                                                     </span>
                                                 </a>
                                                 <form action="${pageContext.request.contextPath}/admin/accounts" method="GET"

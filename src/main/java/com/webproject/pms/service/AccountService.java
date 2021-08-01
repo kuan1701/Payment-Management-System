@@ -18,6 +18,8 @@ public interface AccountService {
 	
 	Boolean registrationAccount(Account Account, Model model, Principal principal);
 	
+	Boolean adminAttachAccount(Account Account, Model model, Long userId);
+	
 	List<Account> findAllAccounts();
 	
 	List<Account> findAllActivateAccountsByUserId(Long userId);

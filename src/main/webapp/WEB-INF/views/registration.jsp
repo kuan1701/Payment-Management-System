@@ -189,10 +189,10 @@
                                                                 maxlength="24" placeholder="${name}*"
                                                                 value="${nameValue}"></form:input>
                                                     <label for="name" class="default-label">
-                                                    <span id="valid-msg-name" class="valid-msg invisible">
-                                                        ${correct}<img src="<c:url value="/images/correct.png"/>"
-                                                                       alt="">
-                                                    </span>
+                                                        <span id="valid-msg-name" class="valid-msg invisible">
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>"
+                                                                           alt="">
+                                                        </span>
                                                         <span id="error-msg-name" class="error-msg invisible">
                                                                 ${nameError}
                                                         </span>

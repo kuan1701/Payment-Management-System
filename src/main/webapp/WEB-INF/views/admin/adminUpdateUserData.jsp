@@ -13,11 +13,11 @@
     <title><fmt:message key="admin.update_user.title"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="shortcut icon" href="<c:url value="/static/images/favicon-black.ico"/>" type="image/x-icon">
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/intlTelInput.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/styles.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/style-fixed-footer.css"/>">
+    <link rel="shortcut icon" href="<c:url value="/images/favicon-black.ico"/>" type="image/x-icon">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/intlTelInput.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/styles.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/style-fixed-footer.css"/>">
 </head>
 <body>
 <div class="main">
@@ -131,11 +131,7 @@
 
                                         <c:choose>
                                             <c:when test="${response ne 'unableGetUserId'}">
-                                                <form action="" method="POST" role="form">
-                                                    <input type="hidden" name="command" value="updateUserData"/>
-
-                                                    <!-- User Id -->
-                                                    <input type="hidden" id="userId" name="userId" value="${userId}"/>
+                                                <form action="/admin/updateUserData/${updateUser.userId}" method="POST" role="form">
 
                                                     <div class="form-row">
 
@@ -146,11 +142,11 @@
                                                                    data-toggle="tooltip-left"
                                                                    data-title="${tooltipOnlyLetters}"
                                                                    maxlength="24" placeholder="${name}*"
-                                                                   value="${nameValue}"/>
+                                                                   value="${updateUser.name}"/>
                                                             <label for="name" class="default-label">
                                                                 <span id="valid-msg-name" class="valid-msg invisible">
                                                                     ${correct}
-                                                                    <img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                                    <img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                                 </span>
                                                                 <span id="error-msg-name" class="error-msg invisible">
                                                                         ${nameError}
@@ -165,12 +161,12 @@
                                                                    data-toggle="tooltip"
                                                                    data-title="${tooltipOnlyLetters}"
                                                                    maxlength="32" placeholder="${surname}*"
-                                                                   value="${surnameValue}"/>
+                                                                   value="${updateUser.surname}"/>
                                                             <label for="surname" class="default-label">
                                                                 <span id="valid-msg-surname"
                                                                       class="valid-msg invisible">
                                                                     ${correct}
-                                                                    <img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                                    <img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                                 </span>
                                                                 <span id="error-msg-surname"
                                                                       class="error-msg invisible">
@@ -187,11 +183,11 @@
                                                                    type="tel" class="form-control"
                                                                    data-toggle="tooltip" data-title="${tooltipPhone}"
                                                                    onkeypress="inputOnlyNumbers();"
-                                                                   value="${phoneValue}"/>
+                                                                   value="${updateUser.phone}"/>
                                                             <label for="phone" class="default-label">
                                                                 <span id="valid-msg-phone" class="valid-msg invisible">
                                                                     ${correct}
-                                                                    <img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                                    <img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                                 </span>
                                                                 <span id="error-msg-phone" class="error-msg invisible">
                                                                         ${loginError}
@@ -208,11 +204,11 @@
                                                                    data-toggle="tooltip"
                                                                    data-title="${tooltipEmail}"
                                                                    maxlength="45" placeholder="${email}"
-                                                                   value="${emailValue}"/>
+                                                                   value="${updateUser.email}"/>
                                                             <label for="email" class="default-label">
                                                                 <span id="valid-msg-email" class="valid-msg invisible">
                                                                     ${correct}
-                                                                    <img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                                    <img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                                 </span>
                                                                 <span id="error-msg-email" class="error-msg invisible">
                                                                         ${emailError}
@@ -230,7 +226,7 @@
                                                 </form>
 
                                                 <div class="action back-btn">
-                                                    <form action="/" method="GET" role="form">
+                                                    <form action="/admin/userInfo/${updateUser.userId}" method="GET" role="form">
                                                         <input type="hidden" name="command" value="showUser"/>
                                                         <input type="hidden" name="userId" value="${userId}"/>
                                                         <button type="submit" class="btn btn-primary signup btn-default"
@@ -245,8 +241,8 @@
                                                 <!-- Return to Users -->
                                                 <div class="message-block">
                                                     <span class="title-label forward-left-link-img">
-                                                        <a href="/static" class="float-left">
-                                                            <img src="<c:url value="/static/images/return.png"/>"
+                                                        <a href="" class="float-left">
+                                                            <img src="<c:url value="/images/return.png"/>"
                                                                  class="icon-return" alt=""/>
                                                                 ${returnToUsers}
                                                         </a>
@@ -266,5 +262,5 @@
     <jsp:include page="../template/footer.jsp"/>
 </div>
 </body>
-<script src="<c:url value="/static/js/validator_adminUpdateUserData.js"/>"></script>
+<script src="<c:url value="/js/validator_adminUpdateUserData.js"/>"></script>
 </html>

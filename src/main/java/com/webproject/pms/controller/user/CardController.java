@@ -85,15 +85,53 @@ public class CardController {
 		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(
 				accountService.findAccountByAccountNumber(number).getAccountId());
 		
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		for (BankCard bankCard : bankCardsList) {
+			model.addAttribute("bankCard", bankCard);
+		}
+		
 		model.addAttribute("bankCardsList", bankCardsList);
 		model.addAttribute("bankCardsEmpty", bankCardsList.isEmpty());
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		model.addAttribute("account", accountService.findAccountByAccountNumber(number));
 		return "user/userShowAccountCards";
 	}
 	
+	/**
+	 * Show detach card
+	 * @param model
+	 * @param principal
+	 * @param accountNumber
+	 * @param cardId
+	 * @return user/userShowAccountCards
+	 */
+	@GetMapping("/attached-cards/{accountNumber}/detach/{cardId}")
+	public String showDetachCards(Model model,
+	                                Principal principal,
+	                                @PathVariable("accountNumber") String accountNumber,
+	                                @PathVariable("cardId") Long cardId
+	) {
+		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(
+				accountService.findAccountByAccountNumber(accountNumber).getAccountId()
+		);
+		
+		model.addAttribute("bankCardsList", bankCardsList);
+		model.addAttribute("bankCardsEmpty", bankCardsList.isEmpty());
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("bankCard", bankCardService.findCardByCardId(cardId));
+		model.addAttribute("account", accountService.findAccountByAccountNumber(accountNumber));
+		return "user/userShowAccountCards";
+	}
+	
+	/**
+	 * Block card
+	 * @param model
+	 * @param principal
+	 * @param accountNumber
+	 * @param cardId
+	 * @return redirect:/attached-cards/{accountNumber}
+	 */
 	@PostMapping("/attached-cards/{accountNumber}")
-	public String detachCard(Model model,
+	public String blockCard(Model model,
 	                         Principal principal,
 	                         @PathVariable("accountNumber") String accountNumber,
 	                         @RequestParam("cardId") Long cardId
@@ -121,17 +159,17 @@ public class CardController {
 	 * @param model
 	 * @param principal
 	 * @param accountNumber
-	 * @param cardNumber
+	 * @param cardId
 	 * @return redirect:/attached-cards/{accountNumber}
 	 */
-	@PostMapping("/detach/{cardNumber}")
+	@PostMapping("/attached-cards/{accountNumber}/detach/{cardId}")
 	public String deleteAccount(Model model,
 	                            Principal principal,
-                                @PathVariable String accountNumber,
-                                @PathVariable("cardNumber") String cardNumber
+                                @PathVariable("accountNumber") String accountNumber,
+                                @PathVariable("cardId") Long cardId
 	) {
 		Account account = accountService.findAccountByAccountNumber(accountNumber);
-		BankCard bankCard = bankCardService.findCardByCardNumber(cardNumber);
+		BankCard bankCard = bankCardService.findCardByCardId(cardId);
 		
 		bankCardService.deleteCard(bankCard);
 		model.addAttribute("bankCard", bankCard);

@@ -191,4 +191,6 @@ public class PaymentController {
 		model.addAttribute("payment", payment);
 		return "user/userShowPaymentInfo";
 	}
+	
+	
 }

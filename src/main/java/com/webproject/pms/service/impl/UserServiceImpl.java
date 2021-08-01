@@ -6,6 +6,7 @@ import com.webproject.pms.model.entities.Role;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.UserService;
 import com.webproject.pms.util.MailSender.MailSender;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
@@ -90,8 +92,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
+	public void deleteUser(User user){
+		userDao.delete(user);
+	}
+	
+	@Override
 	public List<User> findAllUsers() {
-		return userDao.findAll();
+		return userDao.searchAllUser();
 	}
 	
 	@Override
@@ -101,35 +108,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	
 	@Override
 	public User findUserByUserId(Long userId) {
-		
 		return userDao.getById(userId);
-		
-//		Optional<User> userFromDb = userDao.findById(userId);
-//		return userFromDb.orElse(new User());
 	}
 	
 	@Override
 	public User findUserByUsername(String username) {
-		
 		return userDao.findUserByUsername(username);
 	}
 	
 	@Override
 	public User findUserByPhone(String phone) {
-		
 		return userDao.findUserByPhone(phone);
 	}
 	
 	@Override
 	public User findUserByEmail(String email) {
-		
 		return userDao.findUserByEmail(email);
-	}
-	
-	@Override
-	public User findUserByPhoneAndEmail(String phone, String email) {
-		
-		return userDao.findUserByPhoneAndEmail(phone, email);
 	}
 	
 	@Override
@@ -146,6 +140,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		User userDB = userDao.findUserByUsername(user.getUsername());
 		User emailDB = userDao.findUserByEmail(user.getEmail());
 		User phoneDB = userDao.findUserByPhone(user.getPhone());
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
 		if (userDB != null) {
 			model.addAttribute("registrationError", "This login already exist");
@@ -162,14 +158,51 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			return false;
 		}
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
-			user.setRegistrationDate(new Date().toString());
+			user.setRegistrationDate(formatter.format(new Date()));
 			user.setEmailVerified(false);
 			user.setActive(false);
 			user.setRole(new Role(1L, "ROLE_USER"));
 			user.setActivationCode(UUID.randomUUID().toString());
 			userDao.save(user);
 		
-		if (!StringUtils.isEmpty(user.getEmail())) {
+		if (!ObjectUtils.isEmpty(user.getEmail())) {
+			String message = String.format(
+					"Hello, %s! \n"
+							+ "Welcome to Payment System! Please, visit next link: http://localhost:8080/activate/%s",
+					user.getUsername(),
+					user.getActivationCode()
+			);
+			mailSender.send(user.getEmail(), "Activation code", message);
+			System.out.println(message);
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean adminCreateUser(User user, Model model) {
+		
+		User emailDB = userDao.findUserByEmail(user.getEmail());
+		User phoneDB = userDao.findUserByPhone(user.getPhone());
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		if (emailDB != null) {
+			model.addAttribute("response", "emailExistError");
+			return false;
+		}
+		else if(phoneDB != null) {
+			model.addAttribute("response", "phoneExistError");
+			return false;
+		}
+		user.setPassword(passwordEncoder.encode("123456"));
+		user.setRegistrationDate(formatter.format(new Date()));
+		user.setEmailVerified(false);
+		user.setActive(false);
+		user.setRole(new Role(1L, "ROLE_USER"));
+		user.setActivationCode(UUID.randomUUID().toString());
+		userDao.save(user);
+		
+		if (!ObjectUtils.isEmpty(user.getEmail())) {
 			String message = String.format(
 					"Hello, %s! \n"
 							+ "Welcome to Payment System! Please, visit next link: http://localhost:8080/activate/%s",
@@ -213,7 +246,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		emailFromDb.setActivationCode(UUID.randomUUID().toString());
 		userDao.save(emailFromDb);
 		
-		if (!StringUtils.isEmpty(email)) {
+		if (!ObjectUtils.isEmpty(email)) {
 			String message = String.format(
 					"Hello,%s! \nYou forgot password! Please, visit next link: http://localhost:8080/password/%s",
 					emailFromDb.getUsername(),

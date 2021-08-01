@@ -17,12 +17,10 @@ public class AccountController {
 	
 	private final AccountServiceImpl accountService;
 	private final UserServiceImpl userService;
-	private final BankCardServiceImpl bankCardService;
 	
 	public AccountController(AccountServiceImpl accountService, UserServiceImpl userService, BankCardServiceImpl bankCardService) {
 		this.accountService = accountService;
 		this.userService = userService;
-		this.bankCardService = bankCardService;
 	}
 	
 	/**

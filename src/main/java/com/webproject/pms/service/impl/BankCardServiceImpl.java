@@ -22,10 +22,10 @@ import java.util.List;
 @Transactional
 public class BankCardServiceImpl implements BankCardService {
 	
-	private static final Logger LOGGER = LogManager.getLogger(BankCardService.class);
 	private final BankCardDao bankCardDao;
 	private final PasswordEncoder passwordEncoder;
 	private final MapStructMapper mapStructMapper;
+	private static final Logger LOGGER = LogManager.getLogger(BankCardService.class);
 	
 	@Autowired
 	public BankCardServiceImpl(BankCardDao bankCardDao, AccountDao accountDao, PasswordEncoder passwordEncoder, MapStructMapper mapStructMapper) {
@@ -37,7 +37,6 @@ public class BankCardServiceImpl implements BankCardService {
 	
 	@Override
 	public BankCard save(BankCard bankCard) {
-		
 		return bankCardDao.save(bankCard);
 	}
 	
@@ -116,25 +115,21 @@ public class BankCardServiceImpl implements BankCardService {
 	
 	@Override
 	public BankCard findCardByCardId(Long cardId) {
-		
 		return bankCardDao.getById(cardId);
 	}
 	
 	@Override
 	public BankCard findCardByCardNumber(String number) {
-		
 		return bankCardDao.findBankCardByNumber(number);
 	}
 	
 	@Override
 	public List<BankCard> findCardsByAccountId(Long accountId) {
-		
 		return bankCardDao.findBankCardsByAccount_AccountId(accountId);
 	}
 	
 	@Override
 	public List<BankCard> findAllCards() {
-		
 		return bankCardDao.findAll();
 	}
 }

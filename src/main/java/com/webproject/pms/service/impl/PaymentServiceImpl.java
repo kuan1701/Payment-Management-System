@@ -95,7 +95,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentTo.setAppointment(appointment);
 		SimpleDateFormat formatterTo = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		formatterTo.setTimeZone(TimeZone.getTimeZone("UTC"));
-		paymentTo.setDate(formatter.format(new Date()));
+		paymentTo.setDate(formatterTo.format(new Date()));
 		
 		if (checkAvailableAmount(accountFrom, amount)) {
 			transaction(accountFrom, accountTo, amount);
@@ -124,13 +124,11 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Override
 	public synchronized boolean checkAvailableAccount(Account account) {
-		
 		return account.getBlocked();
 	}
 	
 	@Override
 	public synchronized boolean checkAvailableCard(BankCard card) {
-		
 		return card.getActive();
 	}
 	
@@ -169,13 +167,11 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Override
 	public Payment findPaymentByPaymentId(Long paymentId) {
-		
 		return paymentDao.getById(paymentId);
 	}
 	
 	@Override
 	public List<Payment> findAllPaymentsByAccountId(Long accountId) {
-		
 		return paymentDao.findPaymentsByAccount_AccountId(accountId);
 	}
 	
@@ -187,13 +183,11 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Override
 	public List<Payment> findLastPaymentsByUserId(Long userId) {
-		
 		return paymentDao.findLastPaymentsByAccountUserId(userId);
 	}
 	
 	@Override
 	public List<Payment> findAllPayments() {
-		
 		return paymentDao.findAll();
 	}
 	

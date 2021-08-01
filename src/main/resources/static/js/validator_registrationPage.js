@@ -41,8 +41,8 @@ function resetName() {
 }
 
 function validName() {
-    validMsgName.classList.remove("invisible");
     errorMsgName.classList.add("invisible");
+    validMsgName.classList.remove("invisible");
     name.classList.add("valid-input");
     name.classList.remove("error-input");
 }
@@ -50,8 +50,8 @@ function validName() {
 function notValidName() {
     validMsgName.classList.add("invisible");
     errorMsgName.classList.remove("invisible");
-    name.classList.remove("valid-input");
     name.classList.add("error-input");
+    name.classList.remove("valid-input");
 }
 
 name.addEventListener('click', resetName);
@@ -200,9 +200,10 @@ email.addEventListener('change', validationEmail);
 function validationEmail() {
     resetEmail();
 
-    let regExp = /[a-zA-Z0-9._-]+@[a-z0-9.-]+.[a-z]{2,}$/;
-    if (email.value.trim() !== "") {
-        if (email.value.trim().search(regExp) === -1) {
+    if (email.value.trim() === "") {
+        notValidEmail();
+    } else {
+        if (email.value.trim().search(/[a-zA-Z0-9._-]+@[a-z0-9.-]+.[a-z]{2,}$/) === -1) {
             notValidEmail();
         } else {
             validEmail();
