@@ -96,17 +96,6 @@ public class UserController {
 	}
 	
 	/**
-	 * Forgot password
-	 *
-	 * @return
-	 */
-	@GetMapping("/forgot-password")
-	public String recoveryPage() {
-		
-		return "recovery";
-	}
-	
-	/**
 	 * Update password
 	 *
 	 * @param model

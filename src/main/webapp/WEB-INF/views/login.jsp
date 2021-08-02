@@ -93,7 +93,7 @@
                                           class="beta-user">
                                         <input type="hidden" name="username" value="kuan17011993"/>
                                         <input type="hidden" name="email" value="kuan0077@mail.ru"/>
-                                        <input type="hidden" name="password" value="123456"/>
+                                        <input type="hidden" name="password" value="17011993"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-User
                                         </button>

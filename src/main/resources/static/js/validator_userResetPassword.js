@@ -1,52 +1,9 @@
 /**
  * Elements on userResetPassword.jsp page for validation
  */
-let oldPassword = document.querySelector("#oldPassword");
 let newPassword = document.querySelector("#newPassword");
 let passwordConfirmation = document.querySelector("#passwordConfirmation");
 let submitBtn = document.querySelector("#submit");
-
-/**
- * Old password validation
- */
-let validMsgOldPassword = document.querySelector("#valid-msg-oldPassword"),
-    errorMsgOldPassword = document.querySelector("#error-msg-oldPassword");
-
-function resetOldPassword() {
-    validMsgOldPassword.classList.add("invisible");
-    errorMsgOldPassword.classList.add("invisible");
-    oldPassword.classList.remove("valid-input");
-    oldPassword.classList.remove("error-input");
-}
-
-function validOldPassword() {
-    validMsgOldPassword.classList.remove("invisible");
-    errorMsgOldPassword.classList.add("invisible");
-    oldPassword.classList.add("valid-input");
-    oldPassword.classList.remove("error-input");
-}
-
-function notValidOldPassword() {
-    validMsgOldPassword.classList.add("invisible");
-    errorMsgOldPassword.classList.remove("invisible");
-    oldPassword.classList.remove("valid-input");
-    oldPassword.classList.add("error-input");
-}
-
-oldPassword.addEventListener('click', resetOldPassword);
-oldPassword.addEventListener('blur', validationOldPassword);
-oldPassword.addEventListener('keyup', validationOldPassword);
-oldPassword.addEventListener('change', validationOldPassword);
-
-function validationOldPassword() {
-    resetOldPassword();
-
-    if (oldPassword.value.trim() === "" || oldPassword.value.trim().length < 6) {
-        notValidOldPassword();
-    } else {
-        validOldPassword();
-    }
-}
 
 /**
  * New password validation
@@ -163,13 +120,6 @@ function matching() {
  * Checks for errors on the page
  */
 submitBtn.addEventListener('click', (event) => {
-
-    validationOldPassword();
-    if (oldPassword.classList.contains("error-input")) {
-        event.preventDefault();
-        notValidOldPassword();
-        return false;
-    }
 
     validationNewPassword();
     if (newPassword.classList.contains("error-input")) {

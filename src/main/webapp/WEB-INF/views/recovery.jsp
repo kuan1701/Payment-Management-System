@@ -71,7 +71,7 @@
     </c:if>
 
     <!-- Alert loginNotExist -->
-    <c:if test="${response eq 'loginNotExist'}">
+    <c:if test="${response eq 'userNotExist'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="recovery.failed"/>!</strong>
                 <fmt:message key="login.alertLoginNotExistError"/>
@@ -104,7 +104,7 @@
                                     ${formHeader}
                                 </h4>
 
-                                <form action="" method="POST" role="form">
+                                <form action="${pageContext.request.contextPath}/forgot-password" method="POST" role="form">
 
                                     <!-- Email -->
                                     <div>

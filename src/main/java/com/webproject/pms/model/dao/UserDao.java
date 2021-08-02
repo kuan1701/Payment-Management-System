@@ -20,7 +20,9 @@ public interface UserDao extends JpaRepository<User, Long> {
 	User findUserByActivationCode(String activationCode);
 	
 	Boolean existsUserByEmail(String email);
-
+	
+	User findUserByResetPasswordToken(String token);
+	
 	@Query(value = "SELECT user.*, role.* FROM user"
 			+ " INNER JOIN role ON user.role_id = role.id ORDER BY role_id DESC",
 	nativeQuery = true)

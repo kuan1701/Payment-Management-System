@@ -78,6 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				//Доступ только для не зарегистрированных пользователей
 				.antMatchers(
 						"/forgot-password",
+						"/reset_password",
 						"/registration",
 						"/registration-message",
 						"/activate/*",
@@ -90,6 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				//Доступ разрешен всем пользователям
 				.antMatchers(
 						"/my-account",
+						"/reset-password/**",
 						"/login",
 						"/user/**",
 						"/resources/**",

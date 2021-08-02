@@ -55,6 +55,8 @@ public class User implements UserDetails {
 	
 	private Boolean active;
 	
+	private String resetPasswordToken;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Role role;
 	
@@ -267,5 +269,13 @@ public class User implements UserDetails {
 	
 	public void setLogEntries(List<LogEntry> logEntries) {
 		this.logEntries = logEntries;
+	}
+	
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+	
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 }

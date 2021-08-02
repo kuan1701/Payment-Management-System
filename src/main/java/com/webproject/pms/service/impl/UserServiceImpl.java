@@ -1,5 +1,6 @@
 package com.webproject.pms.service.impl;
 
+import com.webproject.pms.exception.UserNotFoundException;
 import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.UserDao;
 import com.webproject.pms.model.entities.Role;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import javax.transaction.Transactional;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -86,8 +88,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	
 	@Override
 	public void updatePassword(User user, String newPassword) {
+		
 		String encodedNewPassword = passwordEncoder.encode(newPassword);
 		user.setPassword(encodedNewPassword);
+		user.setResetPasswordToken(null);
+		
 		userDao.save(user);
 	}
 	
@@ -232,44 +237,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return true;
 	}
 	
-	/**
-	 * If User forgot password and use Send Email method
-	 */
-	public boolean forgotPassword(String email, Model model) {
-		User emailFromDb = userDao.findUserByEmail(email);
-		
-		if (emailFromDb == null) {
-			model.addAttribute("emailError", "No found email!");
-			return false;
-		}
-		
-		emailFromDb.setActivationCode(UUID.randomUUID().toString());
-		userDao.save(emailFromDb);
-		
-		if (!ObjectUtils.isEmpty(email)) {
-			String message = String.format(
-					"Hello,%s! \nYou forgot password! Please, visit next link: http://localhost:8080/password/%s",
-					emailFromDb.getUsername(),
-					emailFromDb.getActivationCode()
-			);
-			mailSender.send(email, "Activation code", message);
-		}
-		return true;
+	@Override
+	public User getByResetPasswordToken(String token) {
+		return userDao.findUserByResetPasswordToken(token);
 	}
 	
-	/**
-	 * Check code, after send email user
-	 */
-	public void activateCodeForNewPassword(Model model, String code) {
-		User userDB = findByActivationCode(code);
-		boolean isActivate = activateUser(code);
+	@Override
+	public void updateResetPasswordToken(String token, String email) throws UserNotFoundException {
 		
-		if (isActivate) {
-			model.addAttribute("user", userDB);
-			model.addAttribute("messageSuccess", "Input new password");
+		User user = userDao.findUserByEmail(email);
+		if (user != null) {
+			user.setResetPasswordToken(token);
+			userDao.save(user);
 		} else {
-			model.addAttribute("user", userDB);
-			model.addAttribute("messageDanger", "Activation code is not found!");
+			throw new UserNotFoundException("Could not find any user with email " + email);
 		}
 	}
 }
