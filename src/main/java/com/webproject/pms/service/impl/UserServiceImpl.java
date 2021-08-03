@@ -18,7 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -140,7 +142,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 * ADD USER IN DATA BASE, SEND EMAIL
 	 */
 	@Override
-	public boolean registrationUser(User user, Model model) {
+	public boolean registrationUser(User user, Model model, String siteURL)
+			throws UnsupportedEncodingException, MessagingException {
 		
 		User userDB = userDao.findUserByUsername(user.getUsername());
 		User emailDB = userDao.findUserByEmail(user.getEmail());
@@ -170,21 +173,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setActivationCode(UUID.randomUUID().toString());
 			userDao.save(user);
 		
-		if (!ObjectUtils.isEmpty(user.getEmail())) {
-			String message = String.format(
-					"Hello, %s! \n"
-							+ "Welcome to Payment System! Please, visit next link: http://localhost:8080/activate/%s",
-					user.getUsername(),
-					user.getActivationCode()
-			);
-			mailSender.send(user.getEmail(), "Activation code", message);
-			System.out.println(message);
-		}
+			mailSender.sendVerificationEmail(user, siteURL);
 		return true;
 	}
 	
 	@Override
-	public boolean adminCreateUser(User user, Model model) {
+	public boolean adminCreateUser(User user, Model model, String siteURL)
+			throws UnsupportedEncodingException, MessagingException {
 		
 		User emailDB = userDao.findUserByEmail(user.getEmail());
 		User phoneDB = userDao.findUserByPhone(user.getPhone());
@@ -207,16 +202,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setActivationCode(UUID.randomUUID().toString());
 		userDao.save(user);
 		
-		if (!ObjectUtils.isEmpty(user.getEmail())) {
-			String message = String.format(
-					"Hello, %s! \n"
-							+ "Welcome to Payment System! Please, visit next link: http://localhost:8080/activate/%s",
-					user.getUsername(),
-					user.getActivationCode()
-			);
-			mailSender.send(user.getEmail(), "Activation code", message);
-			System.out.println(message);
-		}
+		mailSender.sendVerificationEmail(user, siteURL);
 		return true;
 	}
 	
@@ -227,7 +213,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public boolean activateUser(String code) {
 		
 		User user = userDao.findUserByActivationCode(code);
-		if (user == null) {
+		if (user == null || user.getActive()) {
 			return false;
 		}
 		user.setActivationCode(null);

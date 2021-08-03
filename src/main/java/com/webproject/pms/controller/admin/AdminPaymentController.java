@@ -41,7 +41,7 @@ public class AdminPaymentController {
 	 * @param model
 	 * @param principal
 	 * @param paymentId
-	 * @return
+	 * @return admin/adminShowPaymentInfo page
 	 */
 	@GetMapping("/paymentInfo/{paymentId}")
 	public String adminPaymentInfo(Model model,
@@ -65,6 +65,13 @@ public class AdminPaymentController {
 		return "admin/adminShowPaymentInfo";
 	}
 	
+	/**
+	 *  Admin Show User Payments
+	 * @param model
+	 * @param principal
+	 * @param userId
+	 * @return admin/adminShowUserPayments page
+	 */
 	@GetMapping("/showPayments/{userId}")
 	public String adminShowUserPayments(Model model,
                                         Principal principal,

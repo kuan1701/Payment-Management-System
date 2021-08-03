@@ -173,8 +173,7 @@
                                         ${registration}
                                     </h4>
 
-                                    <form:form action="" method="POST" role="form" modelAttribute="user">
-                                        <input type="hidden" name="command" value="registration"/>
+                                    <form:form action="/registration" method="POST" role="form" modelAttribute="user">
 
                                         <div class="block-password">
 

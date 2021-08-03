@@ -32,7 +32,7 @@ public class AdminLetterController {
 	 * Admin support page
 	 * @param model
 	 * @param principal
-	 * @return admin/adminSupport
+	 * @return admin/adminSupport page
 	 */
 	@GetMapping("/support")
 	public String adminSupportPage(Model model,
@@ -55,7 +55,7 @@ public class AdminLetterController {
 	 * @param model
 	 * @param principal
 	 * @param letterId
-	 * @return admin/adminShowLetterInfo
+	 * @return admin/adminShowLetterInfo page
 	 */
 	@GetMapping("/support/letter/{letterId}")
 	public String responseLetter(Model model,
@@ -75,6 +75,13 @@ public class AdminLetterController {
 		return "admin/adminShowLetterInfo";
 	}
 	
+	/**
+	 * Admin processing the letter
+	 * @param model
+	 * @param principal
+	 * @param letterId
+	 * @return redirect:/admin/support page
+	 */
 	@PostMapping("/support/letter/{letterId}/processed")
 	public String processingTheLetter(Model model,
                                       Principal principal,

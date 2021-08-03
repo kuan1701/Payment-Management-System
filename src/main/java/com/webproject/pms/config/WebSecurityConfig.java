@@ -81,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/reset_password",
 						"/registration",
 						"/registration-message",
-						"/activate/*",
+						"/verify",
 						"/oauth2/**"
 				).not().fullyAuthenticated()
 				//Доступ только для пользователей с ролью Администратор
@@ -91,7 +91,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				//Доступ разрешен всем пользователям
 				.antMatchers(
 						"/my-account",
-						"/reset-password/**",
 						"/login",
 						"/user/**",
 						"/resources/**",

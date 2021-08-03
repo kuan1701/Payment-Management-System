@@ -8,12 +8,14 @@ import com.webproject.pms.service.impl.AccountServiceImpl;
 import com.webproject.pms.service.impl.LetterServiceImpl;
 import com.webproject.pms.service.impl.PaymentServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
+import com.webproject.pms.util.MailSender.MailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class AdminUserController {
 	 * @param email
 	 * @param phone
 	 * @param surname
-	 * @return admin/admin
+	 * @return admin/admin page
 	 */
 	@PostMapping("/my-account")
 	public String adminSearchUsers(Model model,
@@ -71,7 +73,7 @@ public class AdminUserController {
 	 * @param model
 	 * @param principal
 	 * @param userId
-	 * @return admin/adminShowUser
+	 * @return admin/adminShowUser page
 	 */
 	@GetMapping("/admin/userInfo/{userId}")
 	public String adminShowUserInfo(Model model,
@@ -105,7 +107,7 @@ public class AdminUserController {
 	 * @param model
 	 * @param principal
 	 * @param userId
-	 * @return admin/adminUpdateUserData
+	 * @return admin/adminUpdateUserData page
 	 */
 	@GetMapping("/admin/updateUserData/{userId}")
 	public String adminUpdateUserDataPage(Model model,
@@ -128,7 +130,7 @@ public class AdminUserController {
 	 * @param principal
 	 * @param user
 	 * @param userId
-	 * @return redirect:/my-account
+	 * @return redirect:/my-account page
 	 */
 	@PostMapping("/admin/updateUserData/{userId}")
 	public String adminUpdateUserData(Model model,
@@ -157,7 +159,7 @@ public class AdminUserController {
 	 * @param model
 	 * @param principal
 	 * @param userId
-	 * @return redirect:/my-account
+	 * @return redirect:/my-account page
 	 */
 	@PostMapping("/admin/delete/{userId}")
 	public String adminDeleteUser(Model model,
@@ -178,7 +180,7 @@ public class AdminUserController {
 	 * Admin create page user
 	 * @param model
 	 * @param principal
-	 * @return admin/adminAddUser
+	 * @return admin/adminAddUser page
 	 */
 	@GetMapping("/admin/createUser")
 	public String adminCreateUserPage(Model model,
@@ -192,14 +194,25 @@ public class AdminUserController {
 		return "admin/adminAddUser";
 	}
 	
+	/**
+	 * Admin create user
+	 * @param model
+	 * @param principal
+	 * @param request
+	 * @param newUser
+	 * @return admin/adminAddUser page
+	 * @throws UnsupportedEncodingException
+	 * @throws MessagingException
+	 */
 	@PostMapping("/admin/createUser")
 	public String adminCreateUser(Model model,
                                   Principal principal,
+                                  HttpServletRequest request,
                                   @ModelAttribute("newUser") User newUser
-	) {
+	) throws UnsupportedEncodingException, MessagingException {
 		User user = userService.findUserByUsername(principal.getName());
 		
-		if (!userService.adminCreateUser(newUser, model)){
+		if (!userService.adminCreateUser(newUser, model, MailSender.getSiteURL(request))){
 			model.addAttribute("response", "addUserError");
 			return "admin/adminAddUser";
 		} else {
@@ -208,5 +221,4 @@ public class AdminUserController {
 		model.addAttribute("user", user);
 		return "admin/adminAddUser";
 	}
-	
 }

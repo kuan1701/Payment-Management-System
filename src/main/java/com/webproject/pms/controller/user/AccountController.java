@@ -24,7 +24,7 @@ public class AccountController {
 	}
 	
 	/**
-	 * Create account
+	 * User create account
 	 * @param model
 	 * @param principal
 	 * @return /userCreateAccount page
@@ -38,6 +38,13 @@ public class AccountController {
 		return "user/userCreateAccount";
 	}
 	
+	/**
+	 * User create account
+	 * @param model
+	 * @param principal
+	 * @param account
+	 * @return redirect:/my-account page
+	 */
 	@PostMapping("/create-account")
 	public String createAccount(Model model,
 	                            Principal principal,
@@ -56,7 +63,7 @@ public class AccountController {
 	 * Show accounts
 	 * @param model
 	 * @param principal
-	 * @return userShowAccountPage
+	 * @return userShowAccount page
 	 */
 	@GetMapping("/show-accounts")
 	public String showAccounts(Model model,
@@ -70,7 +77,17 @@ public class AccountController {
 		model.addAttribute("accountsEmpty", accountList.isEmpty());
 		return "user/userShowAccounts";
 	}
-
+	
+	/**
+	 * User show found accounts
+	 * @param model
+	 * @param principal
+	 * @param accountNumber
+	 * @param min_value
+	 * @param max_value
+	 * @param currency
+	 * @return user/userShowAccounts page
+	 */
 	@PostMapping("/show-accounts")
 	public String showFoundAccounts(Model model,
 	                                Principal principal,
@@ -119,7 +136,7 @@ public class AccountController {
 	 * @param model
 	 * @param principal
 	 * @param number
-	 * @return /show-accounts view
+	 * @return show-accounts page
 	 */
 	@PostMapping("/account-setting/{accountNumber}")
 	public String blockAccount(Model model,
@@ -145,7 +162,7 @@ public class AccountController {
 	 * @param model
 	 * @param principal
 	 * @param number
-	 * @return show-accounts view
+	 * @return show-accounts page
 	 */
 	@PostMapping("/account-setting/delete/{accountNumber}")
 	public String deleteAccount(Model model,

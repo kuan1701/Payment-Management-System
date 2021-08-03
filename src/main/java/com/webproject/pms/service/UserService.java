@@ -5,6 +5,8 @@ import com.webproject.pms.model.entities.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
@@ -29,9 +31,9 @@ public interface UserService {
 	
 	User findByActivationCode(String code);
 	
-	boolean registrationUser(User user, Model model);
+	boolean registrationUser(User user, Model model, String siteURL) throws UnsupportedEncodingException, MessagingException;
 
-	boolean adminCreateUser(User user, Model model);
+	boolean adminCreateUser(User user, Model model, String siteURL) throws UnsupportedEncodingException, MessagingException;
 	
 	boolean activateUser(String code);
 	

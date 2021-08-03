@@ -117,7 +117,7 @@ public class AdminAccountController {
 	 * @param model
 	 * @param principal
 	 * @param accountId
-	 * @return /show-accounts view
+	 * @return show-accounts page
 	 */
 	@PostMapping("/accountInfo/{accountId}")
 	public String blockAccount(Model model,
@@ -143,7 +143,7 @@ public class AdminAccountController {
 	 * @param model
 	 * @param principal
 	 * @param userId
-	 * @return admin/adminAttachAccount
+	 * @return admin/adminAttachAccount page
 	 */
 	@GetMapping("/attachAccount/{userId}")
 	public String attachAccountToUserPage(Model model,
@@ -167,7 +167,7 @@ public class AdminAccountController {
 	 * @param principal
 	 * @param userId
 	 * @param account
-	 * @return admin/adminAttachAccount
+	 * @return admin/adminAttachAccount page
 	 */
 	@PostMapping("/attachAccount/{userId}")
 	public String adminAttachAccountToUser(Model model,
@@ -195,7 +195,7 @@ public class AdminAccountController {
 	 * @param model
 	 * @param principal
 	 * @param userId
-	 * @return
+	 * @return admin/adminShowUserAccounts page
 	 */
 	@GetMapping("/showUserAccounts/{userId}")
 	public String adminShowAllUserAccountsPage(Model model,
@@ -224,7 +224,7 @@ public class AdminAccountController {
 	 * @param min_value
 	 * @param max_value
 	 * @param currency
-	 * @return admin/adminShowUserAccounts
+	 * @return admin/adminShowUserAccounts page
 	 */
 	@PostMapping("/showUserAccounts/{userId}")
 	public String showAdminFoundAccounts(Model model,
@@ -263,7 +263,7 @@ public class AdminAccountController {
 	 * @param principal
 	 * @param accountId
 	 * @param cardId
-	 * @return redirect:/attached-cards/{accountNumber}
+	 * @return redirect:/attached-cards/{accountNumber} page
 	 */
 	@GetMapping("/accountInfo/{accountId}/block/{cardId}")
 	public String adminBlockCardPage(Model model,
@@ -295,7 +295,7 @@ public class AdminAccountController {
 	 * @param principal
 	 * @param accountId
 	 * @param cardId
-	 * @return redirect:/attached-cards/{accountNumber}
+	 * @return redirect:/attached-cards/{accountNumber} page
 	 */
 	@PostMapping("/accountInfo/{accountId}/block/{cardId}")
 	public String adminBlockCard(Model model,
@@ -330,7 +330,7 @@ public class AdminAccountController {
 	 * @param principal
 	 * @param accountId
 	 * @param cardId
-	 * @return user/userShowAccountCards
+	 * @return user/userShowAccountCards page
 	 */
 	@GetMapping("/accountInfo/{accountId}/detach/{cardId}")
 	public String showDetachCards(Model model,
@@ -355,7 +355,7 @@ public class AdminAccountController {
 	 * @param principal
 	 * @param accountId
 	 * @param cardId
-	 * @return redirect:/admin/accountInfo/{accountId}
+	 * @return redirect:/admin/accountInfo/{accountId} page
 	 */
 	@PostMapping("/accountInfo/{accountId}/detach/{cardId}")
 	public String detachCard(Model model,
@@ -379,7 +379,7 @@ public class AdminAccountController {
 	 * @param model
 	 * @param principal
 	 * @param accountId
-	 * @return show-accounts view
+	 * @return show-accounts view page
 	 */
 	@PostMapping("/accountInfo/delete/{accountId}")
 	public String deleteAccount(Model model,
