@@ -58,6 +58,7 @@ public class AdminUserController {
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 		List<User> userList = userService.searchByCriteria(name, surname, phone, email);
+		List<Account> accountList = accountService.findAllAccounts();
 		
 		model.addAttribute("user", user);
 		model.addAttribute("name", name);
@@ -65,6 +66,8 @@ public class AdminUserController {
 		model.addAttribute("email", email);
 		model.addAttribute("surname", surname);
 		model.addAttribute("userList", userList);
+		model.addAttribute("totalAccounts", accountList.size());
+		model.addAttribute("response", "searchUsersSuccess");
 		return "admin/admin";
 	}
 	
@@ -128,30 +131,27 @@ public class AdminUserController {
 	 * Admin updates user data
 	 * @param model
 	 * @param principal
-	 * @param user
 	 * @param userId
 	 * @return redirect:/my-account page
 	 */
 	@PostMapping("/admin/updateUserData/{userId}")
 	public String adminUpdateUserData(Model model,
 	                                  Principal principal,
-	                                  @ModelAttribute("user") User user,
 	                                  @PathVariable("userId") Long userId
 	) {
-		User userAdmin = userService.findUserByUsername(principal.getName());
+		User user = userService.findUserByUsername(principal.getName());
 		User updateUser = userService.findUserByUserId(userId);
 		List<Letter> letterList = letterService.findUnprocessedLetters();
 		
 		if (!userService.updateUser(user, userId)) {
 			model.addAttribute("response", "dataUpdatedError");
-			return "user/userUpdatePersonalData";
 		}
 		userService.updateUser(user, userId);
-		model.addAttribute("response", "dataUpdatedSuccess");
-		model.addAttribute("userAdmin", userAdmin);
+		model.addAttribute("user", user);
 		model.addAttribute("updateUser", updateUser);
 		model.addAttribute("totalLetters", letterList.size());
-		return "redirect:/my-account";
+		model.addAttribute("response", "dataUpdatedSuccess");
+		return "admin/adminUpdateUserData";
 	}
 	
 	/**
@@ -213,9 +213,10 @@ public class AdminUserController {
 		User user = userService.findUserByUsername(principal.getName());
 		
 		if (!userService.adminCreateUser(newUser, model, MailSender.getSiteURL(request))){
+			model.addAttribute("user", user);
 			model.addAttribute("response", "addUserError");
-			return "admin/adminAddUser";
 		} else {
+			model.addAttribute("user", user);
 			model.addAttribute("response", "addUserSuccess");
 		}
 		model.addAttribute("user", user);

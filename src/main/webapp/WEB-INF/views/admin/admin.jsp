@@ -52,7 +52,7 @@
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p>
                 <fmt:message key="admin.page.alertSearchUsersSuccess"/>
-                    ${numberOfUsers}
+                    ${userList.size()}
                 <fmt:message key="admin.users.users"/>.
             </p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -199,7 +199,7 @@
 
                                                                 <!-- Email -->
                                                                 <div>
-                                                                    <input id="email" name="email" type="text"
+                                                                    <input id="email" name="email" type="email"
                                                                            class="form-control"
                                                                            data-toggle="tooltip-left"
                                                                            data-title="${tooltipEmail}"

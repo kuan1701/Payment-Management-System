@@ -44,17 +44,22 @@ public class LetterController {
 	                            Principal principal,
                                 @ModelAttribute("letter") Letter letter,
 	                            BindingResult bindingResult
-	                            ) {
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		
 		if (bindingResult.hasErrors()){
+			model.addAttribute("user", user);
 			model.addAttribute("response", "unableGetData");
 			return "user/userSupport";
 		}
 		if (!letterService.addNewLetter(letter, principal)){
+			model.addAttribute("user", user);
 			model.addAttribute("response", "letterSentError");
 			return "user/userSupport";
 		} else {
+			model.addAttribute("user", user);
 			model.addAttribute("response", "letterSentSuccess");
 		}
-		return "redirect:/my-account";
+		return "user/userSupport";
 	}
 }

@@ -428,7 +428,7 @@
                                                                 </label>
                                                                 <input id="owner" name="owner" type="text"
                                                                        class="form-control" readonly="readonly"
-                                                                       value="${viewableUser.name} ${viewableUser.surname}"/>
+                                                                       value="${viewableAccount.user.name} ${viewableAccount.user.surname}"/>
                                                                 <label for="owner" class="default-label">&nbsp;</label>
                                                             </div>
 

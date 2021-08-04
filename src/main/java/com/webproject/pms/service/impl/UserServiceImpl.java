@@ -239,4 +239,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			throw new UserNotFoundException("Could not find any user with email " + email);
 		}
 	}
+	
+	@Override
+	public void processOAuthPostLogin(String username) {
+		
+		User existUser = userDao.findUserByUsername(username);
+		
+		if (existUser == null) {
+			User newUser = new User();
+			newUser.setUsername(username);
+			newUser.setActive(true);
+			
+			userDao.save(newUser);
+			
+			System.out.println("Created new user: " + username);
+		}
+	}
 }

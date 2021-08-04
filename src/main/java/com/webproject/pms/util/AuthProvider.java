@@ -20,7 +20,9 @@ public class AuthProvider implements AuthenticationProvider {
 	
 	private final PasswordEncoder passwordEncoder;
 	
-	public AuthProvider(UserServiceImpl userService, PasswordEncoder passwordEncoder) {
+	public AuthProvider(UserServiceImpl userService,
+	                    PasswordEncoder passwordEncoder
+	) {
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 	}

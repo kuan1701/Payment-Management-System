@@ -61,11 +61,12 @@ public class CardController {
 		model.addAttribute("bankCard", bankCard);
 		
 		
-		if (!bankCardService.addNewBankCard(bankCard, account)){
+		if (!bankCardService.addNewBankCard(bankCard, account)) {
+			model.addAttribute("user", user);
 			model.addAttribute("cardError", "Card attachment error");
 			return "user/userAttachCard";
 		} else {
-			model.addAttribute("accountError", "Card attached successfully");
+			model.addAttribute("cardError", "Card attached successfully");
 		}
 		return "user/userAttachCard";
 	}

@@ -33,7 +33,10 @@ searchBtn.addEventListener('click', (event) => {
     phone.value = phone.value.trim();
     email.value = email.value.trim();
 
-    if (name.value.trim() === "" && surname.value.trim() === "" && phone.value.trim() === "") {
+    if (name.value.trim() === ""
+        && surname.value.trim() === ""
+        && phone.value.trim() === ""
+        && email.value.trim() === "") {
         event.preventDefault();
         return false;
     }

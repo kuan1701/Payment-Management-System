@@ -44,7 +44,7 @@ public class MailSender {
         String verifyURL = siteURL + "/verify?code=" + user.getActivationCode();
         
         String toAddress = user.getEmail();
-        String fromAddress = "kuanchin17011993@gmail.com";
+        String fromAddress = "paymentmanagementsystem2021@gmail.com";
         String senderName = "Payment Management System Support";
         String subject = "Please verify your registration";
         String content = "Dear [[name]],<br>"
@@ -69,12 +69,12 @@ public class MailSender {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         
-        helper.setFrom("kuanchin17011993@gmail.com", "Payment Management System Support");
+        helper.setFrom("paymentmanagementsystem2021@gmail.com", "Payment Management System Support");
         helper.setTo(recipientEmail);
         
         String subject = "Here's the link to reset your password";
         
-        String content = "<p>Hello, %s!</p>"
+        String content = "<p>Hello!</p>"
                 + "<p>You have requested to reset your password.</p>"
                 + "<p>Click the link below to change your password.</p>"
                 + "<p><a href=\"" + link + "\">Change my password</a></p>"

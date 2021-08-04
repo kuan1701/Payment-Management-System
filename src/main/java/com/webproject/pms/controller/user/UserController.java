@@ -123,14 +123,17 @@ public class UserController {
 		model.addAttribute("user", user);
 		
 		if (oldPassword.equals(newPassword)) {
+			model.addAttribute("user", user);
 			model.addAttribute("passwordError", "You new password must be different than the old one.");
 			return "user/userUpdatePassword";
 		}
 		if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+			model.addAttribute("user", user);
 			model.addAttribute("passwordError", "Your old password is incorrect.");
 			return "user/userUpdatePassword";
 		} else {
 			userService.updatePassword(user, newPassword);
+			model.addAttribute("user", user);
 			model.addAttribute("passwordError", "Update password successfully.");
 		}
 		return "user/userUpdatePassword";

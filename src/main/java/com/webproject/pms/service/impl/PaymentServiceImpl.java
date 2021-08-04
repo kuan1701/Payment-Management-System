@@ -124,7 +124,11 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Override
 	public synchronized boolean checkAvailableAccount(Account account) {
-		return account.getBlocked();
+		
+		if (account != null){
+			return account.getBlocked();
+		}
+		return true;
 	}
 	
 	@Override

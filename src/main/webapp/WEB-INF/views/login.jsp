@@ -91,9 +91,9 @@
                                 <div class="form-group group-btn" style="height: 60px; margin-bottom: 24px;">
                                     <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
-                                        <input type="hidden" name="username" value="kuan17011993"/>
-                                        <input type="hidden" name="email" value="kuan0077@mail.ru"/>
-                                        <input type="hidden" name="password" value="17011993"/>
+                                        <input type="hidden" name="username" value="kuan1701"/>
+                                        <input type="hidden" name="email" value="kuanchin17011993@gmail.com"/>
+                                        <input type="hidden" name="password" value="123456"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-User
                                         </button>
@@ -102,7 +102,7 @@
                                     <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
                                         <input type="hidden" name="username" value="admin"/>
-                                        <input type="hidden" name="email" value="admin@admin.com"/>
+                                        <input type="hidden" name="email" value="paymentmanagementsystem@gmail.com"/>
                                         <input type="hidden" name="password" value="123456"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-Admin

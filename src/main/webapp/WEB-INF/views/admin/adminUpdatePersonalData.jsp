@@ -13,11 +13,11 @@
     <title><fmt:message key="user.update_data.title"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="shortcut icon" href="<c:url value="/static/images/favicon-black.ico"/>" type="image/x-icon">
-    <link rel="stylesheet" href="<c:url value="/static/bootstrap/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/intlTelInput.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/styles.css"/>">
-    <link rel="stylesheet" href="<c:url value="/static/css/style-fixed-footer.css"/>">
+    <link rel="shortcut icon" href="<c:url value="/images/favicon-black.ico"/>" type="image/x-icon">
+    <link rel="stylesheet" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/intlTelInput.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/styles.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/style-fixed-footer.css"/>">
 </head>
 <body>
 <div class="main">
@@ -157,7 +157,7 @@
                                                            value="${nameValue}"/>
                                                     <label for="name" class="default-label">
                                                         <span id="valid-msg-name" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-name" class="error-msg invisible">
                                                             ${nameError}
@@ -174,7 +174,7 @@
                                                            value="${surnameValue}"/>
                                                     <label for="surname" class="default-label">
                                                         <span id="valid-msg-surname" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-surname" class="error-msg invisible">
                                                             ${surnameError}
@@ -193,7 +193,7 @@
                                                            value="${phoneValue}"/>
                                                     <label for="phone" class="default-label">
                                                         <span id="valid-msg-phone" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-phone" class="error-msg invisible">
                                                             ${loginError}
@@ -212,7 +212,7 @@
                                                            value="${emailValue}"/>
                                                     <label for="email" class="default-label">
                                                         <span id="valid-msg-email" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-email" class="error-msg invisible">
                                                             ${emailError}
@@ -237,7 +237,7 @@
                                                     </div>
                                                     <label for="password" class="default-label">
                                                         <span id="valid-msg-password" class="valid-msg invisible">
-                                                            ${correct}<img src="<c:url value="/static/images/correct.png"/>" alt=""/>
+                                                            ${correct}<img src="<c:url value="/images/correct.png"/>" alt=""/>
                                                         </span>
                                                         <span id="error-msg-password" class="error-msg invisible">
                                                             ${passwordError}
@@ -257,7 +257,7 @@
 
                                         <!-- Change Password Button -->
                                         <div class="action back-btn">
-                                            <form action="/static" method="GET" role="form">
+                                            <form action="" method="GET" role="form">
                                                 <input type="hidden" name="command" value="updatePassword"/>
                                                 <button type="submit" class="btn btn-primary signup btn-default"
                                                         style="width: 56%;">
@@ -277,5 +277,5 @@
     <jsp:include page="../template/footer.jsp"/>
 </div>
 </body>
-<script src="<c:url value="/static/js/validator_adminUpdatePersonalData.js"/>"></script>
+<script src="<c:url value="/js/validator_adminUpdatePersonalData.js"/>"></script>
 </html>

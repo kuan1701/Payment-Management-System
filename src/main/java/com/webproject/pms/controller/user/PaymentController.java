@@ -69,6 +69,7 @@ public class PaymentController {
 			paymentList = paymentService.findAllPaymentsByUserId(user.getUserId());
 		}
 		
+		model.addAttribute("numberOfPayments", paymentList.size());
 		model.addAttribute("user", user);
 		model.addAttribute("finalDate", finalDate);
 		model.addAttribute("startDate", startDate);
@@ -117,7 +118,6 @@ public class PaymentController {
 		model.addAttribute("user", user);
 		model.addAttribute("accounts", accounts);
 		model.addAttribute("payment", new Payment());
-		
 		return "user/userMakePayment";
 	}
 	
@@ -147,12 +147,15 @@ public class PaymentController {
 		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("paymentError", "invalidData");
+			model.addAttribute("user", user);
 			return "user/userMakePayment";
 		}
 		if (!paymentService.makePaymentOnAccount(accountFromId, accountToNumber, amount, appointment, model, principal)) {
-			model.addAttribute("paymentError", "errorMakePayment");
+			model.addAttribute("paymentError", "recipientAccountNotExistError");
+			model.addAttribute("user", user);
 			return "user/userMakePayment";
 		} else {
+			model.addAttribute("user", user);
 			model.addAttribute("paymentError", "paymentCompletedSuccess");
 		}
 		
@@ -162,8 +165,7 @@ public class PaymentController {
 		model.addAttribute("appointment", appointment);
 		model.addAttribute("user", user);
 		model.addAttribute("accounts", accounts);
-		
-		return "redirect:/make-payment";
+		return "user/userMakePayment";
 	}
 	
 	/**
@@ -191,6 +193,4 @@ public class PaymentController {
 		model.addAttribute("payment", payment);
 		return "user/userShowPaymentInfo";
 	}
-	
-	
 }

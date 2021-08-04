@@ -51,12 +51,14 @@ public class AccountController {
 	                            @ModelAttribute("account") Account account
 	) {
 		if (!accountService.registrationAccount(account, model, principal)){
+			model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 			model.addAttribute("accountError", "Create account error");
 			return "user/userCreateAccount";
 		} else {
+			model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 			model.addAttribute("accountError", "Create success");
 		}
-		return "redirect:/my-account";
+		return "user/userCreateAccount";
 	}
 	
 	/**
@@ -111,6 +113,8 @@ public class AccountController {
 		model.addAttribute("accountList", accountList);
 		model.addAttribute("accountNumber", accountNumber);
 		model.addAttribute("accountsEmpty", accountList.isEmpty());
+		model.addAttribute("numberOfAccounts", accountList.size());
+		model.addAttribute("response", "searchAccountsSuccess");
 		return "user/userShowAccounts";
 	}
 	
@@ -144,17 +148,21 @@ public class AccountController {
 	                           @PathVariable("accountNumber") String number
 	) {
 		Account account = accountService.findAccountByAccountNumber(number);
+		User user = userService.findUserByUsername(principal.getName());
 		
 		if (!account.getBlocked()) {
 			accountService.blockAccount(account);
+			model.addAttribute("user", user);
+			model.addAttribute("response", "accountBlockedSuccess");
 		} else if(account.getBlocked()) {
 			accountService.unblockAccount(account);
+			model.addAttribute("user", user);
+			model.addAttribute("response", "accountUnblockedSuccess");
 		}
-		
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("user", user);
 		model.addAttribute("account", account);
 		
-		return "redirect:/account-setting/{accountNumber}";
+		return "user/userShowAccountSettings";
 	}
 	
 	/**
@@ -170,13 +178,18 @@ public class AccountController {
 	                           @PathVariable("accountNumber") String number
 	) {
 		Account account = accountService.findAccountByAccountNumber(number);
+		User user = userService.findUserByUsername(principal.getName());
 		
 		if (account != null) {
-			accountService.deleteAccount(account);
+			if (!accountService.deleteAccount(account)){
+				model.addAttribute("user", user);
+				model.addAttribute("account", account);
+				model.addAttribute("response", "accountHasFundsError");
+				return "user/userShowAccountSettings";
+			}
 		}
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("user", user);
 		model.addAttribute("account", account);
-		
 		return "redirect:/show-accounts";
 	}
 }

@@ -1,13 +1,9 @@
 package com.webproject.pms.config;
 
-import com.webproject.pms.model.dao.UserDao;
-import com.webproject.pms.model.entities.Role;
-import com.webproject.pms.model.entities.User;
+import com.webproject.pms.service.impl.UserServiceImpl;
 import com.webproject.pms.util.AuthProvider;
 import com.webproject.pms.util.OAuth2.CustomOAuth2UserService;
-import com.webproject.pms.util.OAuth2.OAuth2LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -20,8 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-
-import java.util.Date;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -34,40 +29,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthProvider authProvider;
 	@Autowired
 	private CustomOAuth2UserService oAuth2UserService;
+	
+//	@Autowired
+//	private UserServiceImpl userService;
 //	@Autowired
 //	private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 	
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
-		
 		return new BCryptPasswordEncoder(8);
 	}
-	
-	@Bean
-	public PrincipalExtractor principalExtractor(UserDao userDao) {
-		return map -> {
-			Long id = (Long) map.get("sub");
 
-			User user = userDao.findById(id).orElseGet(() -> {
-				User newUser = new User();
-
-				newUser.setUserId(id);
-				newUser.setName((String) map.get("given_name"));
-				newUser.setSurname((String) map.get("family_name"));
-				newUser.setEmail((String) map.get("email"));
-				newUser.setEmailVerified((Boolean) map.get("email_verified"));
-				newUser.setUsername(null);
-				newUser.setPhone("+375291111111");
-				newUser.setRegistrationDate(new Date().toString());
-				newUser.setRole(new Role(1L, "ROLE_USER"));
-				newUser.setActivationCode(null);
-				newUser.setActive(true);
-
-				return newUser;
-			});
-			return userDao.save(user);
-		};
-	}
+//	@Bean
+//	public PrincipalExtractor principalExtractor(UserDao userDao) {
+//		return map -> {
+//			Long id = (Long) map.get("sub");
+//
+//			User user = userDao.findById(id).orElseGet(() -> {
+//				User newUser = new User();
+//
+//				newUser.setUserId(id);
+//				newUser.setName((String) map.get("given_name"));
+//				newUser.setSurname((String) map.get("family_name"));
+//				newUser.setEmail((String) map.get("email"));
+//				newUser.setEmailVerified((Boolean) map.get("email_verified"));
+//				newUser.setUsername(null);
+//				newUser.setPhone("+375291111111");
+//				newUser.setRegistrationDate(new Date().toString());
+//				newUser.setRole(new Role(1L, "ROLE_USER"));
+//				newUser.setActivationCode(null);
+//				newUser.setActive(true);
+//
+//				return newUser;
+//			});
+//			return userDao.save(user);
+//		};
+//	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -91,7 +88,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				//Доступ разрешен всем пользователям
 				.antMatchers(
 						"/my-account",
-						"/login",
+						"/oauth2/**",
+						"/login/**",
 						"/user/**",
 						"/resources/**",
 						"/bootstrap/**",
@@ -116,17 +114,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //				.successHandler(oAuth2LoginSuccessHandler)
 				.and()
 				.logout()
-				.permitAll()
-				.logoutSuccessUrl("/login");
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/login")
+				.permitAll();
 	}
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
 		auth.authenticationProvider(authProvider);
-		
-//		auth.userDetailsService(userServiceImpl)
-//				.passwordEncoder(passwordEncoder);
 	}
 	
 	@Override

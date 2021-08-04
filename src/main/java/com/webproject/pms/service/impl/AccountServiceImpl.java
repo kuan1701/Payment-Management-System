@@ -94,6 +94,10 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Boolean deleteAccount(Account account) {
 		
+		BigDecimal balance = account.getBalance();
+		if (balance.compareTo(BigDecimal.ZERO) != 0) {
+			return false;
+		}
 		accountDao.delete(account);
 		return true;
 	}

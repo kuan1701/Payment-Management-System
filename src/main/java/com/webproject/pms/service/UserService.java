@@ -46,4 +46,6 @@ public interface UserService {
 	void updateResetPasswordToken(String token, String email) throws UserPrincipalNotFoundException, UserNotFoundException;
 	
 	User getByResetPasswordToken(String token);
+	
+	void processOAuthPostLogin(String username);
 }

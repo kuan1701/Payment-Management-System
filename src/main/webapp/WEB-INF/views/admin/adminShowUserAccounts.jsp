@@ -53,7 +53,7 @@
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p>
                 <fmt:message key="admin.page.alertSearchAccountsSuccess"/>
-                    ${numberOfAccounts}
+                    ${accounts.size()}
                 <fmt:message key="admin.user_accounts.accounts"/>.
             </p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
