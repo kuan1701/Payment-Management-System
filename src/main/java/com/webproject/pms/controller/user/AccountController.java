@@ -51,13 +51,11 @@ public class AccountController {
 	                            @ModelAttribute("account") Account account
 	) {
 		if (!accountService.registrationAccount(account, model, principal)){
-			model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 			model.addAttribute("accountError", "Create account error");
-			return "user/userCreateAccount";
 		} else {
-			model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 			model.addAttribute("accountError", "Create success");
 		}
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "user/userCreateAccount";
 	}
 	
@@ -93,11 +91,11 @@ public class AccountController {
 	@PostMapping("/show-accounts")
 	public String showFoundAccounts(Model model,
 	                                Principal principal,
-                                    @RequestParam("accountNumber") String accountNumber,
-                                    @RequestParam("min_value") String min_value,
-                                    @RequestParam("max_value") String max_value,
-                                    @RequestParam("currency") String currency
-	) {
+									@RequestParam("currency") String currency,
+									@RequestParam("min_value") String min_value,
+									@RequestParam("max_value") String max_value,
+									@RequestParam("accountNumber") String accountNumber
+									) {
 		User user = userService.findUserByUsername(principal.getName());
 		List<Account> accountList = accountService.searchByCriteria(
 				user.getUserId(),
@@ -127,8 +125,8 @@ public class AccountController {
 	 */
 	@GetMapping("/account-setting/{accountNumber}")
 	public String showAccountSettingPage(Model model,
-                                     Principal principal,
-                                     @PathVariable("accountNumber") String number
+										 Principal principal,
+										 @PathVariable("accountNumber") String number
 	) {
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		model.addAttribute("account", accountService.findAccountByAccountNumber(number));
@@ -152,16 +150,13 @@ public class AccountController {
 		
 		if (!account.getBlocked()) {
 			accountService.blockAccount(account);
-			model.addAttribute("user", user);
 			model.addAttribute("response", "accountBlockedSuccess");
 		} else if(account.getBlocked()) {
 			accountService.unblockAccount(account);
-			model.addAttribute("user", user);
 			model.addAttribute("response", "accountUnblockedSuccess");
 		}
 		model.addAttribute("user", user);
 		model.addAttribute("account", account);
-		
 		return "user/userShowAccountSettings";
 	}
 	
@@ -182,10 +177,7 @@ public class AccountController {
 		
 		if (account != null) {
 			if (!accountService.deleteAccount(account)){
-				model.addAttribute("user", user);
-				model.addAttribute("account", account);
 				model.addAttribute("response", "accountHasFundsError");
-				return "user/userShowAccountSettings";
 			}
 		}
 		model.addAttribute("user", user);
