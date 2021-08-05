@@ -25,23 +25,24 @@ public class AdminPaymentController {
 	private final LetterServiceImpl letterService;
 	private final AccountServiceImpl accountService;
 	private final PaymentServiceImpl paymentService;
-	
-	public AdminPaymentController(PaymentServiceImpl paymentService,
-	                              UserServiceImpl userService,
+
+	public AdminPaymentController(UserServiceImpl userService,
 	                              LetterServiceImpl letterService,
-	                              AccountServiceImpl accountService) {
-		this.paymentService = paymentService;
+								  PaymentServiceImpl paymentService,
+								  AccountServiceImpl accountService
+	) {
 		this.userService = userService;
 		this.letterService = letterService;
+		this.paymentService = paymentService;
 		this.accountService = accountService;
 	}
-	
+
 	/**
 	 * Admin show payment info
 	 * @param model
 	 * @param principal
 	 * @param paymentId
-	 * @return admin/adminShowPaymentInfo page
+	 * @return adminShowPaymentInfo view
 	 */
 	@GetMapping("/paymentInfo/{paymentId}")
 	public String adminPaymentInfo(Model model,
@@ -55,7 +56,7 @@ public class AdminPaymentController {
 		Account recipientAccount = accountService.findAccountByAccountNumber(payment.getRecipientNumber());
 		User recipientUser = recipientAccount.getUser();
 		List<Letter> letterList = letterService.findUnprocessedLetters();
-		
+
 		model.addAttribute("user", user);
 		model.addAttribute("payment", payment);
 		model.addAttribute("senderUser", senderUser);
@@ -64,26 +65,26 @@ public class AdminPaymentController {
 		model.addAttribute("totalLetters", letterList.size());
 		return "admin/adminShowPaymentInfo";
 	}
-	
+
 	/**
 	 *  Admin Show User Payments
 	 * @param model
 	 * @param principal
 	 * @param userId
-	 * @return admin/adminShowUserPayments page
+	 * @return adminShowUserPayments view
 	 */
 	@GetMapping("/showPayments/{userId}")
 	public String adminShowUserPayments(Model model,
                                         Principal principal,
                                         @PathVariable("userId") Long userId
 	) {
-		User user = userService.findUserByUsername(principal.getName());
 		User viewableUser = userService.findUserByUserId(userId);
+		User user = userService.findUserByUsername(principal.getName());
 		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(userId);
 		
 		model.addAttribute("user", user);
-		model.addAttribute("viewableUser", viewableUser);
 		model.addAttribute("paymentList", paymentList);
+		model.addAttribute("viewableUser", viewableUser);
 		model.addAttribute("paymentsEmpty", paymentList.isEmpty());
 		return "admin/adminShowUserPayments";
 	}

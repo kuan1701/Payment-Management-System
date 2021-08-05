@@ -122,6 +122,7 @@
                                         <!-- Perhaps there was an error or the letter was processed -->
                                         <c:choose>
                                             <c:when test="${totalLetters != 0}">
+
                                                 <c:url value="/admin/support/letter/${letter.letterId}/processed" var="var"/>
                                                 <form action="${var}" method="POST" role="form">
 

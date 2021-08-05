@@ -32,7 +32,7 @@ public class AdminLetterController {
 	 * Admin support page
 	 * @param model
 	 * @param principal
-	 * @return admin/adminSupport page
+	 * @return admin/adminSupport view
 	 */
 	@GetMapping("/support")
 	public String adminSupportPage(Model model,
@@ -46,7 +46,6 @@ public class AdminLetterController {
 		model.addAttribute("unprocessedLetters", unprocessedLetters);
 		model.addAttribute("totalLetters", unprocessedLetters.size());
 		model.addAttribute("lettersEmpty", unprocessedLetters.isEmpty());
-		
 		return "admin/adminSupport";
 	}
 	
@@ -55,7 +54,7 @@ public class AdminLetterController {
 	 * @param model
 	 * @param principal
 	 * @param letterId
-	 * @return admin/adminShowLetterInfo page
+	 * @return adminShowLetterInfo view
 	 */
 	@GetMapping("/support/letter/{letterId}")
 	public String responseLetter(Model model,
@@ -69,8 +68,8 @@ public class AdminLetterController {
 		List<Letter> letterList = letterService.findUnprocessedLetters();
 		
 		model.addAttribute("user", user);
-		model.addAttribute("userLetter", userLetter);
 		model.addAttribute("letter", letter);
+		model.addAttribute("userLetter", userLetter);
 		model.addAttribute("totalLetters", letterList.size());
 		return "admin/adminShowLetterInfo";
 	}
@@ -88,10 +87,16 @@ public class AdminLetterController {
                                       @PathVariable("letterId") Long letterId
 	) {
 		User user = userService.findUserByUsername(principal.getName());
+		Letter letter = letterService.findLetterByLetterId(letterId);
+		User userLetter = letter.getUser();
+		List<Letter> letterList = letterService.findUnprocessedLetters();
 		
 		letterService.updateLetterByLetterId(letterId);
-		model.addAttribute("response", "letterProcessedSuccess");
 		model.addAttribute("user", user);
-		return "redirect:/admin/support";
+		model.addAttribute("letter", letter);
+		model.addAttribute("userLetter", userLetter);
+		model.addAttribute("totalLetters", letterList.size());
+		model.addAttribute("response", "letterProcessedSuccess");
+		return "admin/adminShowLetterInfo";
 	}
 }

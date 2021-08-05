@@ -28,14 +28,14 @@ public class AdminUserController {
 	private final LetterServiceImpl letterService;
 	
 	public AdminUserController(UserServiceImpl userService,
+							   LetterServiceImpl letterService,
 	                           AccountServiceImpl accountService,
-	                           PaymentServiceImpl paymentService,
-	                           LetterServiceImpl letterService
+	                           PaymentServiceImpl paymentService
 	) {
 		this.userService = userService;
+		this.letterService = letterService;
 		this.accountService = accountService;
 		this.paymentService = paymentService;
-		this.letterService = letterService;
 	}
 	
 	/**
@@ -57,9 +57,9 @@ public class AdminUserController {
 	                               @RequestParam("surname") String surname
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<User> userList = userService.searchByCriteria(name, surname, phone, email);
 		List<Account> accountList = accountService.findAllAccounts();
-		
+		List<User> userList = userService.searchByCriteria(name, surname, phone, email);
+
 		model.addAttribute("user", user);
 		model.addAttribute("name", name);
 		model.addAttribute("phone", phone);
@@ -85,10 +85,10 @@ public class AdminUserController {
 	) {
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
+		List<Letter> letterList = letterService.findUnprocessedLetters();
 		List<Account> accountList = accountService.findAllAccountsByUserId(userId);
 		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(userId);
-		List<Letter> letterList = letterService.findUnprocessedLetters();
-		
+
 		boolean userIsAdmin = false;
 		if (viewableUser.getRole().getId() == 2) {
 			userIsAdmin = true;
