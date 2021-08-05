@@ -24,13 +24,13 @@ public class AccountController {
 	}
 	
 	/**
-	 * User create account
+	 * User account creation form
 	 * @param model
 	 * @param principal
-	 * @return /userCreateAccount page
+	 * @return userCreateAccount view
 	 */
 	@GetMapping("/create-account")
-	public String createAccountPage(Model model,
+	public String createAccountForm(Model model,
 	                                Principal principal
 	) {
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
@@ -39,7 +39,7 @@ public class AccountController {
 	}
 	
 	/**
-	 * User create account
+	 * User account creation
 	 * @param model
 	 * @param principal
 	 * @param account
@@ -63,7 +63,7 @@ public class AccountController {
 	 * Show accounts
 	 * @param model
 	 * @param principal
-	 * @return userShowAccount page
+	 * @return userShowAccount view
 	 */
 	@GetMapping("/show-accounts")
 	public String showAccounts(Model model,
@@ -86,7 +86,7 @@ public class AccountController {
 	 * @param min_value
 	 * @param max_value
 	 * @param currency
-	 * @return user/userShowAccounts page
+	 * @return userShowAccounts view
 	 */
 	@PostMapping("/show-accounts")
 	public String showFoundAccounts(Model model,
@@ -121,7 +121,7 @@ public class AccountController {
 	 * @param model
 	 * @param principal
 	 * @param number
-	 * @return userShowAccountSettings page
+	 * @return userShowAccountSettings view
 	 */
 	@GetMapping("/account-setting/{accountNumber}")
 	public String showAccountSettingPage(Model model,
@@ -134,24 +134,25 @@ public class AccountController {
 	}
 	
 	/**
-	 * Block unblock account
+	 * Blocking and unblocking of the account by the user
 	 * @param model
 	 * @param principal
 	 * @param number
-	 * @return show-accounts page
+	 * @return userShowAccountSettings view
 	 */
 	@PostMapping("/account-setting/{accountNumber}")
 	public String blockAccount(Model model,
 	                           Principal principal,
 	                           @PathVariable("accountNumber") String number
 	) {
-		Account account = accountService.findAccountByAccountNumber(number);
 		User user = userService.findUserByUsername(principal.getName());
-		
+		Account account = accountService.findAccountByAccountNumber(number);
+
 		if (!account.getBlocked()) {
 			accountService.blockAccount(account);
 			model.addAttribute("response", "accountBlockedSuccess");
-		} else if(account.getBlocked()) {
+		}
+		else if(account.getBlocked()) {
 			accountService.unblockAccount(account);
 			model.addAttribute("response", "accountUnblockedSuccess");
 		}
@@ -161,11 +162,11 @@ public class AccountController {
 	}
 	
 	/**
-	 * Delete account
+	 * Deleting an account by a user
 	 * @param model
 	 * @param principal
 	 * @param number
-	 * @return show-accounts page
+	 * @return redirect:/my-account page
 	 */
 	@PostMapping("/account-setting/delete/{accountNumber}")
 	public String deleteAccount(Model model,
@@ -182,6 +183,6 @@ public class AccountController {
 		}
 		model.addAttribute("user", user);
 		model.addAttribute("account", account);
-		return "redirect:/show-accounts";
+		return "redirect:/my-account";
 	}
 }

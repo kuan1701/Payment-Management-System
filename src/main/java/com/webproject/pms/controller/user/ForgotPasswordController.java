@@ -29,15 +29,21 @@ public class ForgotPasswordController {
 	}
 	
 	/**
-	 * Forgot password
+	 * Forgot password form
 	 *
-	 * @return recovery page
+	 * @return recovery view
 	 */
 	@GetMapping("/forgot-password")
 	public String showForgotPasswordForm() {
 		return "recovery";
 	}
-	
+
+	/**
+	 * Password recovery process
+	 * @param request
+	 * @param model
+	 * @return recovery view
+	 */
 	@PostMapping("/forgot-password")
 	public String processForgotPassword(HttpServletRequest request,
 	                                    Model model
@@ -50,14 +56,22 @@ public class ForgotPasswordController {
 			String resetPasswordLink = MailSender.getSiteURL(request) + "/reset_password?token=" + token;
 			mailSender.sendEmailForResetPassword(email, resetPasswordLink);
 			model.addAttribute("response", "passwordSent");
-		} catch (UserNotFoundException ex) {
+		}
+		catch (UserNotFoundException ex) {
 			model.addAttribute("error", ex.getMessage());
-		} catch (UnsupportedEncodingException | MessagingException e) {
+		}
+		catch (UnsupportedEncodingException | MessagingException e) {
 			model.addAttribute("response", "loginNotExist");
 		}
 		return "recovery";
 	}
-	
+
+	/**
+	 * Reset password form
+	 * @param token
+	 * @param model
+	 * @return userResetPassword view
+	 */
 	@GetMapping("/reset_password")
 	public String showResetPasswordForm(@Param(value = "token") String token,
 	                                    Model model
@@ -71,7 +85,14 @@ public class ForgotPasswordController {
 		}
 	return "user/userResetPassword";
 	}
-	
+
+	/**
+	 * Password reset process
+	 * @param model
+	 * @param token
+	 * @param newPassword
+	 * @return userResetPassword view
+	 */
 	@PostMapping("/reset_password")
 	public String processResetPassword(Model model,
 	                                   @RequestParam("token") String token,
@@ -83,7 +104,8 @@ public class ForgotPasswordController {
 		if (user == null) {
 			model.addAttribute("response", "userNotExist");
 			return "recovery";
-		} else {
+		}
+		else {
 			userService.updatePassword(user, newPassword);
 			model.addAttribute("passwordError", "Update password successfully");
 		}

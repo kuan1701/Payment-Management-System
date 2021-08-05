@@ -29,35 +29,44 @@ public class RegistrationUserController {
 	}
 	
 	/**
-	 * Registration user
+	 * Registration user form
 	 * @param model
 	 * @return registraion page
 	 */
 	@GetMapping("/registration")
-	public String registrationPage(Model model)
+	public String registrationForm(Model model)
 	{
 		model.addAttribute("user", new User());
 		return "registration";
 	}
-	
+
+	/**
+	 * User registration process
+	 * @param model
+	 * @param request
+	 * @param user
+	 * @param bindingResult
+	 * @return registration view
+	 * @throws UnsupportedEncodingException
+	 * @throws MessagingException
+	 */
 	@PostMapping("/registration")
 	public String registrationUser(Model model,
 	                               HttpServletRequest request,
 	                               @ModelAttribute("user") @Valid User user,
 	                               BindingResult bindingResult
 	) throws UnsupportedEncodingException, MessagingException {
+
 		if (bindingResult.hasErrors()){
 			model.addAttribute("registrationError", "Invalid data");
-			return "registration";
 		}
 		if (!user.getPassword().equals(user.getRepeatedPassword())){
 			model.addAttribute("registrationError", "Password mismatch");
-			return "registration";
 		}
 		if (!userService.registrationUser(user, model, MailSender.getSiteURL(request))){
 			model.addAttribute("registrationError", "Registration error");
-			return "registration";
-		} else {
+		}
+		else {
 			model.addAttribute("registrationError", "Registration success");
 		}
 		return "registration";
@@ -67,7 +76,7 @@ public class RegistrationUserController {
 	 * Activate user via mail sender
 	 * @param model
 	 * @param code
-	 * @return activationSuccess page
+	 * @return activationSuccess or activationFail view
 	 */
 	@GetMapping("/verify")
 	public String activateUser(Model model,
@@ -76,7 +85,8 @@ public class RegistrationUserController {
 		if (userService.activateUser(code)) {
 			model.addAttribute("message", "User successfully activated!");
 			return "activationSuccess";
-		} else {
+		}
+		else {
 			model.addAttribute("message", "Activation code is not found!");
 			return "activationFail";
 		}

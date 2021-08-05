@@ -26,19 +26,28 @@ public class LetterController {
 	}
 	
 	/**
-	 * Support
+	 * Support form
 	 * @param model
 	 * @param principal
-	 * @return userSupport page
+	 * @return userSupport view
 	 */
 	@GetMapping("/support")
-	public String support(Model model,
-	                      Principal principal) {
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+	public String supportFrom(Model model,
+							  Principal principal
+	) {
 		model.addAttribute("support", new Letter());
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "user/userSupport";
 	}
-	
+
+	/**
+	 * Creating a letter for feedback
+	 * @param model
+	 * @param principal
+	 * @param letter
+	 * @param bindingResult
+	 * @return userSupport view
+	 */
 	@PostMapping("/support")
 	public String createSupport(Model model,
 	                            Principal principal,
@@ -48,18 +57,13 @@ public class LetterController {
 		User user = userService.findUserByUsername(principal.getName());
 		
 		if (bindingResult.hasErrors()){
-			model.addAttribute("user", user);
 			model.addAttribute("response", "unableGetData");
-			return "user/userSupport";
 		}
-		if (!letterService.addNewLetter(letter, principal)){
-			model.addAttribute("user", user);
+		else if (!letterService.addNewLetter(letter, principal)){
 			model.addAttribute("response", "letterSentError");
-			return "user/userSupport";
-		} else {
-			model.addAttribute("user", user);
-			model.addAttribute("response", "letterSentSuccess");
 		}
+		model.addAttribute("user", user);
+		model.addAttribute("response", "letterSentSuccess");
 		return "user/userSupport";
 	}
 }

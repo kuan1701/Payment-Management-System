@@ -15,25 +15,28 @@ import java.util.List;
 
 @Controller
 public class CardController {
-	
-	private final BankCardServiceImpl bankCardService;
-	private final AccountServiceImpl accountService;
+
 	private final UserServiceImpl userService;
-	
-	public CardController(BankCardServiceImpl bankCardService, AccountServiceImpl accountService, UserServiceImpl userService) {
-		this.bankCardService = bankCardService;
-		this.accountService = accountService;
+	private final AccountServiceImpl accountService;
+	private final BankCardServiceImpl bankCardService;
+
+	public CardController(UserServiceImpl userService,
+						  AccountServiceImpl accountService,
+						  BankCardServiceImpl bankCardService
+	) {
 		this.userService = userService;
+		this.accountService = accountService;
+		this.bankCardService = bankCardService;
 	}
 	
 	/**
-	 * Attach card tto account
+	 * Show attach card to account form
 	 * @param model
 	 * @param principal
-	 * @return userAttachCard page
+	 * @return userAttachCard view
 	 */
 	@GetMapping("/attach-card")
-	public String attachCard(Model model,
+	public String attachCardForm(Model model,
 	                         Principal principal
 	) {
 		User user = userService.findUserByUsername(principal.getName());
@@ -44,13 +47,20 @@ public class CardController {
 		model.addAttribute("bankCard", new BankCard());
 		return "user/userAttachCard";
 	}
-	
+
+	/**
+	 * Attaching a bank card user accounts
+	 * @param model
+	 * @param principal
+	 * @param bankCard
+	 * @param accountNumber
+	 * @return userAttachCard view
+	 */
 	@PostMapping("/attach-card")
-	public String attachCard(
-			Model model,
-			Principal principal,
-			@RequestParam("accountNumber") String accountNumber,
-			@ModelAttribute("card") BankCard bankCard
+	public String attachCard(Model model,
+							 Principal principal,
+							 @ModelAttribute("card") BankCard bankCard,
+							 @RequestParam("accountNumber") String accountNumber
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
@@ -62,21 +72,21 @@ public class CardController {
 		
 		
 		if (!bankCardService.addNewBankCard(bankCard, account)) {
-			model.addAttribute("user", user);
 			model.addAttribute("cardError", "Card attachment error");
-			return "user/userAttachCard";
-		} else {
+		}
+		else {
 			model.addAttribute("cardError", "Card attached successfully");
 		}
+		model.addAttribute("user", user);
 		return "user/userAttachCard";
 	}
 	
 	/**
-	 * Attach card
+	 * Show attached cards
 	 * @param model
 	 * @param principal
 	 * @param number
-	 * @return userShowAccountCards page
+	 * @return userShowAccountCards view
 	 */
 	@GetMapping("/attached-cards/{accountNumber}")
 	public String showAttachedCards(Model model,
@@ -98,18 +108,18 @@ public class CardController {
 	}
 	
 	/**
-	 * Show detach card
+	 * Show detach card form
 	 * @param model
 	 * @param principal
 	 * @param accountNumber
 	 * @param cardId
-	 * @return user/userShowAccountCards
+	 * @return userShowAccountCards view
 	 */
 	@GetMapping("/attached-cards/{accountNumber}/detach/{cardId}")
 	public String showDetachCards(Model model,
-	                                Principal principal,
-	                                @PathVariable("accountNumber") String accountNumber,
-	                                @PathVariable("cardId") Long cardId
+								  Principal principal,
+								  @PathVariable("cardId") Long cardId,
+								  @PathVariable("accountNumber") String accountNumber
 	) {
 		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(
 				accountService.findAccountByAccountNumber(accountNumber).getAccountId()
@@ -117,66 +127,75 @@ public class CardController {
 		
 		model.addAttribute("bankCardsList", bankCardsList);
 		model.addAttribute("bankCardsEmpty", bankCardsList.isEmpty());
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		model.addAttribute("bankCard", bankCardService.findCardByCardId(cardId));
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		model.addAttribute("account", accountService.findAccountByAccountNumber(accountNumber));
 		return "user/userShowAccountCards";
 	}
 	
 	/**
-	 * Block card
+	 * Blocking and unblocking of the card by the user
 	 * @param model
 	 * @param principal
 	 * @param accountNumber
 	 * @param cardId
-	 * @return redirect:/attached-cards/{accountNumber}
+	 * @return userShowAccountCards view
 	 */
 	@PostMapping("/attached-cards/{accountNumber}")
 	public String blockCard(Model model,
-	                         Principal principal,
-	                         @PathVariable("accountNumber") String accountNumber,
-	                         @RequestParam("cardId") Long cardId
+							Principal principal,
+							@RequestParam("cardId") Long cardId,
+							@PathVariable("accountNumber") String accountNumber
 	) {
-		Account account = accountService.findAccountByAccountNumber(accountNumber);
 		BankCard bankCard = bankCardService.findCardByCardId(cardId);
-		
+		User user = userService.findUserByUsername(principal.getName());
+		Account account = accountService.findAccountByAccountNumber(accountNumber);
+		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
+
 		if (bankCard.getActive()) {
 			bankCardService.blockCard(cardId);
 			model.addAttribute("alert", "cardBlockedSuccess");
-		} else if (!bankCard.getActive()) {
+		}
+		else if (!bankCard.getActive()) {
 			bankCardService.unblockCard(cardId);
 			model.addAttribute("alert", "cardUnblockedSuccess");
 		}
-		
+
+		model.addAttribute("user", user);
 		model.addAttribute("cardId", cardId);
-		model.addAttribute("bankCard", bankCard);
 		model.addAttribute("account", account);
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-		return "redirect:/attached-cards/{accountNumber}";
+		model.addAttribute("bankCard", bankCard);
+		model.addAttribute("bankCardsList", bankCardsList);
+		model.addAttribute("bankCardsEmpty", bankCardsList.isEmpty());
+		return "user/userShowAccountCards";
 	}
 	
 	/**
-	 * Detach card
+	 * Detaching the card by the user
 	 * @param model
 	 * @param principal
 	 * @param accountNumber
 	 * @param cardId
-	 * @return redirect:/attached-cards/{accountNumber}
+	 * @return userShowAccountCards view
 	 */
 	@PostMapping("/attached-cards/{accountNumber}/detach/{cardId}")
 	public String deleteAccount(Model model,
 	                            Principal principal,
-                                @PathVariable("accountNumber") String accountNumber,
-                                @PathVariable("cardId") Long cardId
+								@PathVariable("cardId") Long cardId,
+                                @PathVariable("accountNumber") String accountNumber
 	) {
-		Account account = accountService.findAccountByAccountNumber(accountNumber);
 		BankCard bankCard = bankCardService.findCardByCardId(cardId);
-		
+		User user = userService.findUserByUsername(principal.getName());
+		Account account = accountService.findAccountByAccountNumber(accountNumber);
+		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
+
 		bankCardService.deleteCard(bankCard);
-		model.addAttribute("bankCard", bankCard);
+		model.addAttribute("user", user);
 		model.addAttribute("account", account);
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-		
-		return "redirect:/attached-cards/{accountNumber}";
+		model.addAttribute("bankCard", bankCard);
+		model.addAttribute("bankCardsList", bankCardsList);
+		model.addAttribute("alert", "cardDetachedSuccess");
+		model.addAttribute("bankCardsEmpty", bankCardsList.isEmpty());
+		return "user/userShowAccountCards";
 	}
 }

@@ -153,7 +153,7 @@
     </c:if>
 
     <!-- Alert cardDetachedSuccess -->
-    <c:if test="${response eq 'cardDetachedSuccess'}">
+    <c:if test="${alert eq 'cardDetachedSuccess'}">
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p><strong><fmt:message key="user.page.success"/>!</strong>
                 <fmt:message key="user.page.alertCardDetachedSuccess"/>

@@ -31,24 +31,33 @@ public class PaymentController {
 	}
 	
 	/**
-	 * Show payments
+	 * Show user payments
 	 * @param model
 	 * @param principal
-	 * @return userShowPayments page
+	 * @return userShowPayments view
 	 */
 	@GetMapping("/show-payments")
 	public String showPayments(Model model,
 	                           Principal principal
 	) {
-		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(
-				userService.findUserByUsername(principal.getName()).getUserId());
-		
+		User user = userService.findUserByUsername(principal.getName());
+		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(user.getUserId());
+
+		model.addAttribute("user", user);
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("paymentEmpty", paymentList.isEmpty());
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "user/userShowPayments";
 	}
-	
+
+	/**
+	 * User show found payments
+	 * @param model
+	 * @param principal
+	 * @param startDate
+	 * @param finalDate
+	 * @param checkbox
+	 * @return userShowPayments
+	 */
 	@PostMapping("/show-payments")
 	public String showFoundAccounts(Model model,
 	                                Principal principal,
@@ -79,21 +88,22 @@ public class PaymentController {
 	}
 	
 	/**
-	 * Show Account payments
+	 * Show account payments
 	 * @param model
 	 * @param principal
 	 * @param number
-	 * @return userShowAccountPayments page
+	 * @return userShowAccountPayments view
 	 */
 	@GetMapping("/show-account-payments/{accountNumber}")
 	public String showAccountPayments(Model model,
 	                                  Principal principal,
 	                                  @PathVariable("accountNumber") String number
 	){
+		User user = userService.findUserByUsername(principal.getName());
 		Account account = accountService.findAccountByAccountNumber(number);
 		List<Payment> paymentList = paymentService.findAllPaymentsByAccountId(account.getAccountId());
 		
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("user", user);
 		model.addAttribute("account", account);
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("paymentsEmpty", paymentList.isEmpty());
@@ -101,13 +111,13 @@ public class PaymentController {
 	}
 	
 	/**
-	 * Make payment
+	 * Make payment form
 	 * @param model
 	 * @param principal
-	 * @return userMakePayment
+	 * @return userMakePayment view
 	 */
 	@GetMapping("/make-payment")
-	public String makePaymentPage(Model model,
+	public String makePaymentForm(Model model,
 	                              Principal principal,
                                   @ModelAttribute("account") Account account,
                                   @ModelAttribute("payment") Payment payment
@@ -122,7 +132,7 @@ public class PaymentController {
 	}
 	
 	/**
-	 * Make payment
+	 * Payment creation process
 	 * @param model
 	 * @param principal
 	 * @param payment
@@ -131,40 +141,38 @@ public class PaymentController {
 	 * @param accountToNumber
 	 * @param amount
 	 * @param appointment
-	 * @return redirect:/make-payment
+	 * @return userMakePayment view
 	 */
 	@PostMapping("/make-payment")
 	public String makePayment(Model model,
 	                          Principal principal,
-	                          @ModelAttribute("payment") @Valid Payment payment,
-	                          BindingResult bindingResult,
-	                          @RequestParam("accountFromId") Long accountFromId,
-	                          @RequestParam("accountToNumber") String accountToNumber,
-	                          @RequestParam("amount") BigDecimal amount,
-	                          @RequestParam("appointment") String appointment
+							  @RequestParam("amount") BigDecimal amount,
+							  @RequestParam("appointment") String appointment,
+							  @RequestParam("accountFromId") Long accountFromId,
+							  @RequestParam("accountToNumber") String accountToNumber,
+							  @ModelAttribute("payment") @Valid Payment payment,
+							  BindingResult bindingResult
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
+
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("paymentError", "invalidData");
-			model.addAttribute("user", user);
-			return "user/userMakePayment";
 		}
-		if (!paymentService.makePaymentOnAccount(accountFromId, accountToNumber, amount, appointment, model, principal)) {
+		else if (!paymentService.makePaymentOnAccount(
+				accountFromId, accountToNumber, amount, appointment, model, principal)) {
 			model.addAttribute("paymentError", "recipientAccountNotExistError");
-			model.addAttribute("user", user);
-			return "user/userMakePayment";
-		} else {
-			model.addAttribute("user", user);
+		}
+		else {
 			model.addAttribute("paymentError", "paymentCompletedSuccess");
 		}
-		
+
+		model.addAttribute("user", user);
+		model.addAttribute("amount", amount);
+		model.addAttribute("accounts", accounts);
+		model.addAttribute("appointment", appointment);
 		model.addAttribute("accountFromId", accountFromId);
 		model.addAttribute("accountToNumber", accountToNumber);
-		model.addAttribute("amount", amount);
-		model.addAttribute("appointment", appointment);
-		model.addAttribute("user", user);
-		model.addAttribute("accounts", accounts);
 		return "user/userMakePayment";
 	}
 	
@@ -173,7 +181,7 @@ public class PaymentController {
 	 * @param model
 	 * @param principal
 	 * @param paymentId
-	 * @return user/userShowPaymentInfo
+	 * @return userShowPaymentInfo view
 	 */
 	@GetMapping("/paymentInfo/{paymentId}")
 	public String showPaymentInfo(Model model,
@@ -183,14 +191,14 @@ public class PaymentController {
 		Payment payment = paymentService.findPaymentByPaymentId(paymentId);
 		Account senderAccount = accountService.findAccountByAccountNumber(payment.getSenderNumber());
 		Account recipientAccount = accountService.findAccountByAccountNumber(payment.getRecipientNumber());
-		User recipientUser = recipientAccount.getUser();
 		User senderUser = senderAccount.getUser();
-		
-		model.addAttribute("senderUser", senderUser);
-		model.addAttribute("recipientUser", recipientUser);
-		model.addAttribute("recipientIsAccount", true);
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		User recipientUser = recipientAccount.getUser();
+
 		model.addAttribute("payment", payment);
+		model.addAttribute("senderUser", senderUser);
+		model.addAttribute("recipientIsAccount", true);
+		model.addAttribute("recipientUser", recipientUser);
+		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "user/userShowPaymentInfo";
 	}
 }
