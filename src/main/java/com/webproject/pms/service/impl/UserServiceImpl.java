@@ -5,6 +5,7 @@ import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.UserDao;
 import com.webproject.pms.model.entities.Role;
 import com.webproject.pms.model.entities.User;
+import com.webproject.pms.model.oidc.CustomOidUser;
 import com.webproject.pms.service.UserService;
 import com.webproject.pms.util.MailSender.MailSender;
 import org.apache.commons.lang3.ObjectUtils;
@@ -171,6 +172,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setActive(false);
 			user.setRole(new Role(1L, "ROLE_USER"));
 			user.setActivationCode(UUID.randomUUID().toString());
+			user.setResetPasswordToken(null);
 			userDao.save(user);
 		
 			mailSender.sendVerificationEmail(user, siteURL);
@@ -200,6 +202,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setActive(false);
 		user.setRole(new Role(1L, "ROLE_USER"));
 		user.setActivationCode(UUID.randomUUID().toString());
+		user.setResetPasswordToken(null);
 		userDao.save(user);
 		
 		mailSender.sendVerificationEmail(user, siteURL);
@@ -229,6 +232,34 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
+	public void processOAuthPostLogin(CustomOidUser oidUser) {
+		
+		String email = oidUser.getEmail();
+		String password = oidUser.getAttribute("sub");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		User existUser = userDao.findUserByEmail(email);
+		
+		if (existUser == null) {
+			User newUser = new User();
+			newUser.setEmail(email);
+			newUser.setPassword(passwordEncoder.encode(password));
+			newUser.setUsername(oidUser.getAttribute("name"));
+			newUser.setName(oidUser.getAttribute("given_name"));
+			newUser.setSurname(oidUser.getAttribute("family_name"));
+			newUser.setRole(new Role(1L, "ROLE_USER"));
+			newUser.setActive(true);
+			newUser.setRegistrationDate(formatter.format(new Date()));
+			newUser.setEmailVerified(true);
+			newUser.setActivationCode(null);
+			newUser.setResetPasswordToken(null);
+			newUser.setPhone("+375291234567");
+			userDao.save(newUser);
+		}
+	}
+	
+	@Override
 	public void updateResetPasswordToken(String token, String email) throws UserNotFoundException {
 		
 		User user = userDao.findUserByEmail(email);
@@ -237,22 +268,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			userDao.save(user);
 		} else {
 			throw new UserNotFoundException("Could not find any user with email " + email);
-		}
-	}
-	
-	@Override
-	public void processOAuthPostLogin(String username) {
-		
-		User existUser = userDao.findUserByUsername(username);
-		
-		if (existUser == null) {
-			User newUser = new User();
-			newUser.setUsername(username);
-			newUser.setActive(true);
-			
-			userDao.save(newUser);
-			
-			System.out.println("Created new user: " + username);
 		}
 	}
 }

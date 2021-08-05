@@ -92,7 +92,7 @@
                                     <form:form action="${pageContext.request.contextPath}/login" method="POST" role="form"
                                           class="beta-user">
                                         <input type="hidden" name="username" value="kuan1701"/>
-                                        <input type="hidden" name="email" value="kuanchin17011993@gmail.com"/>
+                                        <input type="hidden" name="email" value="kuan0077@mail.com"/>
                                         <input type="hidden" name="password" value="123456"/>
                                         <button type="submit" class="btn btn-primary signup btn-default btn-shadow">
                                             Beta-User

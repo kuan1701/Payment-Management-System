@@ -17,6 +17,20 @@ values
 (
     null,
     true,
+    'kuan0077@mail.com',
+    true,
+    'Kuan',
+    '$2a$08$FsyzJ2.hxuAvcfF9D32MfuVo9y2Qo/J0/8ALn8B6YaZiymb6d6eu.',
+    '+375-29-285-27-75',
+    '04-08-2021 15:50:30',
+    null,
+    'Chin',
+    'kuan1701',
+    1
+),
+(
+    null,
+    true,
     'billGates@mail.com',
     true,
     'Bill',

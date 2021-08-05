@@ -28,12 +28,10 @@ public class AuthProvider implements AuthenticationProvider {
 	}
 	
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String dataEntered = authentication.getName();
-		String password = (String) authentication.getCredentials().toString();
+		String username = authentication.getName();
+		String password = authentication.getCredentials().toString();
 		
-		User user = (User) userService.loadUserByUsername(dataEntered);
-		
-		String pass = user.getPassword();
+		User user = (User) userService.loadUserByUsername(username);
 		
 			if (!passwordEncoder.matches(password, user.getPassword())) {
 				throw new BadCredentialsException("Wrong password");
@@ -43,7 +41,8 @@ public class AuthProvider implements AuthenticationProvider {
 			return new UsernamePasswordAuthenticationToken(user, password, authorities);
 	}
 	
-	public boolean supports(Class<?> arg) {
-		return true;
+	@Override
+	public boolean supports(Class<?> authentication) {
+		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
 }

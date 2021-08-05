@@ -2,6 +2,7 @@ package com.webproject.pms.service;
 
 import com.webproject.pms.exception.UserNotFoundException;
 import com.webproject.pms.model.entities.User;
+import com.webproject.pms.model.oidc.CustomOidUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 
@@ -47,5 +48,5 @@ public interface UserService {
 	
 	User getByResetPasswordToken(String token);
 	
-	void processOAuthPostLogin(String username);
+	void processOAuthPostLogin(CustomOidUser oidUser);
 }
