@@ -15,10 +15,6 @@ public interface BankCardService {
 	
 	Boolean unblockCard(Long cardId);
 	
-	Boolean deleteCardByCardId(Long cardId);
-	
-	Boolean deleteCardByCardNumber(String cardNumber);
-	
 	void deleteCard(BankCard card);
 	
 	BankCard findCardByCardId(Long cardId);

@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface LetterDao extends JpaRepository<Letter, Long> {
-	
+
+	@Query(value = "SELECT * FROM action_log WHERE user_id = ? ORDER BY date DESC",
+	nativeQuery = true)
 	List<Letter> findLettersByUser_UserId(Long userId);
 	
 	@Query(value = "SELECT * FROM letter"

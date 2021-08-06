@@ -67,23 +67,26 @@ public class PaymentController {
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 		List<Payment> paymentList = new ArrayList<>();
+
+		switch (checkbox) {
+			case "0,1":
+				paymentList = paymentService.searchByCriteria(user.getUserId(), true, startDate, finalDate);
+				break;
+			case "1,0":
+				paymentList = paymentService.searchByCriteriaOutgoingFalse(user.getUserId(), false, startDate, finalDate);
+				break;
+			case "0,0":
+			case "1,1":
+				paymentList = paymentService.searchByCriteriaWithoutOutgoing(user.getUserId(), startDate, finalDate);
+				break;
+		}
 		
-		if (checkbox.equals("0,1")) {
-			paymentList = paymentService.searchByCriteria(user.getUserId(), true, startDate, finalDate);
-		}
-		else if (checkbox.equals("1,0")) {
-			paymentList = paymentService.searchByCriteriaWithoutOutgoing(user.getUserId(), startDate, finalDate);
-		}
-		else {
-			paymentList = paymentService.findAllPaymentsByUserId(user.getUserId());
-		}
-		
-		model.addAttribute("numberOfPayments", paymentList.size());
 		model.addAttribute("user", user);
 		model.addAttribute("finalDate", finalDate);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("paymentsEmpty", paymentList.isEmpty());
+		model.addAttribute("numberOfPayments", paymentList.size());
 		return "user/userShowPayments";
 	}
 	
@@ -166,6 +169,20 @@ public class PaymentController {
 		else {
 			model.addAttribute("paymentError", "paymentCompletedSuccess");
 		}
+
+//		if (paymentType.equals("0")) {
+//			paymentService.makePaymentOnAccount(
+//					accountFromId, accountToNumber, amount, appointment, model, principal);
+//			model.addAttribute("paymentError", "paymentCompletedSuccess");
+//		}
+//		else if (paymentType.equals("1")) {
+//			paymentService.makePaymentOnCard(
+//					accountFromId, accountToNumber, amount, appointment, model, principal);
+//			model.addAttribute("paymentError", "paymentCompletedSuccess");
+//		}
+//		else {
+//			model.addAttribute("paymentError", "paymentCompletedSuccess");
+//		}
 
 		model.addAttribute("user", user);
 		model.addAttribute("amount", amount);

@@ -1,11 +1,14 @@
 package com.webproject.pms.service;
 
 import com.webproject.pms.model.entities.LogEntry;
+import com.webproject.pms.model.entities.User;
 
 import java.util.List;
 
 public interface ActionLogService {
-	
+
+	void createLog(String description, User user);
+
 	LogEntry save(LogEntry logEntry);
 	
 	Boolean clearActionLog(Long userId);

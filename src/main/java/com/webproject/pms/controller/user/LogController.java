@@ -1,42 +1,82 @@
 package com.webproject.pms.controller.user;
 
 import com.webproject.pms.model.entities.LogEntry;
+import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.ActionLogServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
 
 @Controller
 public class LogController {
-	
-	private final ActionLogServiceImpl actionLogService;
+
 	private final UserServiceImpl userService;
-	
-	public LogController(ActionLogServiceImpl actionLogService, UserServiceImpl userService) {
-		this.actionLogService = actionLogService;
+	private final ActionLogServiceImpl actionLogService;
+
+	public LogController(UserServiceImpl userService,
+						 ActionLogServiceImpl actionLogService)
+	{
 		this.userService = userService;
+		this.actionLogService = actionLogService;
 	}
 	
 	/**
 	 * Show logs of user
 	 * @param model
 	 * @param principal
-	 * @return userShowActionLog page
+	 * @return userShowActionLog view
 	 */
-	@GetMapping("/action-log")
+	@GetMapping("/action-log/{userId}")
 	public String actionLogPage(Model model,
-	                            Principal principal
-			
+	                            Principal principal,
+								@PathVariable("userId") Long userId
 	) {
-		List<LogEntry> logEntryList = actionLogService.findLogEntriesByUserId(
-				userService.findUserByUsername(principal.getName()).getUserId());
-		
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		User user = userService.findUserByUsername(principal.getName());
+		List<LogEntry> logEntryList = actionLogService.findLogEntriesByUserId(userId);
+
+		model.addAttribute("user", user);
 		model.addAttribute("logEntries", logEntryList);
+		return "user/userShowActionLog";
+	}
+
+	/**
+	 * Clearing log history
+	 * @param model
+	 * @param principal
+	 * @param userId
+	 * @return redirect:/action-log/{userId} page
+	 */
+	@PostMapping("/action-log/{userId}")
+	public String clearAllLogs(Model model,
+							   Principal principal,
+							   @PathVariable("userId") Long userId
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		actionLogService.clearActionLog(userId);
+		model.addAttribute("user", user);
+		return "redirect:/action-log/{userId}";
+	}
+
+	@PostMapping("/action-log/{userId}/search")
+	public String searchByCriteria(Model model,
+								   Principal principal,
+								   @PathVariable("userId") Long userId,
+								   @RequestParam("start-date") String startDate,
+								   @RequestParam("final-date") String finalDate
+	){
+		User user = userService.findUserByUsername(principal.getName());
+		List<LogEntry> logEntryList = actionLogService.searchByCriteria(userId, startDate, finalDate);
+
+		model.addAttribute("user", user);
+		model.addAttribute("logEntries", logEntryList);
+		model.addAttribute("response", "searchLogEntriesSuccess");
 		return "user/userShowActionLog";
 	}
 }

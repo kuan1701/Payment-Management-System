@@ -13,7 +13,7 @@ public interface PaymentService {
 	
 	boolean makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, String appointment, Model model, Principal principal);
 	
-	void makePaymentOnCard(Long accountId, String cardNumber, BigDecimal amount, String appointment, Principal principal);
+	boolean makePaymentOnCard(Long accountFromId, String cardNumber, BigDecimal amount, String appointment, Model model, Principal principal);
 	
 	boolean checkAvailableAccount(Account account);
 	
@@ -36,6 +36,8 @@ public interface PaymentService {
 	List<Payment> findAllPayments();
 	
 	List<Payment> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate);
-	
+
+	List<Payment> searchByCriteriaOutgoingFalse(Long userId, Boolean isOutgoing, String startDate, String finalDate);
+
 	List<Payment> searchByCriteriaWithoutOutgoing(Long userId, String startDate, String finalDate);
 }

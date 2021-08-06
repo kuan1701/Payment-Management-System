@@ -137,16 +137,21 @@ public class AdminUserController {
 	@PostMapping("/admin/updateUserData/{userId}")
 	public String adminUpdateUserData(Model model,
 	                                  Principal principal,
+									  @RequestParam("name") String name,
+									  @RequestParam("surname") String surname,
+									  @RequestParam("phone") String phone,
+									  @RequestParam("email") String email,
+									  @RequestParam("password") String password,
 	                                  @PathVariable("userId") Long userId
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 		User updateUser = userService.findUserByUserId(userId);
 		List<Letter> letterList = letterService.findUnprocessedLetters();
 		
-		if (!userService.updateUser(user, userId)) {
+		if (!userService.updateUser(user, userId, name, surname, phone, email, password)) {
 			model.addAttribute("response", "dataUpdatedError");
 		}
-		userService.updateUser(user, userId);
+		userService.updateUser(user, userId, name, surname, phone, email, password);
 		model.addAttribute("user", user);
 		model.addAttribute("updateUser", updateUser);
 		model.addAttribute("totalLetters", letterList.size());

@@ -2,7 +2,6 @@ package com.webproject.pms.service;
 
 import com.webproject.pms.exception.UserNotFoundException;
 import com.webproject.pms.model.entities.User;
-import com.webproject.pms.model.oidc.CustomOidUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 
@@ -15,12 +14,12 @@ import java.util.List;
 public interface UserService {
 	
 	User saveUser(User user);
+
+	boolean deleteUser(User user);
 	
-	void deleteUser(User user);
-	
-	boolean updateUser(User user, Long id);
-	
-	void updatePassword(User user, String password);
+	boolean updateUser(User user, Long id, String name, String surname, String phone, String email, String password);
+
+	boolean updatePassword(User user, String password);
 	
 	User findUserByUserId(Long userId);
 	
@@ -47,6 +46,6 @@ public interface UserService {
 	void updateResetPasswordToken(String token, String email) throws UserPrincipalNotFoundException, UserNotFoundException;
 	
 	User getByResetPasswordToken(String token);
-	
-	void processOAuthPostLogin(CustomOidUser oidUser);
+
+	void processOAuthPostLogin(String username);
 }

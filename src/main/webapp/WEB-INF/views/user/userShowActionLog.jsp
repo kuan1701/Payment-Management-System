@@ -41,9 +41,9 @@
                     <button type="button" class="btn btn-default closeButton" data-dismiss="modal">
                         <fmt:message key="user.page.closeButton"/>
                     </button>
-                    <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
-                    <form action="" method="POST" role="form">
-                        <input type="hidden" name="command" value="clearActionLog"/>
+                    <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>]
+                    <c:url  value="/action-log/${user.userId}" var="var"/>
+                    <form action="${var}" method="POST" role="form">
                         <button type="submit" class="btn btn-primary confirmButton" onfocus="this.blur();">
                             <fmt:message key="user.page.confirmButton"/>
                         </button>
@@ -98,7 +98,7 @@
         <div id="alert" class="alert alert-success fade show" role="alert">
             <p>
                 <fmt:message key="user.page.alertSearchLogEntriesSuccess"/>
-                    ${numberOfLogEntries}
+                    ${logEntries.size()}
                 <fmt:message key="user.log.logEntries"/>.
             </p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -165,9 +165,8 @@
                                                             <label>
                                                                     ${searchCriteria}:
                                                             </label>
-                                                            <form action="" method="POST" role="form">
-                                                                <input type="hidden" name="command"
-                                                                       value="searchLogEntries"/>
+                                                            <c:url value="/action-log/${user.userId}/search" var="var"/>
+                                                            <form action="${var}" method="POST" role="form">
 
                                                                 <!-- Min value Date -->
                                                                 <input id="datepicker-start-date"

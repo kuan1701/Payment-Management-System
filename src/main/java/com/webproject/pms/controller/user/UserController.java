@@ -88,17 +88,22 @@ public class UserController {
 	 * @return userUpdatePersonalData view
 	 */
 	@PostMapping("/profile-info/{userId}")
-	public String updateUser(Principal principal,
-	                         @PathVariable("userId") Long userId,
-	                         Model model
+	public String updateUser(Model model,
+							 Principal principal,
+	                         @RequestParam("name") String name,
+	                         @RequestParam("surname") String surname,
+	                         @RequestParam("phone") String phone,
+	                         @RequestParam("email") String email,
+	                         @RequestParam("password") String password,
+	                         @PathVariable("userId") Long userId
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 
-		if (!userService.updateUser(user, userId)) {
+		if (!userService.updateUser(user, userId, name, surname, phone, email, password)) {
 			model.addAttribute("updateInfo", "Update data error");
 		}
 		else {
-			userService.updateUser(user, userId);
+			userService.updateUser(user, userId, name, surname, phone, email, password);
 			model.addAttribute("updateInfo", "Update data successfully");
 		}
 		model.addAttribute("user", user);

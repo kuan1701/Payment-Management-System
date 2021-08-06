@@ -22,14 +22,16 @@ import java.util.TimeZone;
 @Transactional
 public class LetterServiceImpl implements LetterService {
 	
-	private static final Logger LOGGER = LogManager.getLogger(LetterServiceImpl.class);
-	private final LetterDao letterDao;
 	private final UserDao userDao;
-	
+	private final LetterDao letterDao;
+	private final ActionLogServiceImpl actionLogService;
+	private static final Logger LOGGER = LogManager.getLogger(LetterServiceImpl.class);
+
 	@Autowired
-	public LetterServiceImpl(LetterDao letterDao, UserDao userDao) {
+	public LetterServiceImpl(LetterDao letterDao, UserDao userDao, ActionLogServiceImpl actionLogService) {
 		this.letterDao = letterDao;
 		this.userDao = userDao;
+		this.actionLogService = actionLogService;
 	}
 	
 	@Override
@@ -43,26 +45,19 @@ public class LetterServiceImpl implements LetterService {
 		letter.setUser(user);
 		letter.setProcessed(false);
 		letterDao.save(letter);
+
+		actionLogService.createLog("Successful attempt to send a letter to Support", user);
+		LOGGER.info("Successful attempt to send a letter to Support");
 		return true;
 	}
-	
+
 	@Override
 	public Boolean updateLetterByLetterId(Long letterId) {
-		
+
 		if (letterId != null) {
 			Letter letter = findLetterByLetterId(letterId);
 			letter.setProcessed(true);
 			letterDao.save(letter);
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public Boolean deleteLetterByLetterId(Long letterId) {
-		
-		if (letterDao.existsById(letterId)) {
-			letterDao.deleteById(letterId);
 			return true;
 		}
 		return false;

@@ -328,9 +328,6 @@
                                             <input type="hidden" id="numberByAccountId" name="numberByAccountId"
                                                    value="${account.number}"/>
 
-<%--                                            <!-- Exchange Rate -->--%>
-<%--                                            <input type="hidden" name="exchangeRate" value="1.0"/>--%>
-
                                             <!-- Select AccountId -->
                                             <div>
                                                 <label class="for-form-label">
@@ -360,8 +357,8 @@
                                             </div>
 
                                             <!-- Switch -->
-                                            <input id="switcher" class="toggle-btn" type="checkbox"/>
-                                            <label for="switcher" class="toggle-btn-label"></label>
+                                            <input id="switcher" class="toggle-btn" name="paymentType" type="checkbox"/>
+                                            <label for="switcher" class="toggle-btn-label" name="paymentType"></label>
 
                                             <div class="form-row">
 

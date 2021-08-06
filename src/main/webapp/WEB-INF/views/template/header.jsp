@@ -46,7 +46,7 @@
                                     <div class="dropdown-divider"></div>
 
                                     <div class="dropdown-item" style="display: grid;">
-                                        <a href="${pageContext.request.contextPath}/action-log">
+                                        <a href="${pageContext.request.contextPath}/action-log/${user.userId}">
                                             <div class="float-left">
                                                 <p style="margin-bottom: 0.1rem;">
                                                     <fmt:message key="header.actionLog"/>

@@ -1,15 +1,14 @@
 package com.webproject.pms.service.impl;
 
 import com.webproject.pms.mappers.MapStructMapper;
-import com.webproject.pms.model.dao.AccountDao;
 import com.webproject.pms.model.dao.BankCardDao;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
+import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.BankCardService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,16 +22,18 @@ import java.util.List;
 public class BankCardServiceImpl implements BankCardService {
 	
 	private final BankCardDao bankCardDao;
-	private final PasswordEncoder passwordEncoder;
 	private final MapStructMapper mapStructMapper;
+	private final ActionLogServiceImpl actionLogService;
 	private static final Logger LOGGER = LogManager.getLogger(BankCardService.class);
 	
 	@Autowired
-	public BankCardServiceImpl(BankCardDao bankCardDao, AccountDao accountDao, PasswordEncoder passwordEncoder, MapStructMapper mapStructMapper) {
-		
+	public BankCardServiceImpl(BankCardDao bankCardDao,
+							   MapStructMapper mapStructMapper,
+							   ActionLogServiceImpl actionLogService
+	) {
 		this.bankCardDao = bankCardDao;
-		this.passwordEncoder = passwordEncoder;
 		this.mapStructMapper = mapStructMapper;
+		this.actionLogService = actionLogService;
 	}
 	
 	@Override
@@ -55,12 +56,17 @@ public class BankCardServiceImpl implements BankCardService {
 		if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null
 				|| account == null
 		) {
+			actionLogService.createLog("ERROR: Unsuccessful attempt to attach a card", account.getUser());
+			LOGGER.error("ERROR: Unsuccessful attempt to attach a card");
 			return false;
 		}
 		bankCard.setAccount(account);
 		bankCard.setActive(true);
 		bankCard.setValidity(formatter.format(date));
 		bankCardDao.save(bankCard);
+
+		actionLogService.createLog("ATTACHED: Card [" + bankCard.getNumber() + "]", account.getUser());
+		LOGGER.info("ATTACHED: Card [" + bankCard.getNumber() + "]");
 		return true;
 	}
 	
@@ -71,6 +77,9 @@ public class BankCardServiceImpl implements BankCardService {
 			BankCard bankCard = bankCardDao.getById(cardId);
 			bankCard.setActive(false);
 			bankCardDao.save(bankCard);
+
+			actionLogService.createLog("BLOCKED: Card [" + bankCard.getNumber() + "]", bankCard.getAccount().getUser());
+			LOGGER.info("BLOCKED: Card [" + bankCard.getNumber() + "]");
 			return true;
 		}
 		return false;
@@ -83,26 +92,9 @@ public class BankCardServiceImpl implements BankCardService {
 			BankCard bankCard = bankCardDao.getById(cardId);
 			bankCard.setActive(true);
 			bankCardDao.save(bankCard);
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public Boolean deleteCardByCardId(Long cardId) {
-		
-		if (bankCardDao.existsById(cardId)) {
-			bankCardDao.deleteById(cardId);
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public Boolean deleteCardByCardNumber(String cardNumber) {
-		
-		if (bankCardDao.findBankCardByNumber(cardNumber) != null) {
-			bankCardDao.deleteBankCardByNumber(cardNumber);
+
+			actionLogService.createLog("UNBLOCKED: Card [" + bankCard.getNumber() + "]", bankCard.getAccount().getUser());
+			LOGGER.info("UNBLOCKED: Card [" + bankCard.getNumber() + "]");
 			return true;
 		}
 		return false;
@@ -110,6 +102,9 @@ public class BankCardServiceImpl implements BankCardService {
 	
 	@Override
 	public void deleteCard(BankCard card) {
+
+		actionLogService.createLog("DELETED: Card [" + card.getNumber() + "]", card.getAccount().getUser());
+		LOGGER.info("DELETED: Card [" + card.getNumber() + "]");
 		bankCardDao.delete(card);
 	}
 	

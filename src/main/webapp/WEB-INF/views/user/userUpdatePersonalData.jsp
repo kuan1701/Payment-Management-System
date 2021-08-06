@@ -292,16 +292,6 @@
                                                 </button>
                                             </form>
                                         </div>
-
-                                        <div class="block-questions" style="margin-top: 0;">
-                                            <p style="margin-bottom: 0;">
-                                                <fmt:message key="user.update_data.wantDeleteAccount"/>
-                                            </p>
-                                            <a href="#deleteUserModal" onclick="showDeleteUserModal();"
-                                               onfocus="this.blur();">
-                                                <fmt:message key="user.update_data.delete"/>
-                                            </a>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

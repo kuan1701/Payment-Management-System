@@ -1,6 +1,5 @@
 package com.webproject.pms.config;
 
-import com.webproject.pms.service.oidcUserService.CustomOidUserService;
 import com.webproject.pms.util.AuthProvider;
 import com.webproject.pms.util.OAuth2.CustomOAuth2UserService;
 import com.webproject.pms.util.OAuth2.OAuth2LoginSuccessHandler;
