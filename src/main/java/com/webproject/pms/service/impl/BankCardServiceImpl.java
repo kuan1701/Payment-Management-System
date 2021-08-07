@@ -103,7 +103,7 @@ public class BankCardServiceImpl implements BankCardService {
 	@Override
 	public void deleteCard(BankCard card) {
 
-		actionLogService.createLog("DELETED: Card [" + card.getNumber() + "]", card.getAccount().getUser());
+		actionLogService.createLog("DETACHED: Card [" + card.getNumber() + "]", card.getAccount().getUser());
 		LOGGER.info("DELETED: Card [" + card.getNumber() + "]");
 		bankCardDao.delete(card);
 	}

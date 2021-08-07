@@ -4,10 +4,7 @@ import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.Letter;
 import com.webproject.pms.model.entities.Payment;
 import com.webproject.pms.model.entities.User;
-import com.webproject.pms.service.impl.AccountServiceImpl;
-import com.webproject.pms.service.impl.LetterServiceImpl;
-import com.webproject.pms.service.impl.PaymentServiceImpl;
-import com.webproject.pms.service.impl.UserServiceImpl;
+import com.webproject.pms.service.impl.*;
 import com.webproject.pms.util.MailSender.MailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,19 +20,22 @@ import java.util.List;
 public class AdminUserController {
 	
 	private final UserServiceImpl userService;
+	private final LetterServiceImpl letterService;
 	private final AccountServiceImpl accountService;
 	private final PaymentServiceImpl paymentService;
-	private final LetterServiceImpl letterService;
-	
+	private final ActionLogServiceImpl actionLogService;
+
+
 	public AdminUserController(UserServiceImpl userService,
 							   LetterServiceImpl letterService,
-	                           AccountServiceImpl accountService,
-	                           PaymentServiceImpl paymentService
-	) {
+							   AccountServiceImpl accountService,
+							   PaymentServiceImpl paymentService,
+							   ActionLogServiceImpl actionLogService) {
 		this.userService = userService;
 		this.letterService = letterService;
 		this.accountService = accountService;
 		this.paymentService = paymentService;
+		this.actionLogService = actionLogService;
 	}
 	
 	/**
@@ -141,21 +141,22 @@ public class AdminUserController {
 									  @RequestParam("surname") String surname,
 									  @RequestParam("phone") String phone,
 									  @RequestParam("email") String email,
-									  @RequestParam("password") String password,
 	                                  @PathVariable("userId") Long userId
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 		User updateUser = userService.findUserByUserId(userId);
 		List<Letter> letterList = letterService.findUnprocessedLetters();
 		
-		if (!userService.updateUser(user, userId, name, surname, phone, email, password)) {
+		if (!userService.updateUser(updateUser, userId, name, surname, phone, email, null)) {
 			model.addAttribute("response", "dataUpdatedError");
+			actionLogService.createLog("ERROR: Unsuccessful attempt to update personal data", user);
 		}
-		userService.updateUser(user, userId, name, surname, phone, email, password);
+		userService.updateUser(updateUser, userId, name, surname, phone, email, null);
 		model.addAttribute("user", user);
 		model.addAttribute("updateUser", updateUser);
 		model.addAttribute("totalLetters", letterList.size());
 		model.addAttribute("response", "dataUpdatedSuccess");
+		actionLogService.createLog("UPDATED: Successful attempt to update personal data", user);
 		return "admin/adminUpdateUserData";
 	}
 	
@@ -172,12 +173,14 @@ public class AdminUserController {
                                   @PathVariable("userId") Long userId
 	) {
 		User viewableUser = userService.findUserByUserId(userId);
-		
+		User user = userService.findUserByUsername(principal.getName());
+
 		if (viewableUser != null) {
 			userService.deleteUser(viewableUser);
 		}
 		model.addAttribute("viewableUser", viewableUser);
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		model.addAttribute("user", user);
+		actionLogService.createLog("DELETED: Successful attempt to delete user", user);
 		return "redirect:/my-account";
 	}
 	
@@ -220,9 +223,12 @@ public class AdminUserController {
 		if (!userService.adminCreateUser(newUser, model, MailSender.getSiteURL(request))){
 			model.addAttribute("user", user);
 			model.addAttribute("response", "addUserError");
+			actionLogService.createLog("ERROR: Unsuccessful attempt to create a new user", user);
 		} else {
 			model.addAttribute("user", user);
 			model.addAttribute("response", "addUserSuccess");
+			actionLogService.createLog("CREATED: Successful attempt to create a new user", user);
+
 		}
 		model.addAttribute("user", user);
 		return "admin/adminAddUser";

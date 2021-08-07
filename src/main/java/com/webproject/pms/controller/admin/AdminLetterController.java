@@ -2,6 +2,7 @@ package com.webproject.pms.controller.admin;
 
 import com.webproject.pms.model.entities.Letter;
 import com.webproject.pms.model.entities.User;
+import com.webproject.pms.service.impl.ActionLogServiceImpl;
 import com.webproject.pms.service.impl.LetterServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
@@ -17,15 +18,18 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminLetterController {
-	
-	private final LetterServiceImpl letterService;
+
 	private final UserServiceImpl userService;
-	
-	public AdminLetterController(LetterServiceImpl letterService,
-	                             UserServiceImpl userService
+	private final LetterServiceImpl letterService;
+	private final ActionLogServiceImpl actionLogService;
+
+	public AdminLetterController(UserServiceImpl userService,
+								 LetterServiceImpl letterService,
+								 ActionLogServiceImpl actionLogService
 	) {
-		this.letterService = letterService;
 		this.userService = userService;
+		this.letterService = letterService;
+		this.actionLogService = actionLogService;
 	}
 	
 	/**
@@ -97,6 +101,7 @@ public class AdminLetterController {
 		model.addAttribute("userLetter", userLetter);
 		model.addAttribute("totalLetters", letterList.size());
 		model.addAttribute("response", "letterProcessedSuccess");
+		actionLogService.createLog("PROCESSED: Successful attempt to process the question", user);
 		return "admin/adminShowLetterInfo";
 	}
 }

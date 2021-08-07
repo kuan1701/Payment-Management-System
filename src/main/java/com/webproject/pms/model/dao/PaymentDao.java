@@ -14,36 +14,36 @@ public interface PaymentDao extends JpaRepository<Payment, Long> {
 	
 	List<Payment> findPaymentsByUserId(Long userId);
 	
-	@Query(value = "SELECT payment.* FROM payment"
+	@Query(value = "SELECT * FROM payment"
 			+ " WHERE user_id = ? ORDER BY payment_id DESC LIMIT 3",
 			nativeQuery = true)
 	List<Payment> findLastPaymentsByAccountUserId(Long userId);
 	
-	@Query(value = "SELECT payment.* FROM payment"
+	@Query(value = "SELECT * FROM payment"
 			+ " WHERE user_id = ? AND is_outgoing = ? AND"
 			+ " date BETWEEN STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') AND"
 			+ " STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s)') ORDER BY date DESC;",
 			nativeQuery = true)
 	List<Payment> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate);
 	
-	@Query(value =  "SELECT payment.* FROM payment"
+	@Query(value =  "SELECT * FROM payment"
 			+ " WHERE user_id = ? AND is_outgoing = ? AND date BETWEEN"
 			+ " STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') AND"
 			+ " CURRENT_TIMESTAMP() ORDER BY date DESC;",
-	nativeQuery = true)
+			nativeQuery = true)
 	List<Payment> searchByCriteriaAndFinalDateAsCurrentTimestamp(Long userId, Boolean isOutgoing, String startDate);
 	
-	@Query(value = "SELECT payment.* FROM payment"
+	@Query(value = "SELECT * FROM payment"
 			+ " WHERE user_id = ? AND date BETWEEN"
 			+ " STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') AND"
 			+ " STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s)') ORDER BY date DESC;",
 			nativeQuery = true)
 	List<Payment> searchByCriteriaWithoutIsOutgoing(Long userId, String startDate, String finalDate);
 	
-	@Query(value = "SELECT payment.* FROM payment " +
-			"WHERE user_id = ? AND date BETWEEN " +
-			"STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') AND " +
-			"CURRENT_TIMESTAMP() ORDER BY date DESC;",
+	@Query(value = "SELECT * FROM payment"
+			+ " WHERE user_id = ? AND date BETWEEN"
+			+ " STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') AND"
+			+ " CURRENT_TIMESTAMP() ORDER BY date DESC;",
 	nativeQuery = true)
 	List<Payment> searchByCriteriaWithoutIsOutgoingAndFinalDateAsCurrentTimestamp(Long userId, String startDate);
 }

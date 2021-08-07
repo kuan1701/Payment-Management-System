@@ -118,7 +118,7 @@
                                                              alt=""/>
                                                         ${myPayments}
                                                     </a>
-                                                    <form action="${pageContext.request.contextPath}/show-payments"
+                                                    <form action="${pageContext.request.contextPath}/show-payments/${user.userId}"
                                                           method="GET" id="form-showPayments" role="form">
                                                     </form>
                                                 </li>

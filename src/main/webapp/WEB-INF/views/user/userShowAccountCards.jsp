@@ -217,7 +217,7 @@
                                                     </a>
                                                 </li>
                                                 <li class="nav-item-home">
-                                                    <a href="${pageContext.request.contextPath}/show-payments" class="nav-link">
+                                                    <a href="${pageContext.request.contextPath}/show-payments/${user.userId}" class="nav-link">
                                                         <img src="<c:url value="/images/show-payments.png"/>"
                                                              class="icon-sidebar" style="height: 17px" alt=""/>
                                                         ${myPayments}

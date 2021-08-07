@@ -46,7 +46,7 @@
             <p>
                 <fmt:message key="admin.page.alertSearchPaymentsSuccess"/>
                     ${numberOfPayments}
-                <fmt:message key="admin.user_payments.platezhis"/>.
+                <fmt:message key="admin.user_payments.payments"/>.
             </p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -119,7 +119,7 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item-active">
-                                                <a href="${pageContext.request.contextPath}/show-payments" class="nav-link">
+                                                <a href="${pageContext.request.contextPath}/show-payments/${user.userId}" class="nav-link">
                                                     <img src="<c:url value="/images/show-payments.png"/>"
                                                          class="icon-sidebar" style="height: 17px" alt=""/>
                                                     ${myPayments}
@@ -139,14 +139,14 @@
                                                                     ${searchCriteria}:
                                                             </label>
 
-                                                            <c:url value="/show-payments" var="var"/>
+                                                            <c:url value="/show-payments/${user.userId}" var="var"/>
                                                             <form:form action="${var}"
                                                                        method="POST" role="form" modelAttribute="paymentList">
 
-                                                                <input type="hidden" id="isIncoming" name="checkbox"
+                                                                <input type="hidden" id="isIncoming" name="isIncoming"
                                                                        value="isIncoming"/>
 
-                                                                <input type="hidden" id="isOutgoing" name="checkbox"
+                                                                <input type="hidden" id="isOutgoing" name="isOutgoing"
                                                                        value="isOutgoing"/>
 
                                                                 <!-- Choice of payment type -->

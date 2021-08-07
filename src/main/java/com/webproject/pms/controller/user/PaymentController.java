@@ -24,7 +24,10 @@ public class PaymentController {
 	private final AccountServiceImpl accountService;
 	private final UserServiceImpl userService;
 	
-	public PaymentController(PaymentServiceImpl paymentService, AccountServiceImpl accountService, UserServiceImpl userService) {
+	public PaymentController(PaymentServiceImpl paymentService,
+							 AccountServiceImpl accountService,
+							 UserServiceImpl userService
+	) {
 		this.paymentService = paymentService;
 		this.accountService = accountService;
 		this.userService = userService;
@@ -36,12 +39,13 @@ public class PaymentController {
 	 * @param principal
 	 * @return userShowPayments view
 	 */
-	@GetMapping("/show-payments")
+	@GetMapping("/show-payments/{userId}")
 	public String showPayments(Model model,
-	                           Principal principal
+	                           Principal principal,
+							   @PathVariable("userId") Long userId
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(user.getUserId());
+		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(userId);
 
 		model.addAttribute("user", user);
 		model.addAttribute("paymentList", paymentList);
@@ -51,42 +55,43 @@ public class PaymentController {
 
 	/**
 	 * User show found payments
-	 * @param model
-	 * @param principal
-	 * @param startDate
-	 * @param finalDate
-	 * @param checkbox
+	 * @param model - model
+	 * @param principal - principal
+	 * @param startDate - startDate
+	 * @param finalDate - finalDate
+	 * @param isIncoming - isIncoming
+	 * @param isOutgoing - isOutgoing
 	 * @return userShowPayments
 	 */
-	@PostMapping("/show-payments")
+	@PostMapping("/show-payments/{userId}")
 	public String showFoundAccounts(Model model,
 	                                Principal principal,
+	                                @PathVariable("userId") Long userId,
 	                                @RequestParam("startDate") String startDate,
 	                                @RequestParam("finalDate") String finalDate,
-                                    @RequestParam("checkbox") String checkbox
+									@RequestParam("isIncoming") String isIncoming,
+									@RequestParam("isOutgoing") String isOutgoing
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Payment> paymentList = new ArrayList<>();
+		List<Payment> paymentList;
 
-		switch (checkbox) {
-			case "0,1":
-				paymentList = paymentService.searchByCriteria(user.getUserId(), true, startDate, finalDate);
-				break;
-			case "1,0":
-				paymentList = paymentService.searchByCriteriaOutgoingFalse(user.getUserId(), false, startDate, finalDate);
-				break;
-			case "0,0":
-			case "1,1":
-				paymentList = paymentService.searchByCriteriaWithoutOutgoing(user.getUserId(), startDate, finalDate);
-				break;
+		if (isIncoming.equals("1") && isOutgoing.equals("0")) {
+			paymentList = paymentService.searchByCriteria(userId, false, startDate, finalDate);
 		}
-		
+		else if (isIncoming.equals("0") && isOutgoing.equals("1")) {
+			paymentList = paymentService.searchByCriteriaOutgoingFalse(userId, true, startDate, finalDate);
+		}
+		else {
+			paymentList = paymentService.searchByCriteriaWithoutOutgoing(userId, startDate, finalDate);
+		}
+
 		model.addAttribute("user", user);
 		model.addAttribute("finalDate", finalDate);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("paymentList", paymentList);
-		model.addAttribute("paymentsEmpty", paymentList.isEmpty());
+		model.addAttribute("paymentEmpty", paymentList.isEmpty());
 		model.addAttribute("numberOfPayments", paymentList.size());
+		model.addAttribute("response", "searchPaymentsSuccess");
 		return "user/userShowPayments";
 	}
 	

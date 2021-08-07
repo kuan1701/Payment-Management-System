@@ -10,9 +10,7 @@ import com.webproject.pms.service.impl.PaymentServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -86,6 +84,38 @@ public class AdminPaymentController {
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("viewableUser", viewableUser);
 		model.addAttribute("paymentsEmpty", paymentList.isEmpty());
+		return "admin/adminShowUserPayments";
+	}
+
+	@PostMapping("/showPayments/{userId}")
+	public String showFoundAccounts(Model model,
+									Principal principal,
+									@PathVariable("userId") Long userId,
+									@RequestParam("startDate") String startDate,
+									@RequestParam("finalDate") String finalDate,
+									@RequestParam("isIncoming") String isIncoming,
+									@RequestParam("isOutgoing") String isOutgoing
+	) {
+		User user = userService.findUserByUsername(principal.getName());
+		List<Payment> paymentList;
+
+		if (isIncoming.equals("1") && isOutgoing.equals("0")) {
+			paymentList = paymentService.searchByCriteria(userId, false, startDate, finalDate);
+		}
+		else if (isIncoming.equals("0") && isOutgoing.equals("1")) {
+			paymentList = paymentService.searchByCriteriaOutgoingFalse(userId, true, startDate, finalDate);
+		}
+		else {
+			paymentList = paymentService.searchByCriteriaWithoutOutgoing(userId, startDate, finalDate);
+		}
+
+		model.addAttribute("user", user);
+		model.addAttribute("finalDate", finalDate);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("paymentList", paymentList);
+		model.addAttribute("paymentsEmpty", paymentList.isEmpty());
+		model.addAttribute("numberOfPayments", paymentList.size());
+		model.addAttribute("response", "searchPaymentsSuccess");
 		return "admin/adminShowUserPayments";
 	}
 }

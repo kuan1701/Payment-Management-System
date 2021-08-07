@@ -18,18 +18,21 @@ public class AdminAccountController {
 	private final PaymentServiceImpl paymentService;
 	private final BankCardServiceImpl cardService;
 	private final LetterServiceImpl letterService;
-	
+	private final ActionLogServiceImpl actionLogService;
+
 	public AdminAccountController(AccountServiceImpl accountService,
-	                              UserServiceImpl userService,
-	                              PaymentServiceImpl paymentService,
-	                              BankCardServiceImpl cardService,
-	                              LetterServiceImpl letterService
+								  UserServiceImpl userService,
+								  PaymentServiceImpl paymentService,
+								  BankCardServiceImpl cardService,
+								  LetterServiceImpl letterService,
+								  ActionLogServiceImpl actionLogService
 	) {
 		this.accountService = accountService;
 		this.userService = userService;
 		this.paymentService = paymentService;
 		this.cardService = cardService;
 		this.letterService = letterService;
+		this.actionLogService = actionLogService;
 	}
 	
 	/**
@@ -151,10 +154,12 @@ public class AdminAccountController {
 		if (!viewableAccount.getBlocked()) {
 			accountService.blockAccount(viewableAccount);
 			model.addAttribute("response", "accountBlockedSuccess");
+			actionLogService.createLog("BLOCKED: Account [" + viewableAccount.getNumber() + "]", user);
 		}
 		else if(viewableAccount.getBlocked()) {
 			accountService.unblockAccount(viewableAccount);
 			model.addAttribute("response", "accountUnblockedSuccess");
+			actionLogService.createLog("UNBLOCKED: Account [" + viewableAccount.getNumber() + "]", user);
 		}
 		model.addAttribute("user", user);
 		model.addAttribute("cardList", cardList);
@@ -207,9 +212,11 @@ public class AdminAccountController {
 
 		if (!accountService.adminAttachAccount(account, model, userId)){
 			model.addAttribute("response", "accountAttachError");
+			actionLogService.createLog("ERROR: Unsuccessful attempt to create a new account", user);
 		}
 		else {
 			model.addAttribute("response", "accountAttachedSuccess");
+			actionLogService.createLog("CREATED: Account [" + account.getNumber() + ", " + account.getCurrency() + "]", user);
 		}
 		
 		model.addAttribute("user", user);
@@ -339,10 +346,12 @@ public class AdminAccountController {
 		if (card.getActive()) {
 			cardService.blockCard(cardId);
 			model.addAttribute("alert", "cardBlockedSuccess");
+			actionLogService.createLog("BLOCKED: Card [" + card.getNumber() + "]", user);
 		}
 		else if (!card.getActive()) {
 			cardService.unblockCard(cardId);
 			model.addAttribute("alert", "cardUnblockedSuccess");
+			actionLogService.createLog("UNBLOCKED: Card [" + card.getNumber() + "]", user);
 		}
 		model.addAttribute("user", user);
 		model.addAttribute("account", account);
@@ -365,14 +374,16 @@ public class AdminAccountController {
 								  @PathVariable("cardId") Long cardId,
 	                              @PathVariable("accountId") Long accountId
 	) {
+		BankCard card = cardService.findCardByCardId(cardId);
+		User user = userService.findUserByUsername(principal.getName());
 		List<BankCard> cardsList = cardService.findCardsByAccountId(accountId);
 		Account viewableAccount = accountService.findAccountByAccountId(accountId);
 
+		model.addAttribute("card", card);
+		model.addAttribute("user", user);
 		model.addAttribute("cardsList", cardsList);
 		model.addAttribute("cardsEmpty", cardsList.isEmpty());
 		model.addAttribute("viewableAccount", viewableAccount);
-		model.addAttribute("card", cardService.findCardByCardId(cardId));
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "admin/adminShowAccountInfo";
 	}
 	
@@ -391,15 +402,17 @@ public class AdminAccountController {
 							 @PathVariable("accountId") Long accountId
 	) {
 		BankCard card = cardService.findCardByCardId(cardId);
+		User user = userService.findUserByUsername(principal.getName());
 		Account viewableAccount = accountService.findAccountByAccountId(accountId);
 		User viewableUser = viewableAccount.getUser();
-		
+
 		cardService.deleteCard(card);
 		model.addAttribute("card", card);
+		model.addAttribute("user", user);
 		model.addAttribute("viewableUser", viewableUser);
 		model.addAttribute("viewableAccount", viewableAccount);
 		model.addAttribute("response", "cardDetachedSuccess");
-		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+		actionLogService.createLog("DETACHED: Card [" + card.getNumber() + "]", user);
 		return "admin/adminShowAccountInfo";
 	}
 	
@@ -415,15 +428,16 @@ public class AdminAccountController {
 	                            Principal principal,
 	                            @PathVariable("accountId") Long accountId
 	) {
-		Account viewableAccount = accountService.findAccountByAccountId(accountId);
 		User user = userService.findUserByUsername(principal.getName());
-		
+		Account viewableAccount = accountService.findAccountByAccountId(accountId);
+
 		if (viewableAccount != null) {
 			accountService.deleteAccount(viewableAccount);
 			model.addAttribute("response", "accountHasFundsError");
 		}
 		model.addAttribute("user", user);
 		model.addAttribute("viewableAccount", viewableAccount);
+		actionLogService.createLog("DELETED: ACCOUNT [" + viewableAccount.getNumber() + "]", user);
 		return "admin/adminShowAccountInfo";
 	}
 }

@@ -149,15 +149,15 @@
                                     </div>
 
                                     <!-- Sigh up via Google -->
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <a class="button btn-lg button-google btn-block text-uppercase btn-outline"
-                                               href="${pageContext.request.contextPath}/oauth2/authorization/google">
-                                                <img src="https://img.icons8.com/color/16/000000/google-logo.png">
-                                                <fmt:message key="login.singUpWithGoogle"/>
-                                            </a>
-                                        </div>
-                                    </div>
+<%--                                    <div class="row">--%>
+<%--                                        <div class="col-md-12">--%>
+<%--                                            <a class="button btn-lg button-google btn-block text-uppercase btn-outline"--%>
+<%--                                               href="${pageContext.request.contextPath}/oauth2/authorization/google">--%>
+<%--                                                <img src="https://img.icons8.com/color/16/000000/google-logo.png">--%>
+<%--                                                <fmt:message key="login.singUpWithGoogle"/>--%>
+<%--                                            </a>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
 
                                     <!-- Submit -->
                                     <div class="action" style="padding: 20px 0 0 0;">

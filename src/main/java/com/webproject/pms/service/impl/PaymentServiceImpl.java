@@ -265,10 +265,10 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 		
 		if (finalDate.equals("")) {
-			paymentList = paymentDao.searchByCriteriaAndFinalDateAsCurrentTimestamp(userId, true, startDate);
+			paymentList = paymentDao.searchByCriteriaAndFinalDateAsCurrentTimestamp(userId, isOutgoing, startDate);
 		} else {
 			finalDate += " 23:59:59";
-			paymentList = paymentDao.searchByCriteria(userId, true, startDate, finalDate);
+			paymentList = paymentDao.searchByCriteria(userId, isOutgoing, startDate, finalDate);
 		}
 		return paymentList;
 	}
@@ -285,10 +285,10 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		if (finalDate.equals("")) {
-			paymentList = paymentDao.searchByCriteriaAndFinalDateAsCurrentTimestamp(userId, false, startDate);
+			paymentList = paymentDao.searchByCriteriaAndFinalDateAsCurrentTimestamp(userId, isOutgoing, startDate);
 		} else {
 			finalDate += " 23:59:59";
-			paymentList = paymentDao.searchByCriteria(userId, false, startDate, finalDate);
+			paymentList = paymentDao.searchByCriteria(userId, isOutgoing, startDate, finalDate);
 		}
 		return paymentList;
 	}

@@ -56,7 +56,7 @@
             <p>
                 <fmt:message key="admin.page.alertSearchPaymentsSuccess"/>
                     ${numberOfPayments}
-                <fmt:message key="admin.user_payments.platezhis"/>.
+                <fmt:message key="admin.user_payments.payments"/>
             </p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -139,7 +139,7 @@
                                                 </c:if>
 
                                                 <!-- Return to User -->
-                                                <c:if test="${ response eq 'showUserPaymentsError'}">
+                                                <c:if test="${response eq 'showUserPaymentsError'}">
                                                     <div class="message-block">
                                                         <span class="title-label forward-left-link-img">
                                                             <a href="?command=showUser&userId=${userId}"
@@ -159,8 +159,6 @@
                                                             <div>
                                                                 <form action="/admin/userInfo/${viewableUser.userId}" method="GET" role="form">
 
-                                                                    <input type="hidden" name="userId"
-                                                                           value="${userId}"/>
                                                                     <div class="action" style="padding: 0 0 20px 0;">
                                                                         <button id="submit" type="submit"
                                                                                 class="btn btn-primary signup btn-default"
@@ -212,7 +210,7 @@
 
                                                                     <!-- Min value Date -->
                                                                     <input id="datepicker-start-date"
-                                                                           name="start-date"
+                                                                           name="startDate"
                                                                            data-toggle="tooltip-left"
                                                                            data-title="${tooltipStartDate}"
                                                                            readonly="readonly"
@@ -222,7 +220,7 @@
 
                                                                     <!-- Max value Date -->
                                                                     <input id="datepicker-final-date"
-                                                                           name="final-date"
+                                                                           name="finalDate"
                                                                            data-toggle="tooltip-left"
                                                                            data-title="${tooltipFinalDate}"
                                                                            readonly="readonly"
