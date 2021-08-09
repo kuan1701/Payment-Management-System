@@ -60,6 +60,10 @@ public class AdminUserController {
 		List<Account> accountList = accountService.findAllAccounts();
 		List<User> userList = userService.searchByCriteria(name, surname, phone, email);
 
+		if(!userList.isEmpty()) {
+			model.addAttribute("response", "searchUsersSuccess");
+		}
+
 		model.addAttribute("user", user);
 		model.addAttribute("name", name);
 		model.addAttribute("phone", phone);
@@ -67,7 +71,6 @@ public class AdminUserController {
 		model.addAttribute("surname", surname);
 		model.addAttribute("userList", userList);
 		model.addAttribute("totalAccounts", accountList.size());
-		model.addAttribute("response", "searchUsersSuccess");
 		return "admin/admin";
 	}
 	
@@ -220,7 +223,7 @@ public class AdminUserController {
 	) throws UnsupportedEncodingException, MessagingException {
 		User user = userService.findUserByUsername(principal.getName());
 		
-		if (!userService.adminCreateUser(newUser, model, MailSender.getSiteURL(request))){
+		if (!userService.adminCreateUser(newUser, MailSender.getSiteURL(request))){
 			model.addAttribute("user", user);
 			model.addAttribute("response", "addUserError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to create a new user", user);

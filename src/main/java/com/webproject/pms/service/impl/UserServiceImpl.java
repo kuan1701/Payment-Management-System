@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -71,8 +70,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User saveUser(User user) {
-        return userDao.save(user);
+    public boolean saveUser(User user) {
+
+        userDao.save(user);
+        return true;
     }
 
     @Override
@@ -167,7 +168,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * ADD USER IN DATA BASE, SEND EMAIL
      */
     @Override
-    public boolean registrationUser(User user, Model model, String siteURL)
+    public boolean registrationUser(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
 
         User userDB = userDao.findUserByUsername(user.getUsername());
@@ -177,20 +178,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         if (userDB != null) {
-            model.addAttribute("registrationError", "This login already exist");
-            model.addAttribute("userLoginError", "This login already exist");
 			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
         }
         else if (emailDB != null) {
-            model.addAttribute("registrationError", "This email already exist");
-            model.addAttribute("mailError", "This email already exist");
 			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
         }
         else if (phoneDB != null) {
-            model.addAttribute("registrationError", "This phone already exist");
-            model.addAttribute("phoneError", "This phone already exist");
 			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
         }
@@ -210,7 +205,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean adminCreateUser(User user, Model model, String siteURL)
+    public boolean adminCreateUser(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
 
         User emailDB = userDao.findUserByEmail(user.getEmail());
@@ -219,12 +214,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         if (emailDB != null) {
-            model.addAttribute("response", "emailExistError");
             actionLogService.createLog("ERROR: Unsuccessful attempt to register a new user", user);
             LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
         } else if (phoneDB != null) {
-            model.addAttribute("response", "phoneExistError");
             actionLogService.createLog("ERROR: Unsuccessful attempt to register a new user", user);
             LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
@@ -251,7 +244,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public boolean activateUser(String code) {
 
         User user = userDao.findUserByActivationCode(code);
-        if (user == null || user.getActive()) {
+        if (user == null) {
             return false;
         }
         user.setActivationCode(null);

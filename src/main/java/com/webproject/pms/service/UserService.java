@@ -12,8 +12,8 @@ import java.util.List;
 
 
 public interface UserService {
-	
-	User saveUser(User user);
+
+	boolean saveUser(User user);
 
 	boolean deleteUser(User user);
 	
@@ -31,9 +31,9 @@ public interface UserService {
 	
 	User findByActivationCode(String code);
 	
-	boolean registrationUser(User user, Model model, String siteURL) throws UnsupportedEncodingException, MessagingException;
+	boolean registrationUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException;
 
-	boolean adminCreateUser(User user, Model model, String siteURL) throws UnsupportedEncodingException, MessagingException;
+	boolean adminCreateUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException;
 	
 	boolean activateUser(String code);
 	

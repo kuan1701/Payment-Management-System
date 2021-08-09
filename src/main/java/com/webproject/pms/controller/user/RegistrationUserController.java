@@ -63,7 +63,7 @@ public class RegistrationUserController {
 		if (!user.getPassword().equals(user.getRepeatedPassword())){
 			model.addAttribute("registrationError", "Password mismatch");
 		}
-		if (!userService.registrationUser(user, model, MailSender.getSiteURL(request))){
+		if (!userService.registrationUser(user, MailSender.getSiteURL(request))){
 			model.addAttribute("registrationError", "Registration error");
 		}
 		else {

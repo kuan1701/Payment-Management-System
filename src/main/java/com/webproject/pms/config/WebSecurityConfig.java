@@ -2,7 +2,6 @@ package com.webproject.pms.config;
 
 import com.webproject.pms.util.AuthProvider;
 import com.webproject.pms.util.OAuth2.CustomOAuth2UserService;
-import com.webproject.pms.util.OAuth2.OAuth2LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,11 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthProvider authProvider;
 	@Autowired
 	private CustomOAuth2UserService oAuth2UserService;
-	
-//	@Autowired
-//	private UserServiceImpl userService;
-//	@Autowired
-//	private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 	
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
@@ -83,7 +77,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.userInfoEndpoint()
 				.userService(oAuth2UserService)
 				.and()
-				//.successHandler(oAuth2LoginSuccessHandler)
 				.and()
 				.logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
