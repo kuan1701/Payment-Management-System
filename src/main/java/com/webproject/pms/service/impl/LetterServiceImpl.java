@@ -28,9 +28,12 @@ public class LetterServiceImpl implements LetterService {
 	private static final Logger LOGGER = LogManager.getLogger(LetterServiceImpl.class);
 
 	@Autowired
-	public LetterServiceImpl(LetterDao letterDao, UserDao userDao, ActionLogServiceImpl actionLogService) {
-		this.letterDao = letterDao;
+	public LetterServiceImpl(UserDao userDao,
+							 LetterDao letterDao,
+							 ActionLogServiceImpl actionLogService)
+	{
 		this.userDao = userDao;
+		this.letterDao = letterDao;
 		this.actionLogService = actionLogService;
 	}
 	
@@ -38,9 +41,9 @@ public class LetterServiceImpl implements LetterService {
 	public Boolean addNewLetter(Letter letter, Principal principal) {
 		
 		User user = userDao.findUserByUsername(principal.getName());
-		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
 		letter.setDate(formatter.format(new Date()));
 		letter.setUser(user);
 		letter.setProcessed(false);
@@ -66,11 +69,6 @@ public class LetterServiceImpl implements LetterService {
 	@Override
 	public Letter findLetterByLetterId(Long letterId) {
 		return letterDao.getById(letterId);
-	}
-	
-	@Override
-	public List<Letter> findLettersByUserId(Long userId) {
-		return letterDao.findLettersByUser_UserId(userId);
 	}
 	
 	@Override

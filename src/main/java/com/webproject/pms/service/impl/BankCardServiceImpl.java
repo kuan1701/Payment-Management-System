@@ -4,7 +4,6 @@ import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.BankCardDao;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
-import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.BankCardService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,8 +36,10 @@ public class BankCardServiceImpl implements BankCardService {
 	}
 	
 	@Override
-	public BankCard save(BankCard bankCard) {
-		return bankCardDao.save(bankCard);
+	public Boolean save(BankCard bankCard) {
+
+		bankCardDao.save(bankCard);
+		return true;
 	}
 	
 	@Override
@@ -114,17 +115,7 @@ public class BankCardServiceImpl implements BankCardService {
 	}
 	
 	@Override
-	public BankCard findCardByCardNumber(String number) {
-		return bankCardDao.findBankCardByNumber(number);
-	}
-	
-	@Override
 	public List<BankCard> findCardsByAccountId(Long accountId) {
 		return bankCardDao.findBankCardsByAccount_AccountId(accountId);
-	}
-	
-	@Override
-	public List<BankCard> findAllCards() {
-		return bankCardDao.findAll();
 	}
 }

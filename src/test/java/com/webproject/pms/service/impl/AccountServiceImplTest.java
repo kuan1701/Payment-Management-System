@@ -20,8 +20,8 @@ import java.security.Principal;
 @SpringBootTest
 class AccountServiceImplTest {
 
-    private Account account;
     private User user;
+    private Account account;
 
     @Autowired
     private AccountServiceImpl accountService;

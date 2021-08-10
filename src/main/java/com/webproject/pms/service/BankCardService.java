@@ -6,8 +6,8 @@ import com.webproject.pms.model.entities.BankCard;
 import java.util.List;
 
 public interface BankCardService {
-	
-	BankCard save(BankCard bankCard);
+
+	Boolean save(BankCard bankCard);
 	
 	Boolean addNewBankCard(BankCard bankCard, Account account);
 	
@@ -19,9 +19,5 @@ public interface BankCardService {
 	
 	BankCard findCardByCardId(Long cardId);
 	
-	BankCard findCardByCardNumber(String number);
-	
 	List<BankCard> findCardsByAccountId(Long accountId);
-	
-	List<BankCard> findAllCards();
 }

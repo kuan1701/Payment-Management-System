@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -26,7 +25,7 @@ public class ActionLogServiceImpl implements ActionLogService {
     }
 
     @Override
-    public void createLog(String description, User user) {
+    public Boolean createLog(String description, User user) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -35,16 +34,14 @@ public class ActionLogServiceImpl implements ActionLogService {
         logEntry.setDate(formatter.format(new Date()));
         logEntry.setUser(user);
         actionLogDao.save(logEntry);
+        return true;
     }
 
     @Override
-    public LogEntry save(LogEntry logEntry) {
+    public Boolean save(LogEntry logEntry) {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        logEntry.setDate(formatter.format(new Date()));
-        return actionLogDao.save(logEntry);
+        actionLogDao.save(logEntry);
+        return true;
     }
 
     @Override
@@ -70,7 +67,7 @@ public class ActionLogServiceImpl implements ActionLogService {
     @Override
     public List<LogEntry> searchByCriteria(Long userId, String startDate, String finalDate) {
 
-        List<LogEntry> logEntries = new ArrayList<>();
+        List<LogEntry> logEntries;
 
         if (startDate.equals("")) {
             startDate = "01/01/2020 00:00:00";

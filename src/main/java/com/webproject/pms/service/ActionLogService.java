@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface ActionLogService {
 
-	void createLog(String description, User user);
+	Boolean createLog(String description, User user);
 
-	LogEntry save(LogEntry logEntry);
+	Boolean save(LogEntry logEntry);
 	
 	Boolean clearActionLog(Long userId);
 	

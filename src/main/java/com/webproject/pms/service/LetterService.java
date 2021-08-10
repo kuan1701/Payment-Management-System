@@ -13,8 +13,6 @@ public interface LetterService {
 
 	Letter findLetterByLetterId(Long letterId);
 	
-	List<Letter> findLettersByUserId(Long userId);
-	
 	List<Letter> findUnprocessedLetters();
 	
 	List<Letter> findAllLetters();
