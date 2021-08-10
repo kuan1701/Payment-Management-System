@@ -52,17 +52,14 @@ class UserServiceImplTest {
         user.setPhone("+375291111111");
         user.setEmailVerified(true);
         user.setActive(true);
-        user.setRegistrationDate("2021-08-04 15:15:15");
         user.setResetPasswordToken("123456");
         user.setRole(new Role(1L, "ROLE_USER"));
     }
 
-
-
     @Test
     void saveUser(){
 
-        boolean userSaved = userService.saveUser(user);
+        Boolean userSaved = userService.saveUser(user);
         Assertions.assertTrue(userSaved);
         Mockito.verify(userDao, Mockito.times(1)).save(user);
     }
@@ -71,7 +68,7 @@ class UserServiceImplTest {
     void registrationUser() throws UnsupportedEncodingException, MessagingException {
 
         String siteURL = "some@mail.com";
-        boolean isUserCreated = userService.registrationUser(user, siteURL);
+        Boolean isUserCreated = userService.registrationUser(user, siteURL);
 
         Assertions.assertTrue(isUserCreated);
         Assertions.assertNotNull(user.getActivationCode());
@@ -94,7 +91,7 @@ class UserServiceImplTest {
                 .when(userDao)
                 .findUserByUsername("someUser");
 
-        boolean isUserCreated = userService.registrationUser(user, siteURL);
+        Boolean isUserCreated = userService.registrationUser(user, siteURL);
 
         Assertions.assertFalse(isUserCreated);
 
@@ -111,7 +108,7 @@ class UserServiceImplTest {
                 .when(userDao)
                 .findUserByActivationCode("activate");
 
-        boolean isUserActivated = userService.activateUser("activate");
+        Boolean isUserActivated = userService.activateUser("activate");
 
         Assertions.assertTrue(isUserActivated);
         Assertions.assertNull(user.getActivationCode());
@@ -121,7 +118,7 @@ class UserServiceImplTest {
 
     @Test
     public void activateUserFailTest() {
-        boolean isUserActivated = userService.activateUser("activate me");
+        Boolean isUserActivated = userService.activateUser("activate me");
 
         Assertions.assertFalse(isUserActivated);
 
@@ -147,7 +144,7 @@ class UserServiceImplTest {
                 .when(userDao)
                 .findById(user.getUserId());
 
-        boolean isUpdated = userService.updateUser(user,
+        Boolean isUpdated = userService.updateUser(user,
                 1L,
                 "someName",
                 "someSurname",
@@ -167,7 +164,7 @@ class UserServiceImplTest {
     @Test
     void updatePassword() {
 
-        boolean passwordUpdated = userService.updatePassword(user, "123456");
+        Boolean passwordUpdated = userService.updatePassword(user, "123456");
 
         Assertions.assertTrue(passwordUpdated);
         Assertions.assertNull(user.getResetPasswordToken());
@@ -177,11 +174,7 @@ class UserServiceImplTest {
     @Test
     void deleteUser() {
 
-        Mockito.doReturn(Optional.of(user))
-                .when(userDao)
-                .findById(user.getUserId());
-
-        boolean userIsDeleted = userService.deleteUser(user);
+        Boolean userIsDeleted = userService.deleteUser(user);
         Assertions.assertTrue(userIsDeleted);
     }
 
@@ -202,10 +195,6 @@ class UserServiceImplTest {
 
     @Test
     void findUserByUserId() {
-
-        Mockito.doReturn(Optional.of(user))
-                .when(userDao)
-                .findById(user.getUserId());
 
         userService.findUserByUserId(user.getUserId());
         Mockito.verify(userDao, Mockito.times(1)).getById(user.getUserId());
@@ -269,7 +258,7 @@ class UserServiceImplTest {
     void adminCreateUser() throws UnsupportedEncodingException, MessagingException {
 
         String siteURL = "some@mail.com";
-        boolean isUserCreated = userService.adminCreateUser(user, siteURL);
+        Boolean isUserCreated = userService.adminCreateUser(user, siteURL);
 
         Assertions.assertTrue(isUserCreated);
         Assertions.assertNotNull(user.getActivationCode());

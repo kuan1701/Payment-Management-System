@@ -210,7 +210,7 @@ public class AdminAccountController {
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
 
-		if (!accountService.adminAttachAccount(account, model, userId)){
+		if (!accountService.adminAttachAccount(account, userId)){
 			model.addAttribute("response", "accountAttachError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to create a new account", user);
 		}

@@ -13,13 +13,13 @@ import java.util.List;
 
 public interface UserService {
 
-	boolean saveUser(User user);
+	Boolean saveUser(User user);
 
-	boolean deleteUser(User user);
+	Boolean deleteUser(User user);
 	
-	boolean updateUser(User user, Long id, String name, String surname, String phone, String email, String password);
+	Boolean updateUser(User user, Long id, String name, String surname, String phone, String email, String password);
 
-	boolean updatePassword(User user, String password);
+	Boolean updatePassword(User user, String password);
 	
 	User findUserByUserId(Long userId);
 	
@@ -31,11 +31,11 @@ public interface UserService {
 	
 	User findByActivationCode(String code);
 	
-	boolean registrationUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException;
+	Boolean registrationUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException;
 
-	boolean adminCreateUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException;
+	Boolean adminCreateUser(User user, String siteURL) throws UnsupportedEncodingException, MessagingException;
 	
-	boolean activateUser(String code);
+	Boolean activateUser(String code);
 	
 	List<User> findAllUsers();
 	

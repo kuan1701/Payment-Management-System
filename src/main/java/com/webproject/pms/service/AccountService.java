@@ -7,8 +7,8 @@ import java.security.Principal;
 import java.util.List;
 
 public interface AccountService {
-	
-	Account save(Account account);
+
+	Boolean save(Account account);
 	
 	Boolean deleteAccount(Account account);
 	
@@ -16,9 +16,9 @@ public interface AccountService {
 	
 	Boolean unblockAccount(Account account);
 	
-	Boolean registrationAccount(Account Account, Model model, Principal principal);
+	Boolean registrationAccount(Account Account, Principal principal);
 	
-	Boolean adminAttachAccount(Account Account, Model model, Long userId);
+	Boolean adminAttachAccount(Account Account, Long userId);
 	
 	List<Account> findAllAccounts();
 	
@@ -29,8 +29,6 @@ public interface AccountService {
 	List<Account> findAllAccountsByUserId(Long userId);
 	
 	Account findAccountByAccountNumber(String number);
-	
-	String findAccountNumberByAccountId(Long accountId);
 	
 	List<Account> searchByCriteriaWithoutId(String number, String min_value, String max_value, String currency);
 	

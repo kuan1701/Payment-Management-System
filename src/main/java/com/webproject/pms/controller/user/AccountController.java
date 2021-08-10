@@ -50,7 +50,7 @@ public class AccountController {
 	                            Principal principal,
 	                            @ModelAttribute("account") Account account
 	) {
-		if (!accountService.registrationAccount(account, model, principal)){
+		if (!accountService.registrationAccount(account, principal)){
 			model.addAttribute("accountError", "Create account error");
 		} else {
 			model.addAttribute("accountError", "Create success");

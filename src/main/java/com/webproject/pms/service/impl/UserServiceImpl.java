@@ -70,14 +70,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean saveUser(User user) {
+    public Boolean saveUser(User user) {
 
         userDao.save(user);
         return true;
     }
 
     @Override
-    public boolean updateUser(User user, Long userId, String name, String surname, String phone, String email, String password) {
+    public Boolean updateUser(User user, Long userId, String name, String surname, String phone, String email, String password) {
 
         if (user.getUserId().equals(userId)) {
             if (userDao.findById(userId).isPresent()) {
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean updatePassword(User user, String newPassword) {
+    public Boolean updatePassword(User user, String newPassword) {
 
         if (!newPassword.equals("")) {
             String encodedNewPassword = passwordEncoder.encode(newPassword);
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean deleteUser(User user) {
+    public Boolean deleteUser(User user) {
         userDao.delete(user);
         return true;
     }
@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * ADD USER IN DATA BASE, SEND EMAIL
      */
     @Override
-    public boolean registrationUser(User user, String siteURL)
+    public Boolean registrationUser(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
 
         User userDB = userDao.findUserByUsername(user.getUsername());
@@ -205,7 +205,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean adminCreateUser(User user, String siteURL)
+    public Boolean adminCreateUser(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
 
         User emailDB = userDao.findUserByEmail(user.getEmail());
@@ -241,7 +241,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * ACTIVATE USER
      */
     @Override
-    public boolean activateUser(String code) {
+    public Boolean activateUser(String code) {
 
         User user = userDao.findUserByActivationCode(code);
         if (user == null) {

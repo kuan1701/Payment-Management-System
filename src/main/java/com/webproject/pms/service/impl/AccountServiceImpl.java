@@ -38,12 +38,14 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public Account save(Account account) {
-		return accountDao.save(account);
+	public Boolean save(Account account) {
+
+		accountDao.save(account);
+		return true;
 	}
 	
 	@Override
-	public Boolean registrationAccount(Account account, Model model, Principal principal) {
+	public Boolean registrationAccount(Account account, Principal principal) {
 		
 		User user = userDao.findUserByUsername(principal.getName());
 		
@@ -52,7 +54,6 @@ public class AccountServiceImpl implements AccountService {
 			LOGGER.error("ERROR: Unsuccessful attempt to create a new account");
 			return false;
 		}
-		model.addAttribute("accountNumberError", "This account already exist");
 		account.setUser(user);
 		account.setBlocked(false);
 		account.setDeleted(false);
@@ -65,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public Boolean adminAttachAccount(Account account, Model model, Long userId) {
+	public Boolean adminAttachAccount(Account account, Long userId) {
 		
 		User user = userDao.getById(userId);
 		
@@ -74,7 +75,6 @@ public class AccountServiceImpl implements AccountService {
 			LOGGER.error("ERROR: Unsuccessful attempt to create a new account");
 			return false;
 		}
-		model.addAttribute("accountNumberError", "This account already exist");
 		account.setUser(user);
 		account.setBlocked(false);
 		account.setDeleted(false);
@@ -138,12 +138,7 @@ public class AccountServiceImpl implements AccountService {
 	public Account findAccountByAccountNumber(String number) {
 		return accountDao.findAccountByNumber(number);
 	}
-	
-	@Override
-	public String findAccountNumberByAccountId(Long accountId) {
-		return findAccountByAccountId(accountId).getNumber();
-	}
-	
+
 	@Override
 	public List<Account> findAllAccountsByUserId(Long userId) {
 		return accountDao.findAllAccountsByUser_UserId(userId);
