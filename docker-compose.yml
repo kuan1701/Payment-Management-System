@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  docker-mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - /app/data/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD="pppp"
+      - MYSQL_USER="root"
+      - MYSQL_DATABASE="pms_db"
+    container_name: mysql57
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pms-assembly:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - "jdbc:mysql://docker-mysql:3306/pms_db?autoReconnect=true&useSSL=false"
+    depends_on:
+      - docker-mysql
