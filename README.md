@@ -13,7 +13,7 @@ I deployed the application on the hosting.
 
 ## Used tools and patterns for project implementation
 
-`Primary:` MySQL 5.7, Java 8 (Core + Servlets + JDBC + JSP), JSTL, Maven 3, HTML CSS, JS, jQuery v3.4, Bootstrap v4.4.    
+`Primary:` MySQL 5.7, Java 15 (Core + Servlets + JDBC + JSP), JSTL, Maven 3, HTML CSS, JS, jQuery v3.4, Bootstrap v4.4.    
 `Secondary:` Apache Tomcat v9.0, Apache Commons Lang v2.6, Apache Log4j v1.2, JUnit v4.13, Mockito v1.10.    
 <i>*For more information on dependencies and plugins, see the pom.xml file.</i>
 
@@ -50,4 +50,4 @@ Please see [CONTRIBUTING.md](../master/CONTRIBUTING.md) for more details.
 
 ---  
 
-I hope my project will help you! Communication with me: https://t.me/vlnt_snk
+I hope my project will help you! Communication with me: https://t.me/kuan1701
