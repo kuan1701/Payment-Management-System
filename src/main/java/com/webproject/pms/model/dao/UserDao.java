@@ -19,8 +19,6 @@ public interface UserDao extends JpaRepository<User, Long> {
 	
 	User findUserByActivationCode(String activationCode);
 	
-	Boolean existsUserByEmail(String email);
-	
 	User findUserByResetPasswordToken(String token);
 	
 	@Query(value = "SELECT user.*, role.* FROM user"

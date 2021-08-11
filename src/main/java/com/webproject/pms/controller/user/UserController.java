@@ -67,7 +67,6 @@ public class UserController {
 	
 	/**
 	 * Show profile info for update
-	 *
 	 * @param model
 	 * @param userId
 	 * @return page userUpdatePersonalData

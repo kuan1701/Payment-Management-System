@@ -19,103 +19,103 @@ import java.util.List;
 @Service
 @Transactional
 public class BankCardServiceImpl implements BankCardService {
-	
-	private final BankCardDao bankCardDao;
-	private final MapStructMapper mapStructMapper;
-	private final ActionLogServiceImpl actionLogService;
-	private static final Logger LOGGER = LogManager.getLogger(BankCardService.class);
-	
-	@Autowired
-	public BankCardServiceImpl(BankCardDao bankCardDao,
-							   MapStructMapper mapStructMapper,
-							   ActionLogServiceImpl actionLogService
-	) {
-		this.bankCardDao = bankCardDao;
-		this.mapStructMapper = mapStructMapper;
-		this.actionLogService = actionLogService;
-	}
-	
-	@Override
-	public Boolean save(BankCard bankCard) {
 
-		bankCardDao.save(bankCard);
-		return true;
-	}
-	
-	@Override
-	public Boolean addNewBankCard(BankCard bankCard, Account account) {
+    private final BankCardDao bankCardDao;
+    private final MapStructMapper mapStructMapper;
+    private final ActionLogServiceImpl actionLogService;
+    private static final Logger LOGGER = LogManager.getLogger(BankCardService.class);
 
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/yy");
-		Date date = null;
-		
-		try {
-			date = formatter.parse(bankCard.getMonth() + "/" + bankCard.getYear());
-		} catch (ParseException e) {
-			LOGGER.error("ParseException: " + e.getMessage());
-		}
-		
-		if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null
-				|| account == null
-		) {
-			actionLogService.createLog("ERROR: Unsuccessful attempt to attach a card", account.getUser());
-			LOGGER.error("ERROR: Unsuccessful attempt to attach a card");
-			return false;
-		}
-		bankCard.setAccount(account);
-		bankCard.setActive(true);
-		bankCard.setValidity(formatter.format(date));
-		bankCardDao.save(bankCard);
+    @Autowired
+    public BankCardServiceImpl(BankCardDao bankCardDao,
+                               MapStructMapper mapStructMapper,
+                               ActionLogServiceImpl actionLogService
+    ) {
+        this.bankCardDao = bankCardDao;
+        this.mapStructMapper = mapStructMapper;
+        this.actionLogService = actionLogService;
+    }
 
-		actionLogService.createLog("ATTACHED: Card [" + bankCard.getNumber() + "]", account.getUser());
-		LOGGER.info("ATTACHED: Card [" + bankCard.getNumber() + "]");
-		return true;
-	}
-	
-	@Override
-	public Boolean blockCard(Long cardId) {
-	
-		if (bankCardDao.findById(cardId).isPresent()) {
-			BankCard bankCard = bankCardDao.getById(cardId);
-			bankCard.setActive(false);
-			bankCardDao.save(bankCard);
+    @Override
+    public Boolean save(BankCard bankCard) {
 
-			actionLogService.createLog("BLOCKED: Card [" + bankCard.getNumber() + "]", bankCard.getAccount().getUser());
-			LOGGER.info("BLOCKED: Card [" + bankCard.getNumber() + "]");
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public Boolean unblockCard(Long cardId) {
-		
-		if (bankCardDao.findById(cardId).isPresent()) {
-			BankCard bankCard = bankCardDao.getById(cardId);
-			bankCard.setActive(true);
-			bankCardDao.save(bankCard);
+        bankCardDao.save(bankCard);
+        return true;
+    }
 
-			actionLogService.createLog("UNBLOCKED: Card [" + bankCard.getNumber() + "]", bankCard.getAccount().getUser());
-			LOGGER.info("UNBLOCKED: Card [" + bankCard.getNumber() + "]");
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public void deleteCard(BankCard card) {
+    @Override
+    public Boolean addNewBankCard(BankCard bankCard, Account account) {
 
-		actionLogService.createLog("DETACHED: Card [" + card.getNumber() + "]", card.getAccount().getUser());
-		LOGGER.info("DELETED: Card [" + card.getNumber() + "]");
-		bankCardDao.delete(card);
-	}
-	
-	@Override
-	public BankCard findCardByCardId(Long cardId) {
-		return bankCardDao.getById(cardId);
-	}
-	
-	@Override
-	public List<BankCard> findCardsByAccountId(Long accountId) {
-		return bankCardDao.findBankCardsByAccount_AccountId(accountId);
-	}
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/yy");
+        Date date = null;
+
+        try {
+            date = formatter.parse(bankCard.getMonth() + "/" + bankCard.getYear());
+        } catch (ParseException e) {
+            LOGGER.error("ParseException: " + e.getMessage());
+        }
+
+        if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null
+                || account == null
+        ) {
+            actionLogService.createLog("ERROR: Unsuccessful attempt to attach a card", account.getUser());
+            LOGGER.error("ERROR: Unsuccessful attempt to attach a card");
+            return false;
+        }
+        bankCard.setAccount(account);
+        bankCard.setActive(true);
+        bankCard.setValidity(formatter.format(date));
+        bankCardDao.save(bankCard);
+
+        actionLogService.createLog("ATTACHED: Card [" + bankCard.getNumber() + "]", account.getUser());
+        LOGGER.info("ATTACHED: Card [" + bankCard.getNumber() + "]");
+        return true;
+    }
+
+    @Override
+    public Boolean blockCard(BankCard bankCard) {
+
+        if (bankCard != null) {
+            bankCard.setActive(false);
+            bankCardDao.save(bankCard);
+
+            actionLogService.createLog("BLOCKED: Card [" + bankCard.getNumber() + "]", bankCard.getAccount().getUser());
+            LOGGER.info("BLOCKED: Card [" + bankCard.getNumber() + "]");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean unblockCard(BankCard bankCard) {
+
+        if (bankCard != null) {
+            bankCard.setActive(true);
+            bankCardDao.save(bankCard);
+
+            actionLogService.createLog("UNBLOCKED: Card [" + bankCard.getNumber() + "]", bankCard.getAccount().getUser());
+            LOGGER.info("UNBLOCKED: Card [" + bankCard.getNumber() + "]");
+            return true;
+
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean deleteCard(BankCard card) {
+
+        actionLogService.createLog("DETACHED: Card [" + card.getNumber() + "]", card.getAccount().getUser());
+        LOGGER.info("DELETED: Card [" + card.getNumber() + "]");
+        bankCardDao.delete(card);
+        return true;
+    }
+
+    @Override
+    public BankCard findCardByCardId(Long cardId) {
+        return bankCardDao.getById(cardId);
+    }
+
+    @Override
+    public List<BankCard> findCardsByAccountId(Long accountId) {
+        return bankCardDao.findBankCardsByAccount_AccountId(accountId);
+    }
 }

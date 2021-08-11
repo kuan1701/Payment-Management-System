@@ -31,10 +31,6 @@ public interface PaymentService {
 	
 	List<Payment> findAllPaymentsByUserId(Long userId);
 	
-	List<Payment> findLastPaymentsByUserId(Long userId);
-	
-	List<Payment> findAllPayments();
-	
 	List<Payment> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate);
 
 	List<Payment> searchByCriteriaOutgoingFalse(Long userId, Boolean isOutgoing, String startDate, String finalDate);

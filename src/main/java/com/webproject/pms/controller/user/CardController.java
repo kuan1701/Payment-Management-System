@@ -153,11 +153,11 @@ public class CardController {
 		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
 
 		if (bankCard.getActive()) {
-			bankCardService.blockCard(cardId);
+			bankCardService.blockCard(bankCard);
 			model.addAttribute("alert", "cardBlockedSuccess");
 		}
 		else if (!bankCard.getActive()) {
-			bankCardService.unblockCard(cardId);
+			bankCardService.unblockCard(bankCard);
 			model.addAttribute("alert", "cardUnblockedSuccess");
 		}
 
@@ -187,9 +187,10 @@ public class CardController {
 		BankCard bankCard = bankCardService.findCardByCardId(cardId);
 		User user = userService.findUserByUsername(principal.getName());
 		Account account = accountService.findAccountByAccountNumber(accountNumber);
-		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
 
 		bankCardService.deleteCard(bankCard);
+		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
+
 		model.addAttribute("user", user);
 		model.addAttribute("account", account);
 		model.addAttribute("bankCard", bankCard);

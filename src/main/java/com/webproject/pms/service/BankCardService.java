@@ -11,11 +11,11 @@ public interface BankCardService {
 	
 	Boolean addNewBankCard(BankCard bankCard, Account account);
 	
-	Boolean blockCard(Long cardId);
+	Boolean blockCard(BankCard card);
 	
-	Boolean unblockCard(Long cardId);
-	
-	void deleteCard(BankCard card);
+	Boolean unblockCard(BankCard card);
+
+	Boolean deleteCard(BankCard card);
 	
 	BankCard findCardByCardId(Long cardId);
 	

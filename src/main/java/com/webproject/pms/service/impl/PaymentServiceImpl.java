@@ -245,16 +245,6 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	public List<Payment> findLastPaymentsByUserId(Long userId) {
-		return paymentDao.findLastPaymentsByAccountUserId(userId);
-	}
-	
-	@Override
-	public List<Payment> findAllPayments() {
-		return paymentDao.findAll();
-	}
-	
-	@Override
 	public List<Payment> searchByCriteria(Long userId, Boolean isOutgoing, String startDate, String finalDate) {
 		List<Payment> paymentList = new ArrayList<>();
 

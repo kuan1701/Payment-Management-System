@@ -339,22 +339,22 @@ public class AdminAccountController {
 	) {
 		BankCard card = cardService.findCardByCardId(cardId);
 		User user = userService.findUserByUsername(principal.getName());
-		Account account = accountService.findAccountByAccountId(accountId);
+		Account viewableAccount = accountService.findAccountByAccountId(accountId);
 		List<BankCard> cardList = cardService.findCardsByAccountId(accountId);
-		User viewableUser = account.getUser();
+		User viewableUser = viewableAccount.getUser();
 		
 		if (card.getActive()) {
-			cardService.blockCard(cardId);
+			cardService.blockCard(card);
 			model.addAttribute("alert", "cardBlockedSuccess");
 			actionLogService.createLog("BLOCKED: Card [" + card.getNumber() + "]", user);
 		}
 		else if (!card.getActive()) {
-			cardService.unblockCard(cardId);
+			cardService.unblockCard(card);
 			model.addAttribute("alert", "cardUnblockedSuccess");
 			actionLogService.createLog("UNBLOCKED: Card [" + card.getNumber() + "]", user);
 		}
 		model.addAttribute("user", user);
-		model.addAttribute("account", account);
+		model.addAttribute("viewableAccount", viewableAccount);
 		model.addAttribute("cardList", cardList);
 		model.addAttribute("viewableUser", viewableUser);
 		return "admin/adminShowAccountInfo";

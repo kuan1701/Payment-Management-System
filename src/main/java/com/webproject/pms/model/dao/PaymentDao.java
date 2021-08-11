@@ -15,11 +15,6 @@ public interface PaymentDao extends JpaRepository<Payment, Long> {
 	List<Payment> findPaymentsByUserId(Long userId);
 	
 	@Query(value = "SELECT * FROM payment"
-			+ " WHERE user_id = ? ORDER BY payment_id DESC LIMIT 3",
-			nativeQuery = true)
-	List<Payment> findLastPaymentsByAccountUserId(Long userId);
-	
-	@Query(value = "SELECT * FROM payment"
 			+ " WHERE user_id = ? AND is_outgoing = ? AND"
 			+ " date BETWEEN STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s') AND"
 			+ " STR_TO_DATE(?, '%d/%m/%Y %H:%i:%s)') ORDER BY date DESC;",
