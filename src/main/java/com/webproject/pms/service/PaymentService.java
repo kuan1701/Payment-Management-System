@@ -3,6 +3,7 @@ package com.webproject.pms.service;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
 import com.webproject.pms.model.entities.Payment;
+import com.webproject.pms.model.entities.User;
 import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
@@ -11,15 +12,11 @@ import java.util.List;
 
 public interface PaymentService {
 	
-	boolean makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, String appointment, Model model, Principal principal);
+	Boolean makePaymentOnAccount(Long accountId, String accountNumber, BigDecimal amount, String appointment, Model model, User user);
 	
-	boolean makePaymentOnCard(Long accountFromId, String cardNumber, BigDecimal amount, String appointment, Model model, Principal principal);
+	Boolean makePaymentOnCard(Long accountFromId, String cardNumber, BigDecimal amount, String appointment, Model model, User user);
 	
-	boolean checkAvailableAccount(Account account);
-	
-	boolean checkAvailableCard(BankCard card);
-	
-	boolean checkAvailableAmount(Account account, BigDecimal amount);
+	Boolean checkAvailableAmount(Account account, BigDecimal amount);
 	
 	void transaction(Account accountFrom, Account accountTo, BigDecimal amount);
 	

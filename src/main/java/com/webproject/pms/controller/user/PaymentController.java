@@ -168,8 +168,8 @@ public class PaymentController {
 			model.addAttribute("paymentError", "invalidData");
 		}
 		else if (!paymentService.makePaymentOnAccount(
-				accountFromId, accountToNumber, amount, appointment, model, principal)) {
-			model.addAttribute("paymentError", "recipientAccountNotExistError");
+				accountFromId, accountToNumber, amount, appointment, model, user)) {
+			model.addAttribute("paymentError", "invalidData");
 		}
 		else {
 			model.addAttribute("paymentError", "paymentCompletedSuccess");

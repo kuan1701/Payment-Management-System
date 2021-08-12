@@ -1,25 +1,21 @@
-# Images: JDK8 and Maven
-FROM maven:3.5.2-jdk-8-alpine AS MAVEN_TOOL_CHAIN
+# Images: JDK11 and Maven
+FROM maven:3.6.3-openjdk-11-slim as BUILDER
+
+ARG VERSION=0.0.1-SNAPSHOT
 
 # Project Author
-MAINTAINER Syniuk Valentyn <planet.sv01@gmail.com>
+MAINTAINER Chin Kuan <kuanchin17011993@gmail.com>
 
-# Copy components
-COPY pom.xml /usr/app/
-COPY src /usr/app/src/
-WORKDIR /usr/app/
+WORKDIR /build/
+COPY pom.xml /build/
+COPY src /build/src/
 
-# Build project (compile + .war)
-RUN mvn package
+#RUN mvn clean package
+COPY target/pms-${VERSION}.war target/application.war
 
-# Images: OpenJDK JRE and Tomcat
-FROM tomcat:9.0-jre8-alpine
+FROM openjdk:11.0.11-jre-slim
+WORKDIR /app/
 
-# Copy WAR into image
-COPY --from=MAVEN_TOOL_CHAIN /usr/app/target/Payment-Management-System-*.war $CATALINA_HOME/webapps/pms.war
+COPY --from=BUILDER /build/target/application.war /app/
 
-# Indicates the ports on which a container listens for connections
-EXPOSE 8080
-
-# Run application with this command line
-HEALTHCHECK --interval=1m --timeout=3s CMD wget --quiet --tries=1 --spider http://localhost:8080/ || exit 1
+CMD java -war /app/application.war

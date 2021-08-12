@@ -182,7 +182,7 @@
     </c:if>
 
     <!-- Alert invalidData -->
-    <c:if test="${paymentError eq '00'}">
+    <c:if test="${paymentError eq 'invalidData'}">
         <div id="alert" class="alert alert-danger fade show" role="alert">
             <p><strong><fmt:message key="user.page.failed"/>!</strong>
                 <fmt:message key="user.page.alertInvalidDataError"/>

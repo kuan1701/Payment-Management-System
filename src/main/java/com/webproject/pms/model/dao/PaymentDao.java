@@ -12,7 +12,7 @@ public interface PaymentDao extends JpaRepository<Payment, Long> {
 	
 	List<Payment> findPaymentsByAccount_AccountId(Long accountId);
 	
-	List<Payment> findPaymentsByUserId(Long userId);
+	List<Payment> findPaymentsByUserIdOrderByDateDesc(Long userId);
 	
 	@Query(value = "SELECT * FROM payment"
 			+ " WHERE user_id = ? AND is_outgoing = ? AND"

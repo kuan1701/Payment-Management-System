@@ -28,7 +28,6 @@ import java.util.TimeZone;
 @Transactional
 public class PaymentServiceImpl implements PaymentService {
 
-	private final UserDao userDao;
 	private final AccountDao accountDao;
 	private final PaymentDao paymentDao;
 	private final MapStructMapper mapStructMapper;
@@ -36,38 +35,40 @@ public class PaymentServiceImpl implements PaymentService {
 	private static final Logger LOGGER = LogManager.getLogger(PaymentServiceImpl.class);
 
 	@Autowired
-	public PaymentServiceImpl(UserDao userDao,
-							  AccountDao accountDao,
+	public PaymentServiceImpl(AccountDao accountDao,
 							  PaymentDao paymentDao,
 							  MapStructMapper mapStructMapper,
 							  ActionLogServiceImpl actionLogService
 	) {
 		this.accountDao = accountDao;
 		this.paymentDao = paymentDao;
-		this.userDao = userDao;
 		this.mapStructMapper = mapStructMapper;
 		this.actionLogService = actionLogService;
 	}
 	
 	@Override
-	public synchronized boolean makePaymentOnAccount(Long accountFromId, String accountToNumber, BigDecimal amount, String appointment, Model model, Principal principal) {
-		
-		User user = userDao.findUserByUsername(principal.getName());
+	public synchronized Boolean makePaymentOnAccount(Long accountFromId,
+													 String accountToNumber,
+													 BigDecimal amount,
+													 String appointment,
+													 Model model,
+													 User user
+	) {
 		Account accountFrom = accountDao.getById(accountFromId);
 		Account accountTo = accountDao.findAccountByNumber(accountToNumber);
 		BigDecimal exchangeRate = new BigDecimal("1.00");
 		
-		if (checkAvailableAccount(accountFrom)) {
+		if (accountFrom.getBlocked()) {
 			model.addAttribute("paymentError", "senderAccountBlockedError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to make a payment", user);
-			LOGGER.error("ERROR: Unsuccessful attempt to make a payment");
+			LOGGER.error("ERROR: Unsuccessful attempt to make a payment. Sender account blocked");
 			return false;
 		}
 		
-		if (checkAvailableAccount(accountTo)) {
-			model.addAttribute("paymentError", "recipientAccountBlockedError");
+		if (accountTo.getBlocked()) {
+			model.addAttribute("paymentError", "recipientCardNotExistOrBlockedError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to make a payment", user);
-			LOGGER.error("ERROR: Unsuccessful attempt to make a payment");
+			LOGGER.error("ERROR: Unsuccessful attempt to make a payment. Recipient account blocked");
 			return false;
 		}
 		
@@ -120,7 +121,9 @@ public class PaymentServiceImpl implements PaymentService {
 		else {
 			payment.setStatus(false);
 			paymentDao.save(payment);
+			model.addAttribute("paymentError", "insufficientFundsError");
 			LOGGER.error("Payment arrangement error!");
+			return false;
 		}
 
 		actionLogService.createLog("PAYMENT_COMPLETED: The payment was made from account ["
@@ -133,13 +136,12 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	public synchronized boolean makePaymentOnCard(Long accountFromId, String cardNumber, BigDecimal amount, String appointment, Model model, Principal principal) {
+	public synchronized Boolean makePaymentOnCard(Long accountFromId, String cardNumber, BigDecimal amount, String appointment, Model model, User user) {
 
-		User user = userDao.findUserByUsername(principal.getName());
 		Account accountFrom = accountDao.getById(accountFromId);
 		BigDecimal exchangeRate = new BigDecimal("1.00");
 
-		if (checkAvailableAccount(accountFrom)) {
+		if (accountFrom.getBlocked()) {
 			model.addAttribute("paymentError", "senderAccountBlockedError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to make a payment", user);
 			LOGGER.error("ERROR: Unsuccessful attempt to make a payment");
@@ -184,24 +186,9 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	public synchronized boolean checkAvailableAccount(Account account) {
-		
-		if (account != null){
-			return account.getBlocked();
-		}
-		return true;
-	}
-	
-	@Override
-	public synchronized boolean checkAvailableCard(BankCard card) {
-		return card.getActive();
-	}
-	
-	@Override
-	public synchronized boolean checkAvailableAmount(Account account, BigDecimal amount) {
-		
-		BigDecimal balance = account.getBalance();
-		return balance.compareTo(amount) >= 0;
+	public synchronized Boolean checkAvailableAmount(Account account, BigDecimal amount) {
+
+		return account.getBalance().compareTo(amount) >= 0;
 	}
 	
 	@Override
@@ -241,7 +228,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public List<Payment> findAllPaymentsByUserId(Long userId) {
 		
-		return paymentDao.findPaymentsByUserId(userId);
+		return paymentDao.findPaymentsByUserIdOrderByDateDesc(userId);
 	}
 	
 	@Override
