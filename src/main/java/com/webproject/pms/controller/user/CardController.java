@@ -20,6 +20,9 @@ public class CardController {
 	private final AccountServiceImpl accountService;
 	private final BankCardServiceImpl bankCardService;
 
+	private List<Account> accounts;
+	private List<BankCard> bankCardsList;
+
 	public CardController(UserServiceImpl userService,
 						  AccountServiceImpl accountService,
 						  BankCardServiceImpl bankCardService
@@ -31,8 +34,8 @@ public class CardController {
 	
 	/**
 	 * Show attach card to account form
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return userAttachCard view
 	 */
 	@GetMapping("/attach-card")
@@ -40,7 +43,7 @@ public class CardController {
 	                         Principal principal
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
+		accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
 		
 		model.addAttribute("user", user);
 		model.addAttribute("accounts", accounts);
@@ -50,10 +53,10 @@ public class CardController {
 
 	/**
 	 * Attaching a bank card user accounts
-	 * @param model
-	 * @param principal
-	 * @param bankCard
-	 * @param accountNumber
+	 * @param model Model
+	 * @param principal Principal
+	 * @param bankCard BankCard
+	 * @param accountNumber String
 	 * @return userAttachCard view
 	 */
 	@PostMapping("/attach-card")
@@ -63,7 +66,7 @@ public class CardController {
 							 @RequestParam("accountNumber") String accountNumber
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
+		accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
 		Account account = accountService.findAccountByAccountId(Long.parseLong(accountNumber));
 		
 		model.addAttribute("user", user);
@@ -83,9 +86,9 @@ public class CardController {
 	
 	/**
 	 * Show attached cards
-	 * @param model
-	 * @param principal
-	 * @param number
+	 * @param model Model
+	 * @param principal Principal
+	 * @param number String
 	 * @return userShowAccountCards view
 	 */
 	@GetMapping("/attached-cards/{accountNumber}")
@@ -93,7 +96,7 @@ public class CardController {
 	                                Principal principal,
 	                                @PathVariable("accountNumber") String number
 	) {
-		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(
+		bankCardsList = bankCardService.findCardsByAccountId(
 				accountService.findAccountByAccountNumber(number).getAccountId());
 		
 		for (BankCard bankCard : bankCardsList) {
@@ -109,10 +112,10 @@ public class CardController {
 	
 	/**
 	 * Show detach card form
-	 * @param model
-	 * @param principal
-	 * @param accountNumber
-	 * @param cardId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountNumber String
+	 * @param cardId Long
 	 * @return userShowAccountCards view
 	 */
 	@GetMapping("/attached-cards/{accountNumber}/detach/{cardId}")
@@ -121,7 +124,7 @@ public class CardController {
 								  @PathVariable("cardId") Long cardId,
 								  @PathVariable("accountNumber") String accountNumber
 	) {
-		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(
+		bankCardsList = bankCardService.findCardsByAccountId(
 				accountService.findAccountByAccountNumber(accountNumber).getAccountId()
 		);
 		
@@ -135,10 +138,10 @@ public class CardController {
 	
 	/**
 	 * Blocking and unblocking of the card by the user
-	 * @param model
-	 * @param principal
-	 * @param accountNumber
-	 * @param cardId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountNumber String
+	 * @param cardId Long
 	 * @return userShowAccountCards view
 	 */
 	@PostMapping("/attached-cards/{accountNumber}")
@@ -150,7 +153,7 @@ public class CardController {
 		BankCard bankCard = bankCardService.findCardByCardId(cardId);
 		User user = userService.findUserByUsername(principal.getName());
 		Account account = accountService.findAccountByAccountNumber(accountNumber);
-		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
+		bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
 
 		if (bankCard.getActive()) {
 			bankCardService.blockCard(bankCard);
@@ -172,10 +175,10 @@ public class CardController {
 	
 	/**
 	 * Detaching the card by the user
-	 * @param model
-	 * @param principal
-	 * @param accountNumber
-	 * @param cardId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountNumber String
+	 * @param cardId Long
 	 * @return userShowAccountCards view
 	 */
 	@PostMapping("/attached-cards/{accountNumber}/detach/{cardId}")
@@ -189,7 +192,7 @@ public class CardController {
 		Account account = accountService.findAccountByAccountNumber(accountNumber);
 
 		bankCardService.deleteCard(bankCard);
-		List<BankCard> bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
+		bankCardsList = bankCardService.findCardsByAccountId(account.getAccountId());
 
 		model.addAttribute("user", user);
 		model.addAttribute("account", account);

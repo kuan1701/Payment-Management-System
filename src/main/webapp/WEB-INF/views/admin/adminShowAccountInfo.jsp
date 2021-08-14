@@ -682,7 +682,7 @@
                                                                     <div class="card-container"
                                                                          style="width: 100% !important;">
                                                                         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2">
-                                                                            <c:forEach items="${cardList}" var="card">
+                                                                            <c:forEach items="${cardsList}" var="card">
                                                                                 <div class="col mb-4">
                                                                                     <div class="card bg-light">
                                                                                         <div class="card-header">

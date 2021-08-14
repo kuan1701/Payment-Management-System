@@ -20,6 +20,8 @@ public class LogController {
 	private final UserServiceImpl userService;
 	private final ActionLogServiceImpl actionLogService;
 
+	private List<LogEntry> logEntryList;
+
 	public LogController(UserServiceImpl userService,
 						 ActionLogServiceImpl actionLogService)
 	{
@@ -29,8 +31,8 @@ public class LogController {
 	
 	/**
 	 * Show logs of user
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return userShowActionLog view
 	 */
 	@GetMapping("/action-log/{userId}")
@@ -39,7 +41,7 @@ public class LogController {
 								@PathVariable("userId") Long userId
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<LogEntry> logEntryList = actionLogService.findLogEntriesByUserId(userId);
+		logEntryList = actionLogService.findLogEntriesByUserId(userId);
 
 		model.addAttribute("user", user);
 		model.addAttribute("logEntries", logEntryList);
@@ -48,9 +50,9 @@ public class LogController {
 
 	/**
 	 * Clearing log history
-	 * @param model
-	 * @param principal
-	 * @param userId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
 	 * @return redirect:/action-log/{userId} page
 	 */
 	@PostMapping("/action-log/{userId}")
@@ -64,6 +66,15 @@ public class LogController {
 		return "redirect:/action-log/{userId}";
 	}
 
+	/**
+	 *
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
+	 * @param startDate String
+	 * @param finalDate String
+	 * @return user/userShowActionLog view
+	 */
 	@PostMapping("/action-log/{userId}/search")
 	public String searchByCriteria(Model model,
 								   Principal principal,
@@ -72,7 +83,7 @@ public class LogController {
 								   @RequestParam("final-date") String finalDate
 	){
 		User user = userService.findUserByUsername(principal.getName());
-		List<LogEntry> logEntryList = actionLogService.searchByCriteria(userId, startDate, finalDate);
+		logEntryList = actionLogService.searchByCriteria(userId, startDate, finalDate);
 
 		model.addAttribute("user", user);
 		model.addAttribute("logEntries", logEntryList);

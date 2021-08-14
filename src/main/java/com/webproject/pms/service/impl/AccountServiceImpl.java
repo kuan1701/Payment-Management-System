@@ -1,6 +1,5 @@
 package com.webproject.pms.service.impl;
 
-import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.AccountDao;
 import com.webproject.pms.model.dao.UserDao;
 import com.webproject.pms.model.entities.Account;
@@ -20,19 +19,19 @@ public class AccountServiceImpl implements AccountService {
 	
 	private final UserDao userDao;
 	private final AccountDao accountDao;
-	private final MapStructMapper mapStructMapper;
 	private final ActionLogServiceImpl actionLogService;
+
+	private final String STARTBALANCE = "10000.00";
+	private final StringBuilder stringBuilder = new StringBuilder();
 	private static final Logger LOGGER = LogManager.getLogger(AccountServiceImpl.class);
 
 	@Autowired
 	public AccountServiceImpl(UserDao userDao,
 							  AccountDao accountDao,
-							  MapStructMapper mapStructMapper,
 							  ActionLogServiceImpl actionLogService) {
 
 		this.userDao = userDao;
 		this.accountDao = accountDao;
-		this.mapStructMapper = mapStructMapper;
 		this.actionLogService = actionLogService;
 	}
 	
@@ -56,11 +55,20 @@ public class AccountServiceImpl implements AccountService {
 		account.setUser(user);
 		account.setBlocked(false);
 		account.setDeleted(false);
-		account.setBalance(new BigDecimal("10000.00"));
+		account.setBalance(new BigDecimal(STARTBALANCE));
 		accountDao.save(account);
 
-		actionLogService.createLog("CREATED: Account [" + account.getNumber() + ", " + account.getCurrency() + "]", user);
-		LOGGER.info("CREATED: Account [" + account.getNumber() + ", " + account.getCurrency() + "]");
+		actionLogService.createLog(String.valueOf(stringBuilder.append("CREATED: Account [")
+				.append(account.getNumber())
+				.append(", ")
+				.append(account.getCurrency())
+				.append("]")), user);
+
+		LOGGER.info(String.valueOf(stringBuilder.append("CREATED: Account [")
+				.append(account.getNumber())
+				.append(", ")
+				.append(account.getCurrency())
+				.append("]")));
 		return true;
 	}
 	
@@ -77,11 +85,20 @@ public class AccountServiceImpl implements AccountService {
 		account.setUser(user);
 		account.setBlocked(false);
 		account.setDeleted(false);
-		account.setBalance(new BigDecimal("10000.00"));
+		account.setBalance(new BigDecimal(STARTBALANCE));
 		accountDao.save(account);
 
-		actionLogService.createLog("CREATED: Account [" + account.getNumber() + ", " + account.getCurrency() + "]", user);
-		LOGGER.info("CREATED: Account [" + account.getNumber() + ", " + account.getCurrency() + "]");
+		actionLogService.createLog(String.valueOf(stringBuilder.append("CREATED: Account [")
+				.append(account.getNumber())
+				.append(", ")
+				.append(account.getCurrency())
+				.append("]")), user);
+
+		LOGGER.info(String.valueOf(stringBuilder.append("CREATED: Account [")
+				.append(account.getNumber())
+				.append(", ")
+				.append(account.getCurrency())
+				.append("]")));
 		return true;
 	}
 	
@@ -92,10 +109,18 @@ public class AccountServiceImpl implements AccountService {
 			account.setBlocked(true);
 			accountDao.save(account);
 
-			actionLogService.createLog("BLOCKED: Account [" + account.getNumber() + "]", account.getUser());
-			LOGGER.info("BLOCKED: Account [" + account.getNumber() + ", " + account.getCurrency() + "]");
+			actionLogService.createLog(String.valueOf(stringBuilder.append("BLOCKED: Account [")
+					.append(account.getNumber())
+					.append("]")), account.getUser());
+
+			LOGGER.info(String.valueOf(stringBuilder.append("BLOCKED: Account [")
+					.append(account.getNumber())
+					.append("]")));
 			return true;
 		}
+		LOGGER.info(String.valueOf(stringBuilder.append("ERROR_BLOCKED: Account [")
+				.append(account.getNumber())
+				.append("]")));
 		return false;
 	}
 	
@@ -106,10 +131,18 @@ public class AccountServiceImpl implements AccountService {
 			account.setBlocked(false);
 			accountDao.save(account);
 
-			actionLogService.createLog("UNBLOCKED: Account [" + account.getNumber() + "]", account.getUser());
-			LOGGER.info("UNBLOCKED: Account [" + account.getNumber() + ", " + account.getCurrency() + "]");
+			actionLogService.createLog(String.valueOf(stringBuilder.append("UNBLOCKED: Account [")
+					.append(account.getNumber())
+					.append("]")), account.getUser());
+
+			LOGGER.info(String.valueOf(stringBuilder.append("UNBLOCKED: Account [")
+					.append(account.getNumber())
+					.append("]")));
 			return true;
 		}
+		LOGGER.info(String.valueOf(stringBuilder.append("ERROR_UNBLOCKED: Account [")
+				.append(account.getNumber())
+				.append("]")));
 		return false;
 	}
 	
@@ -118,13 +151,27 @@ public class AccountServiceImpl implements AccountService {
 		
 		BigDecimal balance = account.getBalance();
 		if (balance.compareTo(BigDecimal.ZERO) != 0) {
-			actionLogService.createLog("ERROR: Unsuccessful attempt to delete account [" + account.getNumber() + "]", account.getUser());
-			LOGGER.error("ERROR: Unsuccessful attempt to delete account [" + account.getNumber() + "]");
+
+			actionLogService.createLog(String.valueOf(stringBuilder
+					.append("ERROR: Unsuccessful attempt to delete account [")
+					.append(account.getNumber())
+					.append("]")), account.getUser());
+
+			LOGGER.error(String.valueOf(stringBuilder
+					.append("ERROR: Unsuccessful attempt to delete account [")
+					.append(account.getNumber())
+					.append("]")));
 			return false;
 		}
 		accountDao.delete(account);
-		actionLogService.createLog("DELETED: Account [" + account.getNumber() + "]", account.getUser());
-		LOGGER.info("DELETED: Account [" + account.getNumber() + ", " + account.getCurrency() + "]");
+
+		actionLogService.createLog(String.valueOf(stringBuilder.append("DELETED: Account [")
+				.append(account.getNumber())
+				.append("]")), account.getUser());
+
+		LOGGER.info(String.valueOf(stringBuilder.append("DELETED: Account [")
+				.append(account.getNumber())
+				.append("]")));
 		return true;
 	}
 	
@@ -154,14 +201,21 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public List<Account> searchByCriteriaWithoutId(String number, String min_value, String max_value, String currency) {
-		
+	public List<Account> searchByCriteriaWithoutId(String number,
+												   String min_value,
+												   String max_value,
+												   String currency
+	) {
 		return accountDao.searchByCriteriaWithoutId(number, min_value, max_value, currency);
 	}
 	
 	@Override
-	public List<Account> searchByCriteria(Long userId, String number, String min_value, String max_value, String currency) {
-		
+	public List<Account> searchByCriteria(Long userId,
+										  String number,
+										  String min_value,
+										  String max_value,
+										  String currency
+	) {
 		return accountDao.searchByCriteria(userId, number, min_value, max_value, currency);
 	}
 }

@@ -30,8 +30,8 @@ public class RegistrationUserController {
 	
 	/**
 	 * Registration user form
-	 * @param model
-	 * @return registraion page
+	 * @param model Model
+	 * @return registration view
 	 */
 	@GetMapping("/registration")
 	public String registrationForm(Model model)
@@ -42,13 +42,13 @@ public class RegistrationUserController {
 
 	/**
 	 * User registration process
-	 * @param model
-	 * @param request
-	 * @param user
-	 * @param bindingResult
+	 * @param model Model
+	 * @param request HttpServletRequest
+	 * @param user User
+	 * @param bindingResult BindingResult
 	 * @return registration view
-	 * @throws UnsupportedEncodingException
-	 * @throws MessagingException
+	 * @throws UnsupportedEncodingException Exception
+	 * @throws MessagingException Exception
 	 */
 	@PostMapping("/registration")
 	public String registrationUser(Model model,
@@ -74,8 +74,8 @@ public class RegistrationUserController {
 	
 	/**
 	 * Activate user via mail sender
-	 * @param model
-	 * @param code
+	 * @param model Model
+	 * @param code String
 	 * @return activationSuccess or activationFail view
 	 */
 	@GetMapping("/verify")

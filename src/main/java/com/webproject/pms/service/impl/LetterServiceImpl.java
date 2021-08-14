@@ -25,7 +25,9 @@ public class LetterServiceImpl implements LetterService {
 	private final UserDao userDao;
 	private final LetterDao letterDao;
 	private final ActionLogServiceImpl actionLogService;
+
 	private static final Logger LOGGER = LogManager.getLogger(LetterServiceImpl.class);
+	private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	public LetterServiceImpl(UserDao userDao,
@@ -41,9 +43,8 @@ public class LetterServiceImpl implements LetterService {
 	public Boolean addNewLetter(Letter letter, Principal principal) {
 		
 		User user = userDao.findUserByUsername(principal.getName());
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		letter.setDate(formatter.format(new Date()));
 		letter.setUser(user);
 		letter.setProcessed(false);

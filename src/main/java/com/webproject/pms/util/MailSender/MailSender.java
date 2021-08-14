@@ -35,7 +35,8 @@ public class MailSender {
         
         mailSender.send(mailMessage);
     }
-    
+
+    //User verification bu email
     public void sendVerificationEmail(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
     
@@ -58,13 +59,11 @@ public class MailSender {
         helper.setSubject(subject);
     
         content = content.replace("[[name]]", user.getName());
-        //content = content.replace("[[URL]]", verifyURL);
-    
         helper.setText(content, true);
-    
         mailSender.send(message);
     }
-    
+
+    //Resetting user password via email
     public void sendEmailForResetPassword(String recipientEmail, String link) throws UnsupportedEncodingException, MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);

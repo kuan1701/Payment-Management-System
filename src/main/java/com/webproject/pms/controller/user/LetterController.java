@@ -27,8 +27,8 @@ public class LetterController {
 	
 	/**
 	 * Support form
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return userSupport view
 	 */
 	@GetMapping("/support")
@@ -42,10 +42,10 @@ public class LetterController {
 
 	/**
 	 * Creating a letter for feedback
-	 * @param model
-	 * @param principal
-	 * @param letter
-	 * @param bindingResult
+	 * @param model Model
+	 * @param principal Principal
+	 * @param letter Letter
+	 * @param bindingResult BindingResult
 	 * @return userSupport view
 	 */
 	@PostMapping("/support")

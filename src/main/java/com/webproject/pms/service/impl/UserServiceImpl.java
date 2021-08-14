@@ -33,20 +33,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserDao userDao;
     private final MailSender mailSender;
-    private final MapStructMapper mapStructMapper;
     private final PasswordEncoder passwordEncoder;
     private final ActionLogServiceImpl actionLogService;
+
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final String ADMINPASSWORD = "123456";
+    private final String ROLE_USER = "ROLE_USER";
 
     @Autowired
     public UserServiceImpl(UserDao userDao,
                            MailSender mailSender,
-                           MapStructMapper mapStructMapper,
                            PasswordEncoder passwordEncoder,
                            ActionLogServiceImpl actionLogService
     ) {
         this.userDao = userDao;
         this.mailSender = mailSender;
-        this.mapStructMapper = mapStructMapper;
         this.passwordEncoder = passwordEncoder;
         this.actionLogService = actionLogService;
     }
@@ -71,14 +72,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Boolean saveUser(User user) {
-
         userDao.save(user);
         return true;
     }
 
     @Override
-    public Boolean updateUser(User user, Long userId, String name, String surname, String phone, String email, String password) {
-
+    public Boolean updateUser(User user,
+                              Long userId,
+                              String name,
+                              String surname,
+                              String phone,
+                              String email,
+                              String password
+    ) {
         if (user.getUserId().equals(userId)) {
             if (userDao.findById(userId).isPresent()) {
 
@@ -164,28 +170,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userDao.findUserByActivationCode(code);
     }
 
-    /**
-     * ADD USER IN DATA BASE, SEND EMAIL
-     */
+    //User registration
     @Override
     public Boolean registrationUser(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
 
-        User userDB = userDao.findUserByUsername(user.getUsername());
-        User emailDB = userDao.findUserByEmail(user.getEmail());
-        User phoneDB = userDao.findUserByPhone(user.getPhone());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        User userByUsername = userDao.findUserByUsername(user.getUsername());
+        User userByEmail = userDao.findUserByEmail(user.getEmail());
+        User userByPhone = userDao.findUserByPhone(user.getPhone());
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        if (userDB != null) {
+        if (userByUsername != null) {
 			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
         }
-        else if (emailDB != null) {
+        else if (userByEmail != null) {
 			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
         }
-        else if (phoneDB != null) {
+        else if (userByPhone != null) {
 			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
         }
@@ -193,7 +196,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setRegistrationDate(formatter.format(new Date()));
         user.setEmailVerified(false);
         user.setActive(false);
-        user.setRole(new Role(1L, "ROLE_USER"));
+        user.setRole(new Role(1L, ROLE_USER));
         user.setActivationCode(UUID.randomUUID().toString());
         user.setResetPasswordToken(null);
         userDao.save(user);
@@ -208,25 +211,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public Boolean adminCreateUser(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
 
-        User emailDB = userDao.findUserByEmail(user.getEmail());
-        User phoneDB = userDao.findUserByPhone(user.getPhone());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        User userByEmail = userDao.findUserByEmail(user.getEmail());
+        User userByPhone = userDao.findUserByPhone(user.getPhone());
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        if (emailDB != null) {
-            actionLogService.createLog("ERROR: Unsuccessful attempt to register a new user", user);
-            LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
-            return false;
-        } else if (phoneDB != null) {
+        if (userByEmail != null) {
             actionLogService.createLog("ERROR: Unsuccessful attempt to register a new user", user);
             LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
             return false;
         }
-        user.setPassword(passwordEncoder.encode("123456"));
+        else if (userByPhone != null) {
+            actionLogService.createLog("ERROR: Unsuccessful attempt to register a new user", user);
+            LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(ADMINPASSWORD));
         user.setRegistrationDate(formatter.format(new Date()));
         user.setEmailVerified(false);
         user.setActive(false);
-        user.setRole(new Role(1L, "ROLE_USER"));
+        user.setRole(new Role(1L, ROLE_USER));
         user.setActivationCode(UUID.randomUUID().toString());
         user.setResetPasswordToken(null);
         userDao.save(user);
@@ -237,9 +240,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return true;
     }
 
-    /**
-     * ACTIVATE USER
-     */
+    //Activate user
     @Override
     public Boolean activateUser(String code) {
 
@@ -286,9 +287,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setActive(true);
-
             userDao.save(newUser);
-
             System.out.println("Created new user: " + username);
         }
     }

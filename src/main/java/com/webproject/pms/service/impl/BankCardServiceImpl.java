@@ -1,6 +1,5 @@
 package com.webproject.pms.service.impl;
 
-import com.webproject.pms.mappers.MapStructMapper;
 import com.webproject.pms.model.dao.BankCardDao;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.BankCard;
@@ -21,17 +20,15 @@ import java.util.List;
 public class BankCardServiceImpl implements BankCardService {
 
     private final BankCardDao bankCardDao;
-    private final MapStructMapper mapStructMapper;
     private final ActionLogServiceImpl actionLogService;
+    private final StringBuilder stringBuilder = new StringBuilder();
     private static final Logger LOGGER = LogManager.getLogger(BankCardService.class);
 
     @Autowired
     public BankCardServiceImpl(BankCardDao bankCardDao,
-                               MapStructMapper mapStructMapper,
                                ActionLogServiceImpl actionLogService
     ) {
         this.bankCardDao = bankCardDao;
-        this.mapStructMapper = mapStructMapper;
         this.actionLogService = actionLogService;
     }
 
@@ -54,9 +51,7 @@ public class BankCardServiceImpl implements BankCardService {
             LOGGER.error("ParseException: " + e.getMessage());
         }
 
-        if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null
-                || account == null
-        ) {
+        if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null || account == null) {
             actionLogService.createLog("ERROR: Unsuccessful attempt to attach a card", account.getUser());
             LOGGER.error("ERROR: Unsuccessful attempt to attach a card");
             return false;
@@ -66,8 +61,13 @@ public class BankCardServiceImpl implements BankCardService {
         bankCard.setValidity(formatter.format(date));
         bankCardDao.save(bankCard);
 
-        actionLogService.createLog("ATTACHED: Card [" + bankCard.getNumber() + "]", account.getUser());
-        LOGGER.info("ATTACHED: Card [" + bankCard.getNumber() + "]");
+        actionLogService.createLog(String.valueOf(stringBuilder.append("ATTACHED: Card [")
+                .append(bankCard.getNumber())
+                .append("]")), account.getUser());
+
+        LOGGER.info(String.valueOf(stringBuilder.append("ATTACHED: Card [")
+                .append(bankCard.getNumber())
+                .append("]")));
         return true;
     }
 
@@ -78,8 +78,13 @@ public class BankCardServiceImpl implements BankCardService {
             bankCard.setActive(false);
             bankCardDao.save(bankCard);
 
-            actionLogService.createLog("BLOCKED: Card [" + bankCard.getNumber() + "]", bankCard.getAccount().getUser());
-            LOGGER.info("BLOCKED: Card [" + bankCard.getNumber() + "]");
+            actionLogService.createLog(String.valueOf(stringBuilder.append("BLOCKED: Card [")
+                    .append(bankCard.getNumber())
+                    .append("]")), bankCard.getAccount().getUser());
+
+            LOGGER.info(String.valueOf(stringBuilder.append("BLOCKED: Card [")
+                    .append(bankCard.getNumber())
+                    .append("]")));
             return true;
         }
         return false;
@@ -92,20 +97,29 @@ public class BankCardServiceImpl implements BankCardService {
             bankCard.setActive(true);
             bankCardDao.save(bankCard);
 
-            actionLogService.createLog("UNBLOCKED: Card [" + bankCard.getNumber() + "]", bankCard.getAccount().getUser());
-            LOGGER.info("UNBLOCKED: Card [" + bankCard.getNumber() + "]");
-            return true;
+            actionLogService.createLog(String.valueOf(stringBuilder.append("UNBLOCKED: Card [")
+                    .append(bankCard.getNumber())
+                    .append("]")), bankCard.getAccount().getUser());
 
+            LOGGER.info(String.valueOf(stringBuilder.append("UNBLOCKED: Card [")
+                    .append(bankCard.getNumber())
+                    .append("]")));
+            return true;
         }
         return false;
     }
 
     @Override
-    public Boolean deleteCard(BankCard card) {
+    public Boolean deleteCard(BankCard bankCard) {
 
-        actionLogService.createLog("DETACHED: Card [" + card.getNumber() + "]", card.getAccount().getUser());
-        LOGGER.info("DELETED: Card [" + card.getNumber() + "]");
-        bankCardDao.delete(card);
+        actionLogService.createLog(String.valueOf(stringBuilder.append("DETACHED: Card [")
+                .append(bankCard.getNumber())
+                .append("]")), bankCard.getAccount().getUser());
+
+        LOGGER.info(String.valueOf(stringBuilder.append("DETACHED: Card [")
+                .append(bankCard.getNumber())
+                .append("]")));
+        bankCardDao.delete(bankCard);
         return true;
     }
 

@@ -14,16 +14,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class PaymentController {
-	
+
+	private final UserServiceImpl userService;
 	private final PaymentServiceImpl paymentService;
 	private final AccountServiceImpl accountService;
-	private final UserServiceImpl userService;
-	
+
+	private List<Account> accounts;
+	private List<Payment> paymentList;
+
 	public PaymentController(PaymentServiceImpl paymentService,
 							 AccountServiceImpl accountService,
 							 UserServiceImpl userService
@@ -35,8 +37,8 @@ public class PaymentController {
 	
 	/**
 	 * Show user payments
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return userShowPayments view
 	 */
 	@GetMapping("/show-payments/{userId}")
@@ -45,7 +47,7 @@ public class PaymentController {
 							   @PathVariable("userId") Long userId
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(userId);
+		paymentList = paymentService.findAllPaymentsByUserId(userId);
 
 		model.addAttribute("user", user);
 		model.addAttribute("paymentList", paymentList);
@@ -55,12 +57,12 @@ public class PaymentController {
 
 	/**
 	 * User show found payments
-	 * @param model - model
-	 * @param principal - principal
-	 * @param startDate - startDate
-	 * @param finalDate - finalDate
-	 * @param isIncoming - isIncoming
-	 * @param isOutgoing - isOutgoing
+	 * @param model Model
+	 * @param principal Principal
+	 * @param startDate String input
+	 * @param finalDate String input
+	 * @param isIncoming String checkbox
+	 * @param isOutgoing String checkbox
 	 * @return userShowPayments
 	 */
 	@PostMapping("/show-payments/{userId}")
@@ -72,13 +74,14 @@ public class PaymentController {
 									@RequestParam("isIncoming") String isIncoming,
 									@RequestParam("isOutgoing") String isOutgoing
 	) {
+		String checked = "1";
+		String unchecked = "0";
 		User user = userService.findUserByUsername(principal.getName());
-		List<Payment> paymentList;
 
-		if (isIncoming.equals("1") && isOutgoing.equals("0")) {
+		if (isIncoming.equals(checked) && isOutgoing.equals(unchecked)) {
 			paymentList = paymentService.searchByCriteria(userId, false, startDate, finalDate);
 		}
-		else if (isIncoming.equals("0") && isOutgoing.equals("1")) {
+		else if (isIncoming.equals(unchecked) && isOutgoing.equals(checked)) {
 			paymentList = paymentService.searchByCriteriaOutgoingFalse(userId, true, startDate, finalDate);
 		}
 		else {
@@ -97,9 +100,9 @@ public class PaymentController {
 	
 	/**
 	 * Show account payments
-	 * @param model
-	 * @param principal
-	 * @param number
+	 * @param model Model
+	 * @param principal Principal
+	 * @param number String
 	 * @return userShowAccountPayments view
 	 */
 	@GetMapping("/show-account-payments/{accountNumber}")
@@ -109,7 +112,7 @@ public class PaymentController {
 	){
 		User user = userService.findUserByUsername(principal.getName());
 		Account account = accountService.findAccountByAccountNumber(number);
-		List<Payment> paymentList = paymentService.findAllPaymentsByAccountId(account.getAccountId());
+		paymentList = paymentService.findAllPaymentsByAccountId(account.getAccountId());
 		
 		model.addAttribute("user", user);
 		model.addAttribute("account", account);
@@ -120,8 +123,8 @@ public class PaymentController {
 	
 	/**
 	 * Make payment form
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return userMakePayment view
 	 */
 	@GetMapping("/make-payment")
@@ -131,7 +134,7 @@ public class PaymentController {
                                   @ModelAttribute("payment") Payment payment
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
+		accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
 		
 		model.addAttribute("user", user);
 		model.addAttribute("accounts", accounts);
@@ -141,14 +144,14 @@ public class PaymentController {
 	
 	/**
 	 * Payment creation process
-	 * @param model
-	 * @param principal
-	 * @param payment
-	 * @param bindingResult
-	 * @param accountFromId
-	 * @param accountToNumber
-	 * @param amount
-	 * @param appointment
+	 * @param model Model
+	 * @param principal Principal
+	 * @param payment Payment
+	 * @param bindingResult BindingResult
+	 * @param accountFromId Long
+	 * @param accountToNumber String
+	 * @param amount BigDecimal
+	 * @param appointment String
 	 * @return userMakePayment view
 	 */
 	@PostMapping("/make-payment")
@@ -162,7 +165,7 @@ public class PaymentController {
 							  BindingResult bindingResult
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
+		accounts = accountService.findAllActivateAccountsByUserId(user.getUserId());
 
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("paymentError", "invalidData");
@@ -200,9 +203,9 @@ public class PaymentController {
 	
 	/**
 	 * Show payment info
-	 * @param model
-	 * @param principal
-	 * @param paymentId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param paymentId Long
 	 * @return userShowPaymentInfo view
 	 */
 	@GetMapping("/paymentInfo/{paymentId}")

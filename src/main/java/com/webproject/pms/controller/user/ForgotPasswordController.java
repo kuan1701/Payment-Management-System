@@ -6,7 +6,6 @@ import com.webproject.pms.service.impl.UserServiceImpl;
 import com.webproject.pms.util.MailSender.MailSender;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.data.repository.query.Param;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +39,8 @@ public class ForgotPasswordController {
 
 	/**
 	 * Password recovery process
-	 * @param request
-	 * @param model
+	 * @param request HttpServletRequest
+	 * @param model Model
 	 * @return recovery view
 	 */
 	@PostMapping("/forgot-password")
@@ -68,8 +67,8 @@ public class ForgotPasswordController {
 
 	/**
 	 * Reset password form
-	 * @param token
-	 * @param model
+	 * @param token String
+	 * @param model Model
 	 * @return userResetPassword view
 	 */
 	@GetMapping("/reset_password")
@@ -88,9 +87,9 @@ public class ForgotPasswordController {
 
 	/**
 	 * Password reset process
-	 * @param model
-	 * @param token
-	 * @param newPassword
+	 * @param model Model
+	 * @param token String
+	 * @param newPassword String
 	 * @return userResetPassword view
 	 */
 	@PostMapping("/reset_password")

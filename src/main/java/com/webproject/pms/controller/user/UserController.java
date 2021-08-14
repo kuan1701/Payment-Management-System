@@ -37,8 +37,8 @@ public class UserController {
 	
 	/**
 	 *  Show user account depending on the role
-	 * @param model
-	 * @param principal
+	 * @param model MOdel
+	 * @param principal Principal
 	 * @return user or admin view
 	 */
 	@GetMapping("/my-account")
@@ -67,8 +67,8 @@ public class UserController {
 	
 	/**
 	 * Show profile info for update
-	 * @param model
-	 * @param userId
+	 * @param model Model
+	 * @param userId Long
 	 * @return page userUpdatePersonalData
 	 */
 	@GetMapping("/profile-info/{userId}")
@@ -81,9 +81,14 @@ public class UserController {
 
 	/**
 	 * Updating user data
-	 * @param principal
-	 * @param userId
-	 * @param model
+	 * @param model Model
+	 * @param principal Principal
+	 * @param name input String
+	 * @param surname input String
+	 * @param phone input String
+	 * @param email input String
+	 * @param password input String
+	 * @param userId Long
 	 * @return userUpdatePersonalData view
 	 */
 	@PostMapping("/profile-info/{userId}")
@@ -111,9 +116,9 @@ public class UserController {
 	
 	/**
 	 * Updating password
-	 * @param model
-	 * @param userId
-	 * @param principal
+	 * @param model Model
+	 * @param userId Long
+	 * @param principal Principal
 	 * @return userUpdatePassword view
 	 */
 	@GetMapping("/update-password/{userId}")
@@ -127,11 +132,11 @@ public class UserController {
 
 	/**
 	 * Password update process
-	 * @param model
-	 * @param principal
-	 * @param newPassword
-	 * @param oldPassword
-	 * @param userId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param newPassword input String
+	 * @param oldPassword input String
+	 * @param userId Long
 	 * @return userUpdatePassword view
 	 */
 	@PostMapping("/update-password/{userId}")

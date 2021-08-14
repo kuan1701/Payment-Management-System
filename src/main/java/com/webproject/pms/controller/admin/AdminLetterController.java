@@ -23,6 +23,8 @@ public class AdminLetterController {
 	private final LetterServiceImpl letterService;
 	private final ActionLogServiceImpl actionLogService;
 
+	private List<Letter> letterList;
+
 	public AdminLetterController(UserServiceImpl userService,
 								 LetterServiceImpl letterService,
 								 ActionLogServiceImpl actionLogService
@@ -34,8 +36,8 @@ public class AdminLetterController {
 	
 	/**
 	 * Admin support page
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return admin/adminSupport view
 	 */
 	@GetMapping("/support")
@@ -55,9 +57,9 @@ public class AdminLetterController {
 	
 	/**
 	 * Admin is considering a question submitted by the user
-	 * @param model
-	 * @param principal
-	 * @param letterId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param letterId Long
 	 * @return adminShowLetterInfo view
 	 */
 	@GetMapping("/support/letter/{letterId}")
@@ -69,7 +71,7 @@ public class AdminLetterController {
 		User user = userService.findUserByUsername(principal.getName());
 		Letter letter = letterService.findLetterByLetterId(letterId);
 		User userLetter = letter.getUser();
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 		
 		model.addAttribute("user", user);
 		model.addAttribute("letter", letter);
@@ -80,10 +82,10 @@ public class AdminLetterController {
 	
 	/**
 	 * Admin processing the letter
-	 * @param model
-	 * @param principal
-	 * @param letterId
-	 * @return redirect:/admin/support page
+	 * @param model Model
+	 * @param principal Principal
+	 * @param letterId Long
+	 * @return admin/adminShowLetterInfo view
 	 */
 	@PostMapping("/support/letter/{letterId}/processed")
 	public String processingTheLetter(Model model,
@@ -93,7 +95,7 @@ public class AdminLetterController {
 		User user = userService.findUserByUsername(principal.getName());
 		Letter letter = letterService.findLetterByLetterId(letterId);
 		User userLetter = letter.getUser();
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 		
 		letterService.updateLetterByLetterId(letterId);
 		model.addAttribute("user", user);

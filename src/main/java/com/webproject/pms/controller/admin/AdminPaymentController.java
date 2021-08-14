@@ -24,6 +24,8 @@ public class AdminPaymentController {
 	private final AccountServiceImpl accountService;
 	private final PaymentServiceImpl paymentService;
 
+	private List<Payment> paymentList;
+
 	public AdminPaymentController(UserServiceImpl userService,
 	                              LetterServiceImpl letterService,
 								  PaymentServiceImpl paymentService,
@@ -37,9 +39,9 @@ public class AdminPaymentController {
 
 	/**
 	 * Admin show payment info
-	 * @param model
-	 * @param principal
-	 * @param paymentId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param paymentId Long
 	 * @return adminShowPaymentInfo view
 	 */
 	@GetMapping("/paymentInfo/{paymentId}")
@@ -66,9 +68,9 @@ public class AdminPaymentController {
 
 	/**
 	 *  Admin Show User Payments
-	 * @param model
-	 * @param principal
-	 * @param userId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
 	 * @return adminShowUserPayments view
 	 */
 	@GetMapping("/showPayments/{userId}")
@@ -78,7 +80,7 @@ public class AdminPaymentController {
 	) {
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
-		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(userId);
+		paymentList = paymentService.findAllPaymentsByUserId(userId);
 		
 		model.addAttribute("user", user);
 		model.addAttribute("paymentList", paymentList);
@@ -87,6 +89,17 @@ public class AdminPaymentController {
 		return "admin/adminShowUserPayments";
 	}
 
+	/**
+	 *
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
+	 * @param startDate String
+	 * @param finalDate String
+	 * @param isIncoming String
+	 * @param isOutgoing String
+	 * @return
+	 */
 	@PostMapping("/showPayments/{userId}")
 	public String showFoundAccounts(Model model,
 									Principal principal,
@@ -96,13 +109,14 @@ public class AdminPaymentController {
 									@RequestParam("isIncoming") String isIncoming,
 									@RequestParam("isOutgoing") String isOutgoing
 	) {
+		String checked = "1";
+		String unchecked = "0";
 		User user = userService.findUserByUsername(principal.getName());
-		List<Payment> paymentList;
 
-		if (isIncoming.equals("1") && isOutgoing.equals("0")) {
+		if (isIncoming.equals(checked) && isOutgoing.equals(unchecked)) {
 			paymentList = paymentService.searchByCriteria(userId, false, startDate, finalDate);
 		}
-		else if (isIncoming.equals("0") && isOutgoing.equals("1")) {
+		else if (isIncoming.equals(unchecked) && isOutgoing.equals(checked)) {
 			paymentList = paymentService.searchByCriteriaOutgoingFalse(userId, true, startDate, finalDate);
 		}
 		else {

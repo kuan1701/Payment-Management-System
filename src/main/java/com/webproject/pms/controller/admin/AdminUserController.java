@@ -1,9 +1,6 @@
 package com.webproject.pms.controller.admin;
 
-import com.webproject.pms.model.entities.Account;
-import com.webproject.pms.model.entities.Letter;
-import com.webproject.pms.model.entities.Payment;
-import com.webproject.pms.model.entities.User;
+import com.webproject.pms.model.entities.*;
 import com.webproject.pms.service.impl.*;
 import com.webproject.pms.util.MailSender.MailSender;
 import org.springframework.stereotype.Controller;
@@ -25,6 +22,12 @@ public class AdminUserController {
 	private final PaymentServiceImpl paymentService;
 	private final ActionLogServiceImpl actionLogService;
 
+	private List<User> userList;
+	private List<Letter> letterList;
+	private List<Account> accountList;
+	private List<Payment> paymentList;
+	private List<LogEntry> logEntryList;
+
 
 	public AdminUserController(UserServiceImpl userService,
 							   LetterServiceImpl letterService,
@@ -40,13 +43,13 @@ public class AdminUserController {
 	
 	/**
 	 * Admin search users
-	 * @param model
-	 * @param principal
-	 * @param name
-	 * @param email
-	 * @param phone
-	 * @param surname
-	 * @return admin/admin page
+	 * @param model Model
+	 * @param principal Principal
+	 * @param name String
+	 * @param email String
+	 * @param phone String
+	 * @param surname String
+	 * @return admin/admin view
 	 */
 	@PostMapping("/my-account")
 	public String adminSearchUsers(Model model,
@@ -57,8 +60,8 @@ public class AdminUserController {
 	                               @RequestParam("surname") String surname
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accountList = accountService.findAllAccounts();
-		List<User> userList = userService.searchByCriteria(name, surname, phone, email);
+		accountList = accountService.findAllAccounts();
+		userList = userService.searchByCriteria(name, surname, phone, email);
 
 		if(!userList.isEmpty()) {
 			model.addAttribute("response", "searchUsersSuccess");
@@ -76,10 +79,10 @@ public class AdminUserController {
 	
 	/**
 	 * Admin show user info
-	 * @param model
-	 * @param principal
-	 * @param userId
-	 * @return admin/adminShowUser page
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
+	 * @return admin/adminShowUser view
 	 */
 	@GetMapping("/admin/userInfo/{userId}")
 	public String adminShowUserInfo(Model model,
@@ -88,9 +91,9 @@ public class AdminUserController {
 	) {
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
-		List<Letter> letterList = letterService.findUnprocessedLetters();
-		List<Account> accountList = accountService.findAllAccountsByUserId(userId);
-		List<Payment> paymentList = paymentService.findAllPaymentsByUserId(userId);
+		letterList = letterService.findUnprocessedLetters();
+		accountList = accountService.findAllAccountsByUserId(userId);
+		paymentList = paymentService.findAllPaymentsByUserId(userId);
 
 		boolean userIsAdmin = false;
 		if (viewableUser.getRole().getId() == 2) {
@@ -110,10 +113,10 @@ public class AdminUserController {
 	
 	/**
 	 * Admin update user data page
-	 * @param model
-	 * @param principal
-	 * @param userId
-	 * @return admin/adminUpdateUserData page
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
+	 * @return admin/adminUpdateUserData view
 	 */
 	@GetMapping("/admin/updateUserData/{userId}")
 	public String adminUpdateUserDataPage(Model model,
@@ -122,7 +125,7 @@ public class AdminUserController {
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 		User updateUser = userService.findUserByUserId(userId);
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 		
 		model.addAttribute("user", user);
 		model.addAttribute("updateUser", updateUser);
@@ -132,9 +135,9 @@ public class AdminUserController {
 	
 	/**
 	 * Admin updates user data
-	 * @param model
-	 * @param principal
-	 * @param userId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
 	 * @return redirect:/my-account page
 	 */
 	@PostMapping("/admin/updateUserData/{userId}")
@@ -148,7 +151,7 @@ public class AdminUserController {
 	) {
 		User user = userService.findUserByUsername(principal.getName());
 		User updateUser = userService.findUserByUserId(userId);
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 		
 		if (!userService.updateUser(updateUser, userId, name, surname, phone, email, null)) {
 			model.addAttribute("response", "dataUpdatedError");
@@ -165,9 +168,9 @@ public class AdminUserController {
 	
 	/**
 	 * Admin delete user
-	 * @param model
-	 * @param principal
-	 * @param userId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
 	 * @return redirect:/my-account page
 	 */
 	@PostMapping("/admin/delete/{userId}")
@@ -181,39 +184,39 @@ public class AdminUserController {
 		if (viewableUser != null) {
 			userService.deleteUser(viewableUser);
 		}
-		model.addAttribute("viewableUser", viewableUser);
 		model.addAttribute("user", user);
+		model.addAttribute("viewableUser", viewableUser);
 		actionLogService.createLog("DELETED: Successful attempt to delete user", user);
 		return "redirect:/my-account";
 	}
 	
 	/**
 	 * Admin create page user
-	 * @param model
-	 * @param principal
-	 * @return admin/adminAddUser page
+	 * @param model Model
+	 * @param principal Principal
+	 * @return admin/adminAddUser view
 	 */
 	@GetMapping("/admin/createUser")
 	public String adminCreateUserPage(Model model,
                                   Principal principal
 	) {
 		List<Letter> letterList = letterService.findUnprocessedLetters();
-		
+
+		model.addAttribute("newUser", new User());
 		model.addAttribute("totalLetters", letterList.size());
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-		model.addAttribute("newUser", new User());
 		return "admin/adminAddUser";
 	}
 	
 	/**
 	 * Admin create user
-	 * @param model
-	 * @param principal
-	 * @param request
-	 * @param newUser
+	 * @param model Model
+	 * @param principal Principal
+	 * @param request HttpServletRequest
+	 * @param newUser User
 	 * @return admin/adminAddUser page
-	 * @throws UnsupportedEncodingException
-	 * @throws MessagingException
+	 * @throws UnsupportedEncodingException Exception
+	 * @throws MessagingException Exception
 	 */
 	@PostMapping("/admin/createUser")
 	public String adminCreateUser(Model model,
@@ -227,7 +230,8 @@ public class AdminUserController {
 			model.addAttribute("user", user);
 			model.addAttribute("response", "addUserError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to create a new user", user);
-		} else {
+		}
+		else {
 			model.addAttribute("user", user);
 			model.addAttribute("response", "addUserSuccess");
 			actionLogService.createLog("CREATED: Successful attempt to create a new user", user);

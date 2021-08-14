@@ -20,6 +20,12 @@ public class AdminAccountController {
 	private final LetterServiceImpl letterService;
 	private final ActionLogServiceImpl actionLogService;
 
+	private List<User> userList;
+	private List<Letter> letterList;
+	private List<BankCard> cardsList;
+	private List<Account> accountList;
+	private List<Payment> paymentList;
+
 	public AdminAccountController(AccountServiceImpl accountService,
 								  UserServiceImpl userService,
 								  PaymentServiceImpl paymentService,
@@ -37,18 +43,18 @@ public class AdminAccountController {
 	
 	/**
 	 * Admin show all accounts in the system
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return adminSHowAccounts view
 	 */
 	@GetMapping("/accounts")
 	public String adminShowAllAccounts(Model model,
 	                                   Principal principal
 	) {
-		List<User> userList = userService.findAllUsers();
-		List<Account> accountList = accountService.findAllAccounts();
+		userList = userService.findAllUsers();
+		accountList = accountService.findAllAccounts();
 		User user = userService.findUserByUsername(principal.getName());
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 		
 		model.addAttribute("user", user);
 		model.addAttribute("userList", userList);
@@ -60,13 +66,13 @@ public class AdminAccountController {
 
 	/**
 	 * Withdrawing found accounts
-	 * @param model
-	 * @param principal
-	 * @param accountNumber
-	 * @param min_value
-	 * @param max_value
-	 * @param currency
-	 * @return adminShowAccounts vi
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountNumber String input
+	 * @param min_value String input
+	 * @param max_value String input
+	 * @param currency String input
+	 * @return adminShowAccounts view
 	 */
 	@PostMapping("/accounts")
 	public String adminSearchAccounts(Model model,
@@ -77,9 +83,9 @@ public class AdminAccountController {
 									  @RequestParam("accountNumber") String accountNumber
 
 	) {
-		List<User> userList = userService.findAllUsers();
+		userList = userService.findAllUsers();
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accountList = accountService.searchByCriteriaWithoutId(
+		accountList = accountService.searchByCriteriaWithoutId(
 				accountNumber,
 				min_value,
 				max_value,
@@ -100,9 +106,9 @@ public class AdminAccountController {
 
 	/**
 	 * Show account info
-	 * @param model
-	 * @param principal
-	 * @param accountId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountId Long
 	 * @return adminShowAccountInfo view
 	 */
 	@GetMapping("/accountInfo/{accountId}")
@@ -113,19 +119,19 @@ public class AdminAccountController {
 		User user = userService.findUserByUsername(principal.getName());
 		Account viewableAccount = accountService.findAccountByAccountId(accountId);
 		User viewableUser = userService.findUserByUserId(viewableAccount.getUser().getUserId());
-		List<Letter> letterList = letterService.findUnprocessedLetters();
-		List<BankCard> cardList = cardService.findCardsByAccountId(accountId);
-		List<Payment> paymentList = paymentService.findAllPaymentsByAccountId(accountId);
+		letterList = letterService.findUnprocessedLetters();
+		cardsList = cardService.findCardsByAccountId(accountId);
+		paymentList = paymentService.findAllPaymentsByAccountId(accountId);
 
-		for (BankCard card : cardList) {
+		for (BankCard card : cardsList) {
 			model.addAttribute("card", card);
 		}
 		
 		model.addAttribute("user", user);
-		model.addAttribute("cardList", cardList);
+		model.addAttribute("cardsList", cardsList);
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("viewableUser", viewableUser);
-		model.addAttribute("cardsEmpty", cardList.isEmpty());
+		model.addAttribute("cardsEmpty", cardsList.isEmpty());
 		model.addAttribute("totalLetters", letterList.size());
 		model.addAttribute("viewableAccount", viewableAccount);
 		model.addAttribute("paymentsEmpty", paymentList.isEmpty());
@@ -134,9 +140,9 @@ public class AdminAccountController {
 	
 	/**
 	 * Blocking and unblocking of the user account by the administrator
-	 * @param model
-	 * @param principal
-	 * @param accountId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountId Long
 	 * @return adminShowAccountInfo view
 	 */
 	@PostMapping("/accountInfo/{accountId}")
@@ -147,9 +153,9 @@ public class AdminAccountController {
 		Account viewableAccount = accountService.findAccountByAccountId(accountId);
 		User user = userService.findUserByUsername(principal.getName());
 		User viewableUser = viewableAccount.getUser();
-		List<Payment> paymentList = paymentService.findAllPaymentsByAccountId(accountId);
-		List<Letter> letterList = letterService.findUnprocessedLetters();
-		List<BankCard> cardList = cardService.findCardsByAccountId(accountId);
+		paymentList = paymentService.findAllPaymentsByAccountId(accountId);
+		letterList = letterService.findUnprocessedLetters();
+		cardsList = cardService.findCardsByAccountId(accountId);
 		
 		if (!viewableAccount.getBlocked()) {
 			accountService.blockAccount(viewableAccount);
@@ -162,7 +168,7 @@ public class AdminAccountController {
 			actionLogService.createLog("UNBLOCKED: Account [" + viewableAccount.getNumber() + "]", user);
 		}
 		model.addAttribute("user", user);
-		model.addAttribute("cardList", cardList);
+		model.addAttribute("cardList", cardsList);
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("viewableUser", viewableUser);
 		model.addAttribute("totalLetters", letterList.size());
@@ -172,9 +178,9 @@ public class AdminAccountController {
 	
 	/**
 	 * Admin attach account to user form
-	 * @param model
-	 * @param principal
-	 * @param userId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
 	 * @return adminAttachAccount view
 	 */
 	@GetMapping("/attachAccount/{userId}")
@@ -184,7 +190,7 @@ public class AdminAccountController {
 	) {
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 		
 		model.addAttribute("user", user);
 		model.addAttribute("account", new Account());
@@ -195,10 +201,10 @@ public class AdminAccountController {
 	
 	/**
 	 * Admin attach account to user
-	 * @param model
-	 * @param principal
-	 * @param userId
-	 * @param account
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
+	 * @param account Account
 	 * @return adminAttachAccount view
 	 */
 	@PostMapping("/attachAccount/{userId}")
@@ -226,9 +232,9 @@ public class AdminAccountController {
 	
 	/**
 	 * Admin show all user accounts
-	 * @param model
-	 * @param principal
-	 * @param userId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
 	 * @return adminShowUserAccounts view
 	 */
 	@GetMapping("/showUserAccounts/{userId}")
@@ -238,7 +244,7 @@ public class AdminAccountController {
 	) {
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 		List<Account> accounts = accountService.findAllAccountsByUserId(userId);
 
 		model.addAttribute("user", user);
@@ -251,13 +257,13 @@ public class AdminAccountController {
 	
 	/**
 	 * Admin find account
-	 * @param model
-	 * @param principal
-	 * @param userId
-	 * @param accountNumber
-	 * @param min_value
-	 * @param max_value
-	 * @param currency
+	 * @param model Model
+	 * @param principal Principal
+	 * @param userId Long
+	 * @param accountNumber String input
+	 * @param min_value String input
+	 * @param max_value String input
+	 * @param currency String input
 	 * @return adminShowUserAccounts view
 	 */
 	@PostMapping("/showUserAccounts/{userId}")
@@ -271,7 +277,7 @@ public class AdminAccountController {
 										 ) {
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 		List<Account> accounts = accountService.searchByCriteria(
 				userId,
 				accountNumber,
@@ -294,10 +300,10 @@ public class AdminAccountController {
 	
 	/**
 	 * Admin block card form
-	 * @param model
-	 * @param principal
-	 * @param accountId
-	 * @param cardId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountId Long
+	 * @param cardId Long
 	 * @return adminShowAccountInfo view
 	 */
 	@GetMapping("/accountInfo/{accountId}/block/{cardId}")
@@ -310,14 +316,14 @@ public class AdminAccountController {
 		Account viewableAccount = accountService.findAccountByAccountId(accountId);
 		BankCard card = cardService.findCardByCardId(cardId);
 		User viewableUser = viewableAccount.getUser();
-		List<Letter> letterList = letterService.findUnprocessedLetters();
-		List<BankCard> cardList = cardService.findCardsByAccountId(accountId);
+		letterList = letterService.findUnprocessedLetters();
+		cardsList = cardService.findCardsByAccountId(accountId);
 	
 		model.addAttribute("card", card);
 		model.addAttribute("user", user);
-		model.addAttribute("cardList", cardList);
+		model.addAttribute("cardList", cardsList);
 		model.addAttribute("viewableUser", viewableUser);
-		model.addAttribute("cardsEmpty", cardList.isEmpty());
+		model.addAttribute("cardsEmpty", cardsList.isEmpty());
 		model.addAttribute("totalLetters", letterList.size());
 		model.addAttribute("viewableAccount", viewableAccount);
 		return "admin/adminShowAccountInfo";
@@ -325,10 +331,10 @@ public class AdminAccountController {
 	
 	/**
 	 * Blocking and unblocking of the user account by the administrator
-	 * @param model
-	 * @param principal
-	 * @param accountId
-	 * @param cardId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountId Long
+	 * @param cardId Long
 	 * @return adminShowAccountInfo view
 	 */
 	@PostMapping("/accountInfo/{accountId}/block/{cardId}")
@@ -340,7 +346,7 @@ public class AdminAccountController {
 		BankCard card = cardService.findCardByCardId(cardId);
 		User user = userService.findUserByUsername(principal.getName());
 		Account viewableAccount = accountService.findAccountByAccountId(accountId);
-		List<BankCard> cardList = cardService.findCardsByAccountId(accountId);
+		cardsList = cardService.findCardsByAccountId(accountId);
 		User viewableUser = viewableAccount.getUser();
 		
 		if (card.getActive()) {
@@ -355,17 +361,17 @@ public class AdminAccountController {
 		}
 		model.addAttribute("user", user);
 		model.addAttribute("viewableAccount", viewableAccount);
-		model.addAttribute("cardList", cardList);
+		model.addAttribute("cardList", cardsList);
 		model.addAttribute("viewableUser", viewableUser);
 		return "admin/adminShowAccountInfo";
 	}
 	
 	/**
 	 * Show detach card form
-	 * @param model
-	 * @param principal
-	 * @param accountId
-	 * @param cardId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountId Long
+	 * @param cardId Long
 	 * @return adminShowAccountInfo view
 	 */
 	@GetMapping("/accountInfo/{accountId}/detach/{cardId}")
@@ -376,7 +382,7 @@ public class AdminAccountController {
 	) {
 		BankCard card = cardService.findCardByCardId(cardId);
 		User user = userService.findUserByUsername(principal.getName());
-		List<BankCard> cardsList = cardService.findCardsByAccountId(accountId);
+		cardsList = cardService.findCardsByAccountId(accountId);
 		Account viewableAccount = accountService.findAccountByAccountId(accountId);
 
 		model.addAttribute("card", card);
@@ -389,10 +395,10 @@ public class AdminAccountController {
 	
 	/**
 	 * Admin detaching card
-	 * @param model
-	 * @param principal
-	 * @param accountId
-	 * @param cardId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountId Long
+	 * @param cardId Long
 	 * @return adminShowAccountInfo view
 	 */
 	@PostMapping("/accountInfo/{accountId}/detach/{cardId}")
@@ -418,9 +424,9 @@ public class AdminAccountController {
 	
 	/**
 	 * Admin deleting account
-	 * @param model
-	 * @param principal
-	 * @param accountId
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountId Long
 	 * @return adminShowAccountInfo view
 	 */
 	@PostMapping("/accountInfo/delete/{accountId}")

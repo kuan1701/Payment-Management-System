@@ -23,7 +23,9 @@ public interface PaymentService {
 	void transaction(Account accountFrom, String cardNumber, BigDecimal amount);
 	
 	Payment findPaymentByPaymentId(Long paymentId);
-	
+
+	Payment initializePayment(User user, BigDecimal amount, String appointment);
+
 	List<Payment> findAllPaymentsByAccountId(Long accountId);
 	
 	List<Payment> findAllPaymentsByUserId(Long userId);

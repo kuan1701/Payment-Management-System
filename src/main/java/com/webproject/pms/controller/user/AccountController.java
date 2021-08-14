@@ -17,6 +17,8 @@ public class AccountController {
 	
 	private final AccountServiceImpl accountService;
 	private final UserServiceImpl userService;
+
+	private List<Account> accountList;
 	
 	public AccountController(AccountServiceImpl accountService, UserServiceImpl userService, BankCardServiceImpl bankCardService) {
 		this.accountService = accountService;
@@ -25,8 +27,8 @@ public class AccountController {
 	
 	/**
 	 * User account creation form
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return userCreateAccount view
 	 */
 	@GetMapping("/create-account")
@@ -40,10 +42,10 @@ public class AccountController {
 	
 	/**
 	 * User account creation
-	 * @param model
-	 * @param principal
-	 * @param account
-	 * @return redirect:/my-account page
+	 * @param model Model
+	 * @param principal Principal
+	 * @param account Account
+	 * @return user/userCreateAccount view
 	 */
 	@PostMapping("/create-account")
 	public String createAccount(Model model,
@@ -52,7 +54,8 @@ public class AccountController {
 	) {
 		if (!accountService.registrationAccount(account, principal)){
 			model.addAttribute("accountError", "Create account error");
-		} else {
+		}
+		else {
 			model.addAttribute("accountError", "Create success");
 		}
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
@@ -61,8 +64,8 @@ public class AccountController {
 	
 	/**
 	 * Show accounts
-	 * @param model
-	 * @param principal
+	 * @param model Model
+	 * @param principal Principal
 	 * @return userShowAccount view
 	 */
 	@GetMapping("/show-accounts")
@@ -70,7 +73,7 @@ public class AccountController {
 	                           Principal principal
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accountList = accountService.findAllAccountsByUserId(user.getUserId());
+		accountList = accountService.findAllAccountsByUserId(user.getUserId());
 		
 		model.addAttribute("user", user);
 		model.addAttribute("accountList", accountList);
@@ -80,12 +83,12 @@ public class AccountController {
 	
 	/**
 	 * User show found accounts
-	 * @param model
-	 * @param principal
-	 * @param accountNumber
-	 * @param min_value
-	 * @param max_value
-	 * @param currency
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountNumber String
+	 * @param min_value String
+	 * @param max_value String
+	 * @param currency String
 	 * @return userShowAccounts view
 	 */
 	@PostMapping("/show-accounts")
@@ -97,7 +100,7 @@ public class AccountController {
 									@RequestParam("accountNumber") String accountNumber
 									) {
 		User user = userService.findUserByUsername(principal.getName());
-		List<Account> accountList = accountService.searchByCriteria(
+		accountList = accountService.searchByCriteria(
 				user.getUserId(),
 				accountNumber,
 				min_value,
@@ -118,35 +121,35 @@ public class AccountController {
 	
 	/**
 	 * Show account settings
-	 * @param model
-	 * @param principal
-	 * @param number
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountNumber String
 	 * @return userShowAccountSettings view
 	 */
 	@GetMapping("/account-setting/{accountNumber}")
 	public String showAccountSettingPage(Model model,
 										 Principal principal,
-										 @PathVariable("accountNumber") String number
+										 @PathVariable("accountNumber") String accountNumber
 	) {
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-		model.addAttribute("account", accountService.findAccountByAccountNumber(number));
+		model.addAttribute("account", accountService.findAccountByAccountNumber(accountNumber));
 		return "user/userShowAccountSettings";
 	}
 	
 	/**
 	 * Blocking and unblocking of the account by the user
-	 * @param model
-	 * @param principal
-	 * @param number
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountNumber String
 	 * @return userShowAccountSettings view
 	 */
 	@PostMapping("/account-setting/{accountNumber}")
 	public String blockAccount(Model model,
 	                           Principal principal,
-	                           @PathVariable("accountNumber") String number
+	                           @PathVariable("accountNumber") String accountNumber
 	) {
 		User user = userService.findUserByUsername(principal.getName());
-		Account account = accountService.findAccountByAccountNumber(number);
+		Account account = accountService.findAccountByAccountNumber(accountNumber);
 
 		if (!account.getBlocked()) {
 			accountService.blockAccount(account);
@@ -163,17 +166,17 @@ public class AccountController {
 	
 	/**
 	 * Deleting an account by a user
-	 * @param model
-	 * @param principal
-	 * @param number
+	 * @param model Model
+	 * @param principal Principal
+	 * @param accountNumber String
 	 * @return redirect:/my-account page
 	 */
 	@PostMapping("/account-setting/delete/{accountNumber}")
 	public String deleteAccount(Model model,
 	                           Principal principal,
-	                           @PathVariable("accountNumber") String number
+	                           @PathVariable("accountNumber") String accountNumber
 	) {
-		Account account = accountService.findAccountByAccountNumber(number);
+		Account account = accountService.findAccountByAccountNumber(accountNumber);
 		User user = userService.findUserByUsername(principal.getName());
 		
 		if (account != null) {
