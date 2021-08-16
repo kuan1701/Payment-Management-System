@@ -100,15 +100,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 userDao.save(updatedUser);
 
                 actionLogService.createLog("UPDATED: Successful attempt to update personal data", user);
-                LOGGER.info("UPDATED: Successful attempt to update personal data");
+                LOGGER.info("UPDATED: Successful attempt to update personal data\n");
                 return true;
             }
             actionLogService.createLog("ERROR: Unsuccessful attempt to update personal data", user);
-            LOGGER.error("ERROR: Unsuccessful attempt to update personal data");
+            LOGGER.error("ERROR: Unsuccessful attempt to update personal data\n");
             return false;
         }
         actionLogService.createLog("ERROR: Unsuccessful attempt to update personal data", user);
-        LOGGER.error("ERROR: Unsuccessful attempt to update personal data");
+        LOGGER.error("ERROR: Unsuccessful attempt to update personal data\n");
         return false;
     }
 
@@ -121,11 +121,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setResetPasswordToken(null);
             userDao.save(user);
             actionLogService.createLog("UPDATED: Successful attempt to update password", user);
-            LOGGER.info("UPDATED: Successfully attempt to update password");
+            LOGGER.info("UPDATED: Successfully attempt to update password\n");
             return true;
         }
         actionLogService.createLog("ERROR: Successful attempt to update password", user);
-        LOGGER.info("ERROR: Successful attempt to update password");
+        LOGGER.info("ERROR: Successful attempt to update password\n");
         return false;
     }
 
@@ -181,15 +181,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         if (userByUsername != null) {
-			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
+			LOGGER.info("ERROR: Unsuccessful attempt to register a new user\n");
             return false;
         }
         else if (userByEmail != null) {
-			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
+			LOGGER.info("ERROR: Unsuccessful attempt to register a new user\n");
             return false;
         }
         else if (userByPhone != null) {
-			LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
+			LOGGER.info("ERROR: Unsuccessful attempt to register a new user\n");
             return false;
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -202,7 +202,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDao.save(user);
 
         mailSender.sendVerificationEmail(user, siteURL);
-        LOGGER.info("REGISTERED: A new user has been successfully added to the system");
+        LOGGER.info("REGISTERED: A new user has been successfully added to the system\n");
         return true;
 
     }
@@ -217,12 +217,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         if (userByEmail != null) {
             actionLogService.createLog("ERROR: Unsuccessful attempt to register a new user", user);
-            LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
+            LOGGER.info("ERROR: Unsuccessful attempt to register a new user\n");
             return false;
         }
         else if (userByPhone != null) {
             actionLogService.createLog("ERROR: Unsuccessful attempt to register a new user", user);
-            LOGGER.info("ERROR: Unsuccessful attempt to register a new user");
+            LOGGER.info("ERROR: Unsuccessful attempt to register a new user\n");
             return false;
         }
         user.setPassword(passwordEncoder.encode(ADMINPASSWORD));
@@ -235,7 +235,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDao.save(user);
 
         actionLogService.createLog("REGISTERED: A new user has been successfully added to the system", user);
-        LOGGER.info("REGISTERED: A new user has been successfully added to the system");
+        LOGGER.info("REGISTERED: A new user has been successfully added to the system\n");
         mailSender.sendVerificationEmail(user, siteURL);
         return true;
     }
@@ -252,7 +252,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setActive(true);
         user.setEmailVerified(true);
         userDao.save(user);
-		LOGGER.info("REGISTERED: A new user has been successfully added to the system");
+		LOGGER.info("REGISTERED: A new user has been successfully added to the system\n");
         return true;
     }
 
@@ -269,11 +269,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setResetPasswordToken(token);
             userDao.save(user);
 			actionLogService.createLog("RESET_PASSWORD: Successful attempt to send a token to an email " + email, user);
-			LOGGER.info("RESET_PASSWORD: Successful attempt to send a token to an email " + email);
+			LOGGER.info("RESET_PASSWORD: Successful attempt to send a token to an email " + email + "\n");
         }
         else {
 			actionLogService.createLog("RESET_PASSWORD_ERROR: Unsuccessful attempt to send a token to an email " + email, user);
-			LOGGER.error("RESET_PASSWORD_ERROR: Could not find any user with email " + email);
+			LOGGER.error("RESET_PASSWORD_ERROR: Could not find any user with email " + email + "\n");
 			throw new UserNotFoundException("Could not find any user with email " + email);
         }
     }

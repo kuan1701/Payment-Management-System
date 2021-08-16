@@ -37,7 +37,7 @@ public class UserController {
 	
 	/**
 	 *  Show user account depending on the role
-	 * @param model MOdel
+	 * @param model Model
 	 * @param principal Principal
 	 * @return user or admin view
 	 */

@@ -343,7 +343,7 @@
 
                                                             <!-- More Payments -->
                                                             <div class="col-md-12">
-                                                                <a href="${pageContext.request.contextPath}/show-payments"
+                                                                <a href="${pageContext.request.contextPath}/show-payments/${user.userId}"
                                                                    class="float-right" style="padding-top: 15px;">
                                                                         ${morePayments}
                                                                 </a>

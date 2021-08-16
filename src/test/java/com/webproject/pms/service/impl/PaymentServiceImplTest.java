@@ -22,6 +22,10 @@ import org.springframework.ui.Model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class PaymentServiceImplTest {
@@ -84,12 +88,12 @@ class PaymentServiceImplTest {
         String appointment = "some text";
         BigDecimal amount = new BigDecimal("100.00");
 
-        Mockito.doReturn(user).when(userDao).getById(user.getUserId());
-        Mockito.doReturn(accountFrom).when(accountDao).getById(accountFrom.getAccountId());
-        Mockito.doReturn(accountTo).when(accountDao).findAccountByNumber(accountTo.getNumber());
-        Mockito.doReturn(true).when(paymentServiceMock).checkAvailableAmount(accountFrom, amount);
+        doReturn(user).when(userDao).getById(user.getUserId());
+        doReturn(accountFrom).when(accountDao).getById(accountFrom.getAccountId());
+        doReturn(accountTo).when(accountDao).findAccountByNumber(accountTo.getNumber());
+        doReturn(true).when(paymentServiceMock).checkAvailableAmount(accountFrom, amount);
 
-        Mockito.doNothing().when(paymentServiceMock).transaction(accountFrom, accountTo, amount);
+        doNothing().when(paymentServiceMock).transaction(accountFrom, accountTo, amount);
 
         Boolean paymentIsCreated = paymentService.makePaymentOnAccount(
                 accountFrom.getAccountId(),
@@ -99,7 +103,7 @@ class PaymentServiceImplTest {
                 model,
                 user);
 
-        Assertions.assertTrue(paymentIsCreated);
+        assertTrue(paymentIsCreated);
     }
 
     @Test
@@ -108,12 +112,12 @@ class PaymentServiceImplTest {
         String appointment = "some text";
         BigDecimal amount = new BigDecimal("100.00");
 
-        Mockito.doReturn(user).when(userDao).getById(user.getUserId());
-        Mockito.doReturn(card).when(cardDao).findBankCardByNumber(card.getNumber());
-        Mockito.doReturn(accountFrom).when(accountDao).getById(accountFrom.getAccountId());
-        Mockito.doReturn(true).when(paymentServiceMock).checkAvailableAmount(accountFrom, amount);
+        doReturn(user).when(userDao).getById(user.getUserId());
+        doReturn(card).when(cardDao).findBankCardByNumber(card.getNumber());
+        doReturn(accountFrom).when(accountDao).getById(accountFrom.getAccountId());
+        doReturn(true).when(paymentServiceMock).checkAvailableAmount(accountFrom, amount);
 
-        Mockito.doNothing().when(paymentServiceMock).transaction(accountFrom, card.getNumber(), amount);
+        doNothing().when(paymentServiceMock).transaction(accountFrom, card.getNumber(), amount);
 
         Boolean paymentIsCreated = paymentService.makePaymentOnCard(
                 accountFrom.getAccountId(),
@@ -123,17 +127,17 @@ class PaymentServiceImplTest {
                 model,
                 user);
 
-        Assertions.assertTrue(paymentIsCreated);
+        assertTrue(paymentIsCreated);
     }
 
     @Test
     void checkAvailableAmount() {
 
         Boolean accountFromChecked = paymentService.checkAvailableAmount(accountFrom, amount);
-        Assertions.assertTrue(accountFromChecked);
+        assertTrue(accountFromChecked);
 
         Boolean accountToChecked = paymentService.checkAvailableAmount(accountTo, amount);
-        Assertions.assertTrue(accountToChecked);
+        assertTrue(accountToChecked);
     }
 
     @Test
@@ -141,12 +145,12 @@ class PaymentServiceImplTest {
 
         BigDecimal amount = new BigDecimal("100.00");
 
-        Mockito.doReturn(accountFrom).when(accountDao).getById(accountFrom.getAccountId());
-        Mockito.doReturn(accountTo).when(accountDao).getById(accountTo.getAccountId());
+        doReturn(accountFrom).when(accountDao).getById(accountFrom.getAccountId());
+        doReturn(accountTo).when(accountDao).getById(accountTo.getAccountId());
 
        paymentService.transaction(accountFrom, accountTo, amount);
-       Mockito.verify(accountDao, Mockito.times(1)).save(accountFrom);
-       Mockito.verify(accountDao, Mockito.times(1)).save(accountTo);
+       verify(accountDao, times(1)).save(accountFrom);
+       verify(accountDao, times(1)).save(accountTo);
     }
 
     @Test
@@ -154,25 +158,25 @@ class PaymentServiceImplTest {
 
         BigDecimal amount = new BigDecimal("100.00");
 
-        Mockito.doReturn(accountFrom).when(accountDao).getById(accountFrom.getAccountId());
-        Mockito.doReturn(card).when(cardDao).getById(card.getCardId());
+        doReturn(accountFrom).when(accountDao).getById(accountFrom.getAccountId());
+        doReturn(card).when(cardDao).getById(card.getCardId());
 
         paymentService.transaction(accountFrom, card.getNumber(), amount);
-        Mockito.verify(accountDao, Mockito.times(1)).save(accountFrom);
+        verify(accountDao, times(1)).save(accountFrom);
     }
 
     @Test
     void findPaymentByPaymentId() {
 
         paymentService.findPaymentByPaymentId(outgoingPayment.getPaymentId());
-        Mockito.verify(paymentDao, Mockito.times(1)).getById(outgoingPayment.getPaymentId());
+        verify(paymentDao, times(1)).getById(outgoingPayment.getPaymentId());
     }
 
     @Test
     void findAllPaymentsByAccountId() {
 
         paymentService.findAllPaymentsByAccountId(accountFrom.getAccountId());
-        Mockito.verify(paymentDao, Mockito.times(1))
+        verify(paymentDao, times(1))
                 .findPaymentsByAccount_AccountId(accountFrom.getAccountId());
     }
 
@@ -180,7 +184,7 @@ class PaymentServiceImplTest {
     void findAllPaymentsByUserId() {
 
         paymentService.findAllPaymentsByUserId(user.getUserId());
-        Mockito.verify(paymentDao, Mockito.times(1))
+        verify(paymentDao, times(1))
                 .findPaymentsByUserIdOrderByDateDesc(user.getUserId());
     }
 
@@ -191,7 +195,7 @@ class PaymentServiceImplTest {
         String finalDate = "09/08/2021";
 
         List<Payment> paymentList = paymentService.searchByCriteria(user.getUserId(), true, startDate, finalDate);
-        Assertions.assertNotNull(paymentList);
+        assertNotNull(paymentList);
     }
 
     @Test
@@ -201,7 +205,7 @@ class PaymentServiceImplTest {
         String finalDate = "09/08/2021";
 
         List<Payment> paymentList = paymentService.searchByCriteriaOutgoingFalse(user.getUserId(), false, startDate, finalDate);
-        Assertions.assertNotNull(paymentList);
+        assertNotNull(paymentList);
     }
 
     @Test
@@ -211,6 +215,6 @@ class PaymentServiceImplTest {
         String finalDate = "09/08/2021";
 
         List<Payment> paymentList = paymentService.searchByCriteriaWithoutOutgoing(user.getUserId(), startDate, finalDate);
-        Assertions.assertNotNull(paymentList);
+        assertNotNull(paymentList);
     }
 }

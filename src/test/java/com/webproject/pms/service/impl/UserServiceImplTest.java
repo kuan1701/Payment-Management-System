@@ -22,6 +22,9 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class UserServiceImplTest {
@@ -60,8 +63,8 @@ class UserServiceImplTest {
     void saveUser(){
 
         Boolean userSaved = userService.saveUser(user);
-        Assertions.assertTrue(userSaved);
-        Mockito.verify(userDao, Mockito.times(1)).save(user);
+        assertTrue(userSaved);
+        verify(userDao, times(1)).save(user);
     }
 
     @Test
@@ -70,14 +73,14 @@ class UserServiceImplTest {
         String siteURL = "some@mail.com";
         Boolean isUserCreated = userService.registrationUser(user, siteURL);
 
-        Assertions.assertTrue(isUserCreated);
-        Assertions.assertNotNull(user.getActivationCode());
-        Assertions.assertFalse(user.getEmailVerified());
-        Assertions.assertFalse(user.getActive());
-        Assertions.assertTrue(CoreMatchers.is(user.getRole().getName()).matches("ROLE_USER"));
+        assertTrue(isUserCreated);
+        assertNotNull(user.getActivationCode());
+        assertFalse(user.getEmailVerified());
+        assertFalse(user.getActive());
+        assertTrue(CoreMatchers.is(user.getRole().getName()).matches("ROLE_USER"));
 
-        Mockito.verify(userDao, Mockito.times(1)).save(user);
-        Mockito.verify(mailSender, Mockito.times(1))
+        verify(userDao, times(1)).save(user);
+        verify(mailSender, times(1))
                 .sendVerificationEmail(user, siteURL);
     }
 
@@ -87,60 +90,60 @@ class UserServiceImplTest {
         String siteURL = "some@mail.com";
         user.setUsername("someUser");
 
-        Mockito.doReturn(new User())
+        doReturn(new User())
                 .when(userDao)
                 .findUserByUsername("someUser");
 
         Boolean isUserCreated = userService.registrationUser(user, siteURL);
 
-        Assertions.assertFalse(isUserCreated);
+        assertFalse(isUserCreated);
 
-        Mockito.verify(userDao, Mockito.times(0))
+        verify(userDao, times(0))
                 .save(ArgumentMatchers.any(User.class));
-        Mockito.verify(mailSender, Mockito.times(0))
+        verify(mailSender, times(0))
                 .sendVerificationEmail(user, siteURL);
     }
 
     @Test
     void activateUser() {
 
-        Mockito.doReturn(user)
+        doReturn(user)
                 .when(userDao)
                 .findUserByActivationCode("activate");
 
         Boolean isUserActivated = userService.activateUser("activate");
 
-        Assertions.assertTrue(isUserActivated);
-        Assertions.assertNull(user.getActivationCode());
+        assertTrue(isUserActivated);
+        assertNull(user.getActivationCode());
 
-        Mockito.verify(userDao, Mockito.times(1)).save(user);
+        verify(userDao, times(1)).save(user);
     }
 
     @Test
     public void activateUserFailTest() {
         Boolean isUserActivated = userService.activateUser("activate me");
 
-        Assertions.assertFalse(isUserActivated);
+        assertFalse(isUserActivated);
 
-        Mockito.verify(userDao, Mockito.times(0))
+        verify(userDao, times(0))
                 .save(ArgumentMatchers.any(User.class));
     }
 
     @Test
     void loadUserByUsername() {
 
-        Mockito.doReturn(user)
+        doReturn(user)
                 .when(userDao)
                 .findUserByUsername("someUser");
 
         User testUser = (User) userService.loadUserByUsername("someUser");
-        Assertions.assertNotNull(testUser);
+        assertNotNull(testUser);
     }
 
     @Test
     void updateUser() {
 
-        Mockito.doReturn(Optional.of(user))
+        doReturn(Optional.of(user))
                 .when(userDao)
                 .findById(user.getUserId());
 
@@ -152,13 +155,13 @@ class UserServiceImplTest {
                 "someEmail",
                 "somePassword");
 
-        Assertions.assertTrue(isUpdated);
-        Assertions.assertNotNull(user.getName());
-        Assertions.assertTrue(CoreMatchers.is(user.getSurname()).matches("someSurname"));
-        Assertions.assertTrue(CoreMatchers.is(user.getEmail()).matches("someEmail"));
-        Assertions.assertTrue(CoreMatchers.is(user.getPhone()).matches("somePhone"));
+        assertTrue(isUpdated);
+        assertNotNull(user.getName());
+        assertTrue(CoreMatchers.is(user.getSurname()).matches("someSurname"));
+        assertTrue(CoreMatchers.is(user.getEmail()).matches("someEmail"));
+        assertTrue(CoreMatchers.is(user.getPhone()).matches("somePhone"));
 
-        Mockito.verify(userDao, Mockito.times(1)).save(user);
+        verify(userDao, times(1)).save(user);
     }
 
     @Test
@@ -166,22 +169,22 @@ class UserServiceImplTest {
 
         Boolean passwordUpdated = userService.updatePassword(user, "123456");
 
-        Assertions.assertTrue(passwordUpdated);
-        Assertions.assertNull(user.getResetPasswordToken());
-        Mockito.verify(userDao, Mockito.times(1)).save(user);
+        assertTrue(passwordUpdated);
+        assertNull(user.getResetPasswordToken());
+        verify(userDao, times(1)).save(user);
     }
 
     @Test
     void deleteUser() {
 
         Boolean userIsDeleted = userService.deleteUser(user);
-        Assertions.assertTrue(userIsDeleted);
+        assertTrue(userIsDeleted);
     }
 
     @Test
     void findAllUsers() {
         userService.findAllUsers();
-        Mockito.verify(userDao, Mockito.times(1)).searchAllUser();
+        verify(userDao, times(1)).searchAllUser();
     }
 
     @Test
@@ -189,7 +192,7 @@ class UserServiceImplTest {
 
         userService.searchByCriteria(user.getName(), user.getSurname(), user.getPhone(), user.getEmail());
 
-        Mockito.verify(userDao, Mockito.times(1))
+        verify(userDao, times(1))
                 .searchByCriteria(user.getName(), user.getSurname(), user.getPhone(), user.getEmail());
     }
 
@@ -197,32 +200,32 @@ class UserServiceImplTest {
     void findUserByUserId() {
 
         userService.findUserByUserId(user.getUserId());
-        Mockito.verify(userDao, Mockito.times(1)).getById(user.getUserId());
+        verify(userDao, times(1)).getById(user.getUserId());
     }
 
     @Test
     void findUserByUsername() {
 
-        Mockito.doReturn(new User())
+        doReturn(new User())
                 .when(userDao)
                 .findUserByUsername(user.getUsername());
 
         User userFromDb = userService.findUserByUsername(user.getUsername());
-        Assertions.assertNotNull(userFromDb);
-        Mockito.verify(userDao, Mockito.times(1))
+        assertNotNull(userFromDb);
+        verify(userDao, times(1))
                 .findUserByUsername(user.getUsername());
     }
 
     @Test
     void findUserByPhone() {
 
-        Mockito.doReturn(new User())
+        doReturn(new User())
                 .when(userDao)
                 .findUserByPhone(user.getPhone());
 
         User userFromDb = userService.findUserByPhone(user.getPhone());
-        Assertions.assertNotNull(userFromDb);
-        Mockito.verify(userDao, Mockito.times(1))
+        assertNotNull(userFromDb);
+        verify(userDao, times(1))
                 .findUserByPhone(user.getPhone());
     }
 
@@ -230,26 +233,26 @@ class UserServiceImplTest {
     @Test
     void findUserByEmail() {
 
-        Mockito.doReturn(new User())
+        doReturn(new User())
                 .when(userDao)
                 .findUserByEmail(user.getEmail());
 
         User userFromDb = userService.findUserByEmail(user.getEmail());
-        Assertions.assertNotNull(userFromDb);
-        Mockito.verify(userDao, Mockito.times(1))
+        assertNotNull(userFromDb);
+        verify(userDao, times(1))
                 .findUserByEmail(user.getEmail());
     }
 
     @Test
     void findByActivationCode() {
 
-        Mockito.doReturn(new User())
+        doReturn(new User())
                 .when(userDao)
                 .findUserByActivationCode(user.getActivationCode());
 
         User userFromDb = userService.findByActivationCode(user.getActivationCode());
-        Assertions.assertNotNull(userFromDb);
-        Mockito.verify(userDao, Mockito.times(1))
+        assertNotNull(userFromDb);
+        verify(userDao, times(1))
                 .findUserByActivationCode(user.getActivationCode());
     }
 
@@ -260,28 +263,28 @@ class UserServiceImplTest {
         String siteURL = "some@mail.com";
         Boolean isUserCreated = userService.adminCreateUser(user, siteURL);
 
-        Assertions.assertTrue(isUserCreated);
-        Assertions.assertNotNull(user.getActivationCode());
-        Assertions.assertNotNull(user.getEmail());
-        Assertions.assertFalse(user.getEmailVerified());
-        Assertions.assertFalse(user.getActive());
-        Assertions.assertTrue(CoreMatchers.is(user.getRole().getName()).matches("ROLE_USER"));
+        assertTrue(isUserCreated);
+        assertNotNull(user.getActivationCode());
+        assertNotNull(user.getEmail());
+        assertFalse(user.getEmailVerified());
+        assertFalse(user.getActive());
+        assertTrue(CoreMatchers.is(user.getRole().getName()).matches("ROLE_USER"));
 
-        Mockito.verify(userDao, Mockito.times(1)).save(user);
-        Mockito.verify(mailSender, Mockito.times(1))
+        verify(userDao, times(1)).save(user);
+        verify(mailSender, times(1))
                 .sendVerificationEmail(user, siteURL);
     }
 
     @Test
     void getByResetPasswordToken() {
 
-        Mockito.doReturn(new User())
+        doReturn(new User())
                 .when(userDao)
                 .findUserByResetPasswordToken(user.getResetPasswordToken());
 
         User userFromDb = userService.getByResetPasswordToken(user.getResetPasswordToken());
-        Assertions.assertNotNull(userFromDb);
-        Mockito.verify(userDao, Mockito.times(1))
+        assertNotNull(userFromDb);
+        verify(userDao, times(1))
                 .findUserByResetPasswordToken(user.getResetPasswordToken());
     }
 
@@ -290,13 +293,13 @@ class UserServiceImplTest {
 
         String token = "someToken";
 
-        Mockito.doReturn(user)
+        doReturn(user)
                 .when(userDao)
                 .findUserByEmail(user.getEmail());
 
         userService.updateResetPasswordToken(token, user.getEmail());
-        Mockito.verify(userDao, Mockito.times(1))
+        verify(userDao, times(1))
                 .findUserByEmail(user.getEmail());
-        Mockito.verify(userDao, Mockito.times(1)).save(user);
+        verify(userDao, times(1)).save(user);
     }
 }

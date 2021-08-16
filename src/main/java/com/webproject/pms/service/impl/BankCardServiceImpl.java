@@ -53,7 +53,7 @@ public class BankCardServiceImpl implements BankCardService {
 
         if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null || account == null) {
             actionLogService.createLog("ERROR: Unsuccessful attempt to attach a card", account.getUser());
-            LOGGER.error("ERROR: Unsuccessful attempt to attach a card");
+            LOGGER.error("ERROR: Unsuccessful attempt to attach a card\n");
             return false;
         }
         bankCard.setAccount(account);
@@ -67,7 +67,7 @@ public class BankCardServiceImpl implements BankCardService {
 
         LOGGER.info(String.valueOf(stringBuilder.append("ATTACHED: Card [")
                 .append(bankCard.getNumber())
-                .append("]")));
+                .append("]\n")));
         return true;
     }
 
@@ -84,7 +84,7 @@ public class BankCardServiceImpl implements BankCardService {
 
             LOGGER.info(String.valueOf(stringBuilder.append("BLOCKED: Card [")
                     .append(bankCard.getNumber())
-                    .append("]")));
+                    .append("]\n")));
             return true;
         }
         return false;
@@ -103,7 +103,7 @@ public class BankCardServiceImpl implements BankCardService {
 
             LOGGER.info(String.valueOf(stringBuilder.append("UNBLOCKED: Card [")
                     .append(bankCard.getNumber())
-                    .append("]")));
+                    .append("]\n")));
             return true;
         }
         return false;
@@ -118,7 +118,7 @@ public class BankCardServiceImpl implements BankCardService {
 
         LOGGER.info(String.valueOf(stringBuilder.append("DETACHED: Card [")
                 .append(bankCard.getNumber())
-                .append("]")));
+                .append("]\n")));
         bankCardDao.delete(bankCard);
         return true;
     }

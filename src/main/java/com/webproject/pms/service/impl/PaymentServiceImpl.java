@@ -74,14 +74,14 @@ public class PaymentServiceImpl implements PaymentService {
 		if (accountFrom.getBlocked()) {
 			model.addAttribute("paymentError", "senderAccountBlockedError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to make a payment", user);
-			LOGGER.error("ERROR: Unsuccessful attempt to make a payment. Sender account blocked");
+			LOGGER.error("ERROR: Unsuccessful attempt to make a payment. Sender account blocked\n");
 			return false;
 		}
 		
 		if (accountTo.getBlocked()) {
 			model.addAttribute("paymentError", "recipientCardNotExistOrBlockedError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to make a payment", user);
-			LOGGER.error("ERROR: Unsuccessful attempt to make a payment. Recipient account blocked");
+			LOGGER.error("ERROR: Unsuccessful attempt to make a payment. Recipient account blocked\n");
 			return false;
 		}
 
@@ -118,7 +118,7 @@ public class PaymentServiceImpl implements PaymentService {
 			paymentFrom.setStatus(false);
 			paymentDao.save(paymentFrom);
 			model.addAttribute("paymentError", "insufficientFundsError");
-			LOGGER.error("Payment arrangement error!");
+			LOGGER.error("Payment arrangement error!\n");
 			return false;
 		}
 
@@ -134,7 +134,7 @@ public class PaymentServiceImpl implements PaymentService {
 				.append(accountFrom.getNumber())
 				.append("] to account [")
 				.append(accountToNumber)
-				.append("]")));
+				.append("]\n")));
 		return true;
 	}
 	
@@ -151,7 +151,7 @@ public class PaymentServiceImpl implements PaymentService {
 		if (accountFrom.getBlocked()) {
 			model.addAttribute("paymentError", "senderAccountBlockedError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to make a payment", user);
-			LOGGER.error("ERROR: Unsuccessful attempt to make a payment");
+			LOGGER.error("ERROR: Unsuccessful attempt to make a payment\n");
 			return false;
 		}
 
@@ -185,7 +185,7 @@ public class PaymentServiceImpl implements PaymentService {
 				.append(accountFrom.getNumber())
 				.append("] to account [")
 				.append(cardNumber)
-				.append("]")));
+				.append("]\n")));
 		return true;
 	}
 	
@@ -204,7 +204,7 @@ public class PaymentServiceImpl implements PaymentService {
 			accountDao.save(accountFrom);
 			accountDao.save(accountTo);
 		} else {
-			LOGGER.error("Trying to withdraw or add funds to a blocked account!");
+			LOGGER.error("Trying to withdraw or add funds to a blocked account!\n");
 		}
 	}
 
@@ -216,7 +216,7 @@ public class PaymentServiceImpl implements PaymentService {
 			accountFrom.setBalance(accountFrom.getBalance().subtract(amount));
 			accountDao.save(accountFrom);
 		} else {
-			LOGGER.error("Trying to withdraw funds from a blocked account or or add funds to a non-existing card!");
+			LOGGER.error("Trying to withdraw funds from a blocked account or or add funds to a non-existing card!\n");
 		}
 	}
 	

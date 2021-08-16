@@ -3,7 +3,6 @@ package com.webproject.pms.service.impl;
 import com.webproject.pms.model.dao.AccountDao;
 import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -49,8 +52,8 @@ class AccountServiceImplTest {
     void save() {
 
         Boolean accountSaved = accountService.save(account);
-        Assertions.assertTrue(accountSaved);
-        Mockito.verify(accountDao, Mockito.times(1)).save(account);
+        assertTrue(accountSaved);
+        verify(accountDao, Mockito.times(1)).save(account);
     }
 
     @Test
@@ -58,64 +61,64 @@ class AccountServiceImplTest {
 
         Boolean accountIsCreated = accountService.registrationAccount(account, principal);
 
-        Assertions.assertTrue(accountIsCreated);
-        Assertions.assertNotNull(account.getNumber());
-        Assertions.assertFalse(account.getBlocked());
-        Mockito.verify(accountDao, Mockito.times(1)).save(account);
+        assertTrue(accountIsCreated);
+        assertNotNull(account.getNumber());
+        assertFalse(account.getBlocked());
+        verify(accountDao, Mockito.times(1)).save(account);
     }
 
     @Test
     void adminAttachAccount() {
 
         Boolean accountIsAttached = accountService.adminAttachAccount(account, user.getUserId());
-        Assertions.assertTrue(accountIsAttached);
-        Assertions.assertFalse(account.getBlocked());
-        Assertions.assertNotNull(account.getNumber());
-        Mockito.verify(accountDao, Mockito.times(1)).save(account);
+        assertTrue(accountIsAttached);
+        assertFalse(account.getBlocked());
+        assertNotNull(account.getNumber());
+        verify(accountDao, Mockito.times(1)).save(account);
     }
 
     @Test
     void blockAccount() {
 
         Boolean accountIsBlocked = accountService.blockAccount(account);
-        Assertions.assertTrue(accountIsBlocked);
-        Assertions.assertTrue(account.getBlocked());
-        Mockito.verify(accountDao, Mockito.times(1)).save(account);
+        assertTrue(accountIsBlocked);
+        assertTrue(account.getBlocked());
+        verify(accountDao, Mockito.times(1)).save(account);
     }
 
     @Test
     void unblockAccount() {
 
         Boolean accountIsUnblocked = accountService.unblockAccount(account);
-        Assertions.assertTrue(accountIsUnblocked);
-        Assertions.assertFalse(account.getBlocked());
-        Mockito.verify(accountDao, Mockito.times(1)).save(account);
+        assertTrue(accountIsUnblocked);
+        assertFalse(account.getBlocked());
+        verify(accountDao, Mockito.times(1)).save(account);
     }
 
     @Test
     void deleteAccount() {
 
         Boolean accountIsDeleted = accountService.deleteAccount(account);
-        Assertions.assertTrue(accountIsDeleted);
+        assertTrue(accountIsDeleted);
     }
 
     @Test
     void findAccountByAccountId() {
 
         accountService.findAccountByAccountId(account.getAccountId());
-        Mockito.verify(accountDao, Mockito.times(1)).getById(account.getAccountId());
+        verify(accountDao, Mockito.times(1)).getById(account.getAccountId());
     }
 
     @Test
     void findAccountByAccountNumber() {
 
-        Mockito.doReturn(new Account())
+        doReturn(new Account())
                 .when(accountDao)
                 .findAccountByNumber(account.getNumber());
 
         Account accountFromDb = accountService.findAccountByAccountNumber(account.getNumber());
-        Assertions.assertNotNull(accountFromDb);
-        Mockito.verify(accountDao, Mockito.times(1))
+        assertNotNull(accountFromDb);
+        verify(accountDao, Mockito.times(1))
                 .findAccountByNumber(account.getNumber());
     }
 
@@ -123,7 +126,7 @@ class AccountServiceImplTest {
     void findAllAccountsByUserId() {
 
         accountService.findAllAccountsByUserId(user.getUserId());
-        Mockito.verify(accountDao, Mockito.times(1))
+        verify(accountDao, Mockito.times(1))
                 .findAllAccountsByUser_UserId(user.getUserId());
     }
 
@@ -131,7 +134,7 @@ class AccountServiceImplTest {
     void findAllActivateAccountsByUserId() {
 
         accountService.findAllActivateAccountsByUserId(user.getUserId());
-        Mockito.verify(accountDao, Mockito.times(1))
+        verify(accountDao, Mockito.times(1))
                 .findAllActivateAccountByUserId(user.getUserId());
     }
 
@@ -139,7 +142,7 @@ class AccountServiceImplTest {
     void findAllAccounts() {
 
         accountService.findAllAccounts();
-        Mockito.verify(accountDao, Mockito.times(1)).findAll();
+        verify(accountDao, Mockito.times(1)).findAll();
     }
 
     @Test
@@ -149,7 +152,7 @@ class AccountServiceImplTest {
         String maxValue = "10000";
 
         accountService.searchByCriteriaWithoutId(account.getNumber(), minValue, maxValue, account.getCurrency());
-        Mockito.verify(accountDao, Mockito.times(1))
+        verify(accountDao, Mockito.times(1))
                 .searchByCriteriaWithoutId(account.getNumber(), minValue, maxValue, account.getCurrency());
     }
 
@@ -160,7 +163,7 @@ class AccountServiceImplTest {
         String maxValue = "10000";
 
         accountService.searchByCriteria(user.getUserId(), account.getNumber(), minValue, maxValue, account.getCurrency());
-        Mockito.verify(accountDao, Mockito.times(1))
+        verify(accountDao, Mockito.times(1))
                 .searchByCriteria(user.getUserId(), account.getNumber(), minValue, maxValue, account.getCurrency());
     }
 }

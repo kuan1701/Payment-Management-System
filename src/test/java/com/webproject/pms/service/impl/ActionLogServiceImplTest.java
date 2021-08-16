@@ -13,6 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 import java.security.Principal;
 import java.util.List;
 
@@ -49,35 +54,35 @@ class ActionLogServiceImplTest {
 
         String description = "someText";
         Boolean actionLogIsCreated = actionLogService.createLog(description, user);
-        Assertions.assertTrue(actionLogIsCreated);
-        Assertions.assertNotNull(logEntry.getUser());
-        Assertions.assertNotNull(logEntry.getDescription());
+        assertTrue(actionLogIsCreated);
+        assertNotNull(logEntry.getUser());
+        assertNotNull(logEntry.getDescription());
     }
 
     @Test
     void save() {
 
         Boolean actionLogSaved = actionLogService.save(logEntry);
-        Assertions.assertTrue(actionLogSaved);
-        Mockito.verify(actionLogDao, Mockito.times(1)).save(logEntry);
+        assertTrue(actionLogSaved);
+        verify(actionLogDao, Mockito.times(1)).save(logEntry);
     }
 
     @Test
     void clearActionLog() {
 
        Boolean logEntriesRemoved = actionLogService.clearActionLog(user.getUserId());
-       Assertions.assertTrue(logEntriesRemoved);
+       assertTrue(logEntriesRemoved);
     }
 
     @Test
     void findLogEntryByLogEntryId() {
 
         actionLogService.findLogEntryByLogEntryId(logEntry.getLogEntryId());
-        Assertions.assertNotNull(logEntry.getUser());
-        Assertions.assertNotNull(logEntry.getDate());
-        Assertions.assertNotNull(logEntry.getDescription());
+        assertNotNull(logEntry.getUser());
+        assertNotNull(logEntry.getDate());
+        assertNotNull(logEntry.getDescription());
 
-        Mockito.verify(actionLogDao, Mockito.times(1))
+        verify(actionLogDao, Mockito.times(1))
                 .getById(logEntry.getLogEntryId());
     }
 
@@ -85,7 +90,7 @@ class ActionLogServiceImplTest {
     void findLogEntriesByUserId() {
 
         actionLogService.findLogEntriesByUserId(logEntry.getUser().getUserId());
-        Mockito.verify(actionLogDao, Mockito.times(1))
+        verify(actionLogDao, Mockito.times(1))
                 .findLogEntriesByUser_UserId(logEntry.getUser().getUserId());
     }
 
@@ -95,6 +100,6 @@ class ActionLogServiceImplTest {
         String finalDate = "09/08/2021";
 
         List<LogEntry> logEntryList = actionLogService.searchByCriteria(user.getUserId(), startDate, finalDate);
-        Assertions.assertNotNull(logEntryList);
+        assertNotNull(logEntryList);
     }
 }

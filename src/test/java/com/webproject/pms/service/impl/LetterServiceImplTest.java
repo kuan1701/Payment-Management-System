@@ -16,6 +16,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.security.Principal;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class LetterServiceImplTest {
@@ -49,11 +53,11 @@ class LetterServiceImplTest {
     void addNewLetter() {
 
         Boolean letterIsCreated = letterService.addNewLetter(letter, principal);
-        Assertions.assertTrue(letterIsCreated);
-        Assertions.assertNotNull(letter.getDate());
-        Assertions.assertNotNull(letter.getDescription());
-        Assertions.assertFalse(letter.getProcessed());
-        Mockito.verify(letterDao, Mockito.times(1)).save(letter);
+        assertTrue(letterIsCreated);
+        assertNotNull(letter.getDate());
+        assertNotNull(letter.getDescription());
+        assertFalse(letter.getProcessed());
+        verify(letterDao, times(1)).save(letter);
     }
 
     @Test
@@ -64,29 +68,29 @@ class LetterServiceImplTest {
                 .getById(letter.getLetterId());
 
         Boolean letterIsUpdated = letterService.updateLetterByLetterId(letter.getLetterId());
-        Assertions.assertTrue(letterIsUpdated);
-        Assertions.assertTrue(letter.getProcessed());
-        Mockito.verify(letterDao, Mockito.times(1)).save(letter);
+        assertTrue(letterIsUpdated);
+        assertTrue(letter.getProcessed());
+        verify(letterDao, times(1)).save(letter);
     }
 
     @Test
     void findLetterByLetterId() {
 
         letterService.findLetterByLetterId(letter.getLetterId());
-        Mockito.verify(letterDao, Mockito.times(1)).getById(letter.getLetterId());
+        verify(letterDao, times(1)).getById(letter.getLetterId());
     }
 
     @Test
     void findUnprocessedLetters() {
 
-        Assertions.assertNotNull(letterService.findUnprocessedLetters());
+        assertNotNull(letterService.findUnprocessedLetters());
     }
 
     @Test
     void findAllLetters() {
 
-        Assertions.assertNotNull(letterService.findAllLetters());
-        Mockito.verify(letterDao, Mockito.times(1)).findAll();
+        assertNotNull(letterService.findAllLetters());
+        verify(letterDao, times(1)).findAll();
     }
 
     @Test
@@ -97,7 +101,7 @@ class LetterServiceImplTest {
         String typeQuestion = "some question";
 
         List<Letter> letterList = letterService.searchByCriteria(typeQuestion, startDate, finalDate);
-        Assertions.assertNotNull(letterList);
+        assertNotNull(letterList);
     }
 
     @Test
@@ -107,6 +111,6 @@ class LetterServiceImplTest {
         String finalDate = "09/08/2021";
 
         List<Letter> letterList = letterService.searchByCriteria(startDate, finalDate);
-        Assertions.assertNotNull(letterList);
+        assertNotNull(letterList);
     }
 }

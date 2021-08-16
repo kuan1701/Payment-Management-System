@@ -32,7 +32,7 @@ public class LetterController {
 	 * @return userSupport view
 	 */
 	@GetMapping("/support")
-	public String supportFrom(Model model,
+	public String supportForm(Model model,
 							  Principal principal
 	) {
 		model.addAttribute("support", new Letter());

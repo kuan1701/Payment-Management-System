@@ -49,7 +49,7 @@ public class AccountServiceImpl implements AccountService {
 		
 		if (accountDao.findAccountByNumber(account.getNumber()) != null) {
 			actionLogService.createLog("ERROR: Unsuccessful attempt to create a new account", user);
-			LOGGER.error("ERROR: Unsuccessful attempt to create a new account");
+			LOGGER.error("ERROR: Unsuccessful attempt to create a new account\n");
 			return false;
 		}
 		account.setUser(user);
@@ -79,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
 		
 		if (accountDao.findAccountByNumber(account.getNumber()) != null) {
 			actionLogService.createLog("ERROR: Unsuccessful attempt to create a new account", user);
-			LOGGER.error("ERROR: Unsuccessful attempt to create a new account");
+			LOGGER.error("ERROR: Unsuccessful attempt to create a new account\n");
 			return false;
 		}
 		account.setUser(user);
@@ -115,12 +115,12 @@ public class AccountServiceImpl implements AccountService {
 
 			LOGGER.info(String.valueOf(stringBuilder.append("BLOCKED: Account [")
 					.append(account.getNumber())
-					.append("]")));
+					.append("]\n")));
 			return true;
 		}
 		LOGGER.info(String.valueOf(stringBuilder.append("ERROR_BLOCKED: Account [")
 				.append(account.getNumber())
-				.append("]")));
+				.append("]\n")));
 		return false;
 	}
 	
@@ -137,12 +137,12 @@ public class AccountServiceImpl implements AccountService {
 
 			LOGGER.info(String.valueOf(stringBuilder.append("UNBLOCKED: Account [")
 					.append(account.getNumber())
-					.append("]")));
+					.append("]\n")));
 			return true;
 		}
 		LOGGER.info(String.valueOf(stringBuilder.append("ERROR_UNBLOCKED: Account [")
 				.append(account.getNumber())
-				.append("]")));
+				.append("]\n")));
 		return false;
 	}
 	
@@ -160,7 +160,7 @@ public class AccountServiceImpl implements AccountService {
 			LOGGER.error(String.valueOf(stringBuilder
 					.append("ERROR: Unsuccessful attempt to delete account [")
 					.append(account.getNumber())
-					.append("]")));
+					.append("]\n")));
 			return false;
 		}
 		accountDao.delete(account);
@@ -171,7 +171,7 @@ public class AccountServiceImpl implements AccountService {
 
 		LOGGER.info(String.valueOf(stringBuilder.append("DELETED: Account [")
 				.append(account.getNumber())
-				.append("]")));
+				.append("]\n")));
 		return true;
 	}
 	

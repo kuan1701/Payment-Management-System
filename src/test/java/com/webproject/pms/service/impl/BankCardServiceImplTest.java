@@ -17,6 +17,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class BankCardServiceImplTest {
@@ -54,58 +58,58 @@ class BankCardServiceImplTest {
     void save() {
 
         Boolean cardAttached = bankCardService.save(bankCard);
-        Assertions.assertTrue(cardAttached);
-        Mockito.verify(bankCardDao, Mockito.times(1)).save(bankCard);
+        assertTrue(cardAttached);
+        verify(bankCardDao, times(1)).save(bankCard);
     }
 
     @Test
     void addNewBankCard() {
 
         Boolean cardAttached = bankCardService.addNewBankCard(bankCard, account);
-        Assertions.assertTrue(cardAttached);
-        Assertions.assertTrue(bankCard.getActive());
-        Assertions.assertNotNull(bankCard.getNumber());
-        Assertions.assertNotNull(bankCard.getAccount());
-        Mockito.verify(bankCardDao, Mockito.times(1)).save(bankCard);
+        assertTrue(cardAttached);
+        assertTrue(bankCard.getActive());
+        assertNotNull(bankCard.getNumber());
+        assertNotNull(bankCard.getAccount());
+        verify(bankCardDao, times(1)).save(bankCard);
     }
 
     @Test
     void blockCard() {
 
         Boolean cardIsBlocked = bankCardService.blockCard(bankCard);
-        Assertions.assertTrue(cardIsBlocked);
-        Assertions.assertFalse(bankCard.getActive());
-        Mockito.verify(bankCardDao, Mockito.times(1)).save(bankCard);
+        assertTrue(cardIsBlocked);
+        assertFalse(bankCard.getActive());
+        verify(bankCardDao, times(1)).save(bankCard);
     }
 
     @Test
     void unblockCard() {
 
         Boolean cardIsUnblocked = bankCardService.unblockCard(bankCard);
-        Assertions.assertTrue(cardIsUnblocked);
-        Assertions.assertTrue(bankCard.getActive());
-        Mockito.verify(bankCardDao, Mockito.times(1)).save(bankCard);
+        assertTrue(cardIsUnblocked);
+        assertTrue(bankCard.getActive());
+        verify(bankCardDao, times(1)).save(bankCard);
     }
 
     @Test
     void deleteCard() {
 
         Boolean cardIsDeleted = bankCardService.deleteCard(bankCard);
-        Assertions.assertTrue(cardIsDeleted);
+        assertTrue(cardIsDeleted);
     }
 
     @Test
     void findCardByCardId() {
 
         bankCardService.findCardByCardId(bankCard.getCardId());
-        Mockito.verify(bankCardDao, Mockito.times(1)).getById(bankCard.getCardId());
+        verify(bankCardDao, times(1)).getById(bankCard.getCardId());
     }
 
     @Test
     void findCardsByAccountId() {
 
         bankCardService.findCardsByAccountId(bankCard.getAccount().getAccountId());
-        Mockito.verify(bankCardDao, Mockito.times(1))
+        verify(bankCardDao, times(1))
                 .findBankCardsByAccount_AccountId(bankCard.getAccount().getAccountId());
     }
 }

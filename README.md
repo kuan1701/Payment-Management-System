@@ -13,7 +13,7 @@ I deployed the application on the hosting.
 
 ## Used tools and patterns for project implementation
 
-`Primary:` MySQL 5.7, Java 15 (Core + Servlets + JDBC + JSP), JSTL, Maven 3, HTML CSS, JS, jQuery v3.4, Bootstrap v4.4.    
+`Primary:` SpringBoot 2.5, MySQL 5.7, FlyWay 7.5.1, Java 15 (Core + Servlets + JDBC + JSP), JSTL, Maven 3, HTML CSS, JS, jQuery v3.4, Bootstrap v4.4.    
 `Secondary:` Apache Tomcat v9.0, Apache Commons Lang v2.6, Apache Log4j v1.2, JUnit v4.13, Mockito v1.10.    
 <i>*For more information on dependencies and plugins, see the pom.xml file.</i>
 
@@ -35,10 +35,8 @@ For the correct launch and stable operation of the site (locally) you need to:
 - In the browser, go to this address: `http://localhost:8080/`
 
 If you know Docker, use these commands by running them from the root folder:  
-&nbsp;&nbsp;&nbsp;&nbsp;`$ docker build -f Dockerfile -t pms-assembly .`  
-&nbsp;&nbsp;&nbsp;&nbsp;`$ docker run --name mysql57 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pppp -d mysql/mysql-server:5.7`  
-&nbsp;&nbsp;&nbsp;&nbsp;`$ docker run -d -p 8080:8080 pms-assembly`  
-Or use this command by running it from the root folder:  
+
+Running it from the root folder:  
 &nbsp;&nbsp;&nbsp;&nbsp;`$ docker-compose up --build -V`
 
 I advise you to use the first option with manual installation and configuration.

@@ -181,7 +181,10 @@ public class AccountController {
 		
 		if (account != null) {
 			if (!accountService.deleteAccount(account)){
+				model.addAttribute("user", user);
+				model.addAttribute("account", account);
 				model.addAttribute("response", "accountHasFundsError");
+				return "user/userShowAccountSettings";
 			}
 		}
 		model.addAttribute("user", user);

@@ -293,8 +293,8 @@
                                                                                                 <p class="card-title text-muted">
                                                                                                         ${remained}: ${payment.newBalance} ${payment.recipientCurrency}
 
-                                                                                                    <!-- Show Platezhi Info -->
-                                                                                                    <a href="?command=showPaymentInfo&paymentId=${payment.paymentId}"
+                                                                                                    <!-- Show Payments Info -->
+                                                                                                    <a href="/paymentInfo/${payment.paymentId}"
                                                                                                        class="float-right">
                                                                                                         <img src="<c:url value="/images/info.png"/>"
                                                                                                              alt="${showInfo}"/>
