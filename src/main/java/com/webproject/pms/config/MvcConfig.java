@@ -15,7 +15,7 @@ public class MvcConfig implements WebMvcConfigurer {
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
 	}
-	
+
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/login").setViewName("login");
 	}

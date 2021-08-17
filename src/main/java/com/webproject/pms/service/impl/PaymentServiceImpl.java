@@ -46,6 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public Payment initializePayment(User user, BigDecimal amount, String appointment) {
 
+		StringBuilder stringBuilder = new StringBuilder();
 		BigDecimal exchangeRate = new BigDecimal("1.00");
 
 		Payment payment = new Payment();
@@ -70,6 +71,7 @@ public class PaymentServiceImpl implements PaymentService {
 	) {
 		Account accountFrom = accountDao.getById(accountFromId);
 		Account accountTo = accountDao.findAccountByNumber(accountToNumber);
+		StringBuilder stringBuilder = new StringBuilder();
 
 		if (accountFrom.getBlocked()) {
 			model.addAttribute("paymentError", "senderAccountBlockedError");
@@ -146,6 +148,7 @@ public class PaymentServiceImpl implements PaymentService {
 									 Model model,
 									 User user
 	) {
+		StringBuilder stringBuilder = new StringBuilder();
 		Account accountFrom = accountDao.getById(accountFromId);
 
 		if (accountFrom.getBlocked()) {

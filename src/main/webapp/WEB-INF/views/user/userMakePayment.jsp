@@ -65,8 +65,7 @@
                     </button>
                     <div style="margin-left: 10px; border-left: 1px solid #e5e5e5;"></div>
                     <form:form action="/make-payment" method="POST" role="form" modelAttribute="payment">
-                        <%--                        <input type="hidden" name="command" value="makePayment"/>--%>
-<%--                        <input type="hidden" name="caseValue" value="on"/>--%>
+                        <input type="hidden" name="paymentType" value="on"/>
                         <input type="hidden" name="accountFromId" id="accountIdParam-AN"/>
                         <input type="hidden" name="accountToNumber" id="accountNumberParam-AN"/>
                         <input type="hidden" name="amount" id="amountParam-AN"/>
@@ -125,10 +124,9 @@
 
                     <c:url value="/make-payment" var="var"/>
                     <form:form action="${var}" method="POST" role="form" modelAttribute="payment">
-                        <%--                        <input type="hidden" name="command" value="makePayment">--%>
-                        <input type="hidden" name="caseValue" value="off"/>
-                        <input type="hidden" name="accountId" id="accountIdParam-CN"/>
-                        <input type="hidden" name="cardNumber" id="cardNumberParam-CN"/>
+                        <input type="hidden" name="paymentType" value="off"/>
+                        <input type="hidden" name="accountFromId" id="accountIdParam-CN"/>
+                        <input type="hidden" name="accountToNumber" id="cardNumberParam-CN"/>
                         <input type="hidden" name="amount" id="amountParam-CN"/>
                         <input type="hidden" name="appointment" id="appointmentParam-CN"/>
                         <button type="submit" id="submitBtn-CN" class="btn btn-primary confirmButton"
@@ -335,6 +333,14 @@
                                                 </label>
                                                 <div>
                                                     <div class="bfh-selectbox">
+                                                        <c:choose>
+                                                            <c:when test="${account.accountId == null}">
+                                                                <div data-value=""></div>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div data-value="${account.accountId}">${account.number}</div>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                         <c:forEach items="${accounts}" var="account">
                                                             <div data-value="${account.accountId}">${account.number}</div>
                                                         </c:forEach>
@@ -375,7 +381,7 @@
                                                                autocomplete="on"
                                                                onkeypress="inputOnlyNumbers();"
                                                                placeholder="${numberAccount}*"
-                                                               value="${accountNumberValue}"/>
+                                                               value="${account.accountId}"/>
                                                         <label for="accountNumber" class="default-label">
                                                             <span id="valid-msg-accountNumber"
                                                                   class="valid-msg invisible">
@@ -395,15 +401,14 @@
                                                     <span class="switcher-case-2">${recipientsCard}</span>
 
                                                     <div style="margin-top: 4px;">
-                                                        <input id="cardNumber" name="cardNumber" type="text"
+                                                        <input id="cardNumber" name="accountToNumber" type="text"
                                                                class="form-control" style="margin-top: 0;"
                                                                data-toggle="tooltip"
                                                                data-title="${tooltipCardNumber}"
                                                                maxlength="19"
                                                                disabled="disabled"
                                                                oninput="this.value=inputCardNumber(this.value)"
-                                                               placeholder="${numberCard}*"
-                                                               value="${cardNumberValue}"/>
+                                                               placeholder="${numberCard}*"/>
                                                         <label for="cardNumber" class="default-label">
                                                             <span id="valid-msg-cardNumber" class="valid-msg invisible">
                                                                 ${correct}

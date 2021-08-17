@@ -21,7 +21,6 @@ public class BankCardServiceImpl implements BankCardService {
 
     private final BankCardDao bankCardDao;
     private final ActionLogServiceImpl actionLogService;
-    private final StringBuilder stringBuilder = new StringBuilder();
     private static final Logger LOGGER = LogManager.getLogger(BankCardService.class);
 
     @Autowired
@@ -42,6 +41,7 @@ public class BankCardServiceImpl implements BankCardService {
     @Override
     public Boolean addNewBankCard(BankCard bankCard, Account account) {
 
+        StringBuilder stringBuilder = new StringBuilder();
         SimpleDateFormat formatter = new SimpleDateFormat("MM/yy");
         Date date = null;
 
@@ -74,6 +74,7 @@ public class BankCardServiceImpl implements BankCardService {
     @Override
     public Boolean blockCard(BankCard bankCard) {
 
+        StringBuilder stringBuilder = new StringBuilder();
         if (bankCard != null) {
             bankCard.setActive(false);
             bankCardDao.save(bankCard);
@@ -93,6 +94,7 @@ public class BankCardServiceImpl implements BankCardService {
     @Override
     public Boolean unblockCard(BankCard bankCard) {
 
+        StringBuilder stringBuilder = new StringBuilder();
         if (bankCard != null) {
             bankCard.setActive(true);
             bankCardDao.save(bankCard);
@@ -112,6 +114,7 @@ public class BankCardServiceImpl implements BankCardService {
     @Override
     public Boolean deleteCard(BankCard bankCard) {
 
+        StringBuilder stringBuilder = new StringBuilder();
         actionLogService.createLog(String.valueOf(stringBuilder.append("DETACHED: Card [")
                 .append(bankCard.getNumber())
                 .append("]")), bankCard.getAccount().getUser());

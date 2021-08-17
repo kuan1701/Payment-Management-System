@@ -22,7 +22,6 @@ public class AccountServiceImpl implements AccountService {
 	private final ActionLogServiceImpl actionLogService;
 
 	private final String STARTBALANCE = "10000.00";
-	private final StringBuilder stringBuilder = new StringBuilder();
 	private static final Logger LOGGER = LogManager.getLogger(AccountServiceImpl.class);
 
 	@Autowired
@@ -44,7 +43,8 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	public Boolean registrationAccount(Account account, Principal principal) {
-		
+
+		StringBuilder stringBuilder = new StringBuilder();
 		User user = userDao.findUserByUsername(principal.getName());
 		
 		if (accountDao.findAccountByNumber(account.getNumber()) != null) {
@@ -74,7 +74,8 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	public Boolean adminAttachAccount(Account account, Long userId) {
-		
+
+		StringBuilder stringBuilder = new StringBuilder();
 		User user = userDao.getById(userId);
 		
 		if (accountDao.findAccountByNumber(account.getNumber()) != null) {
@@ -105,6 +106,8 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Boolean blockAccount(Account account) {
 
+		StringBuilder stringBuilder = new StringBuilder();
+
 		if (account != null) {
 			account.setBlocked(true);
 			accountDao.save(account);
@@ -127,6 +130,8 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Boolean unblockAccount(Account account) {
 
+		StringBuilder stringBuilder = new StringBuilder();
+
 		if (account != null) {
 			account.setBlocked(false);
 			accountDao.save(account);
@@ -148,6 +153,8 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	public Boolean deleteAccount(Account account) {
+
+		StringBuilder stringBuilder = new StringBuilder();
 		
 		BigDecimal balance = account.getBalance();
 		if (balance.compareTo(BigDecimal.ZERO) != 0) {

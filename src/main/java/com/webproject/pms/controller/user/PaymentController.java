@@ -152,6 +152,7 @@ public class PaymentController {
 	 * @param accountToNumber String
 	 * @param amount BigDecimal
 	 * @param appointment String
+	 * @param paymentType String checkbox
 	 * @return userMakePayment view
 	 */
 	@PostMapping("/make-payment")
@@ -161,6 +162,7 @@ public class PaymentController {
 							  @RequestParam("appointment") String appointment,
 							  @RequestParam("accountFromId") Long accountFromId,
 							  @RequestParam("accountToNumber") String accountToNumber,
+							  @RequestParam("paymentType") String paymentType,
 							  @ModelAttribute("payment") @Valid Payment payment,
 							  BindingResult bindingResult
 	) {
@@ -170,27 +172,19 @@ public class PaymentController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("paymentError", "invalidData");
 		}
-		else if (!paymentService.makePaymentOnAccount(
-				accountFromId, accountToNumber, amount, appointment, model, user)) {
-			model.addAttribute("paymentError", "invalidData");
+		else if (paymentType.equals("on")) {
+			paymentService.makePaymentOnAccount(
+					accountFromId, accountToNumber, amount, appointment, model, user);
+			model.addAttribute("paymentError", "paymentCompletedSuccess");
+		}
+		else if (paymentType.equals("off")) {
+			paymentService.makePaymentOnCard(
+					accountFromId, accountToNumber, amount, appointment, model, user);
+			model.addAttribute("paymentError", "paymentCompletedSuccess");
 		}
 		else {
 			model.addAttribute("paymentError", "paymentCompletedSuccess");
 		}
-
-//		if (paymentType.equals("0")) {
-//			paymentService.makePaymentOnAccount(
-//					accountFromId, accountToNumber, amount, appointment, model, principal);
-//			model.addAttribute("paymentError", "paymentCompletedSuccess");
-//		}
-//		else if (paymentType.equals("1")) {
-//			paymentService.makePaymentOnCard(
-//					accountFromId, accountToNumber, amount, appointment, model, principal);
-//			model.addAttribute("paymentError", "paymentCompletedSuccess");
-//		}
-//		else {
-//			model.addAttribute("paymentError", "paymentCompletedSuccess");
-//		}
 
 		model.addAttribute("user", user);
 		model.addAttribute("amount", amount);
@@ -200,7 +194,7 @@ public class PaymentController {
 		model.addAttribute("accountToNumber", accountToNumber);
 		return "user/userMakePayment";
 	}
-	
+
 	/**
 	 * Show payment info
 	 * @param model Model
