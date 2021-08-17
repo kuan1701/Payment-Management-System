@@ -154,7 +154,7 @@ public class PaymentServiceImpl implements PaymentService {
 		if (accountFrom.getBlocked()) {
 			model.addAttribute("paymentError", "senderAccountBlockedError");
 			actionLogService.createLog("ERROR: Unsuccessful attempt to make a payment", user);
-			LOGGER.error("ERROR: Unsuccessful attempt to make a payment\n");
+			LOGGER.error("ERROR: Unsuccessful attempt to make a payment. Sender account blocked\n");
 			return false;
 		}
 
@@ -179,14 +179,14 @@ public class PaymentServiceImpl implements PaymentService {
 		actionLogService.createLog(String.valueOf(stringBuilder
 				.append("PAYMENT_COMPLETED: The payment was made from account [")
 				.append(accountFrom.getNumber())
-				.append("] to account [")
+				.append("] to credit card [")
 				.append(cardNumber)
 				.append("]")), user);
 
 		LOGGER.info(String.valueOf(stringBuilder
 				.append("PAYMENT_COMPLETED: The payment was made from account [")
 				.append(accountFrom.getNumber())
-				.append("] to account [")
+				.append("] to credit card [")
 				.append(cardNumber)
 				.append("]\n")));
 		return true;

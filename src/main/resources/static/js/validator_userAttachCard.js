@@ -5,8 +5,8 @@ let selectbox_account_id = $('.selectbox-account-id');
 let accountId = document.querySelector("#accountId");
 let cardNumber = document.querySelector("#cardNumber");
 let CVV = document.querySelector("#CVV");
-let selectbox_month = $('.bfh-selectbox-month');
-let selectbox_year = $('.bfh-selectbox-year');
+let selectbox_month = $('.inputMonth');
+let selectbox_year = $('.inputYear');
 let month = document.querySelector("#month");
 let year = document.querySelector("#year");
 let submitBtn = document.querySelector("#submit");
@@ -186,10 +186,10 @@ function validationMonth() {
 
     if (month.value.trim() === "" || month.value.trim().length < 2) {
         notValidMonth();
-    } else if (month.value.match(/[^0-9]/g) != null) {
-        notValidMonth();
-    } else {
+    } else if (month.value.match(/^(0[1-9]|1[0-2])$/g)) {
         validMonth();
+    } else {
+        notValidMonth();
     }
 }
 
