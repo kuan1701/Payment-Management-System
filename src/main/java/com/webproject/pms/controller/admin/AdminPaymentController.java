@@ -54,13 +54,19 @@ public class AdminPaymentController {
 		Account senderAccount = accountService.findAccountByAccountNumber(payment.getSenderNumber());
 		User senderUser = senderAccount.getUser();
 		Account recipientAccount = accountService.findAccountByAccountNumber(payment.getRecipientNumber());
-		User recipientUser = recipientAccount.getUser();
+		User recipientUser = null;
 		List<Letter> letterList = letterService.findUnprocessedLetters();
+
+		Boolean recipientIsAccount = false;
+		if (recipientAccount != null) {
+			recipientUser = recipientAccount.getUser();
+			recipientIsAccount = true;
+		}
 
 		model.addAttribute("user", user);
 		model.addAttribute("payment", payment);
 		model.addAttribute("senderUser", senderUser);
-		model.addAttribute("recipientIsAccount", true);
+		model.addAttribute("recipientIsAccount", recipientIsAccount);
 		model.addAttribute("recipientUser", recipientUser);
 		model.addAttribute("totalLetters", letterList.size());
 		return "admin/adminShowPaymentInfo";
@@ -98,7 +104,7 @@ public class AdminPaymentController {
 	 * @param finalDate String
 	 * @param isIncoming String
 	 * @param isOutgoing String
-	 * @return
+	 * @return adminShowUserPayments view
 	 */
 	@PostMapping("/showPayments/{userId}")
 	public String showFoundAccounts(Model model,

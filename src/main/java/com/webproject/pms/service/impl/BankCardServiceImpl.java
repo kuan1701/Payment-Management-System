@@ -8,15 +8,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional
 public class BankCardServiceImpl implements BankCardService {
 
     private final BankCardDao bankCardDao;
@@ -39,6 +38,7 @@ public class BankCardServiceImpl implements BankCardService {
     }
 
     @Override
+    @Transactional
     public Boolean addNewBankCard(BankCard bankCard, Account account) {
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -75,6 +75,7 @@ public class BankCardServiceImpl implements BankCardService {
     }
 
     @Override
+    @Transactional
     public Boolean blockCard(BankCard bankCard) {
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -95,6 +96,7 @@ public class BankCardServiceImpl implements BankCardService {
     }
 
     @Override
+    @Transactional
     public Boolean unblockCard(BankCard bankCard) {
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -115,6 +117,7 @@ public class BankCardServiceImpl implements BankCardService {
     }
 
     @Override
+    @Transactional
     public Boolean deleteCard(BankCard bankCard) {
 
         StringBuilder stringBuilder = new StringBuilder();

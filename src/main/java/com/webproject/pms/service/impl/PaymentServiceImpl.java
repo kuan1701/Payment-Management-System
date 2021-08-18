@@ -11,9 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Service
-@Transactional
 public class PaymentServiceImpl implements PaymentService {
 
 	private final AccountDao accountDao;
@@ -29,7 +28,6 @@ public class PaymentServiceImpl implements PaymentService {
 	private final ActionLogServiceImpl actionLogService;
 
 	private List<Payment> paymentList;
-	private final StringBuilder stringBuilder = new StringBuilder();
 	private static final Logger LOGGER = LogManager.getLogger(PaymentServiceImpl.class);
 	private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -46,7 +44,6 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public Payment initializePayment(User user, BigDecimal amount, String appointment) {
 
-		StringBuilder stringBuilder = new StringBuilder();
 		BigDecimal exchangeRate = new BigDecimal("1.00");
 
 		Payment payment = new Payment();
@@ -62,6 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
+	@Transactional
 	public Boolean makePaymentOnAccount(Long accountFromId,
 													 String accountToNumber,
 													 BigDecimal amount,
@@ -141,6 +139,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
+	@Transactional
 	public Boolean makePaymentOnCard(Long accountFromId,
 									 String cardNumber,
 									 BigDecimal amount,
@@ -199,6 +198,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 	//Account-to-account transaction
 	@Override
+	@Transactional
 	public void transaction(Account accountFrom, Account accountTo, BigDecimal amount) {
 		
 		if (!accountFrom.getBlocked() && !accountTo.getBlocked()) {
@@ -213,6 +213,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 	//Account-to-card transaction
 	@Override
+	@Transactional
 	public void transaction(Account accountFrom, String cardNumber, BigDecimal amount) {
 		
 		if (!accountFrom.getBlocked()) {

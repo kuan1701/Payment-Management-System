@@ -64,7 +64,7 @@ public class UserController {
 		model.addAttribute("userAccountEmpty", userAccountList.isEmpty());
 
 		actionLogService.createLog("SESSION_STARTED", user);
-		LOGGER.error("SESSION_STARTED");
+		LOGGER.info("SESSION_STARTED");
 
 		if (user.getRole().getId() == 2) {
 			return "admin/admin";

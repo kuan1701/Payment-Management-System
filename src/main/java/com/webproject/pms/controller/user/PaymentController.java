@@ -210,13 +210,20 @@ public class PaymentController {
 		Payment payment = paymentService.findPaymentByPaymentId(paymentId);
 		Account senderAccount = accountService.findAccountByAccountNumber(payment.getSenderNumber());
 		Account recipientAccount = accountService.findAccountByAccountNumber(payment.getRecipientNumber());
+
+		User recipientUser = null;
 		User senderUser = senderAccount.getUser();
-		User recipientUser = recipientAccount.getUser();
+
+		Boolean recipientIsAccount = false;
+		if (recipientAccount != null) {
+			recipientUser = recipientAccount.getUser();
+			recipientIsAccount = true;
+		}
 
 		model.addAttribute("payment", payment);
 		model.addAttribute("senderUser", senderUser);
-		model.addAttribute("recipientIsAccount", true);
 		model.addAttribute("recipientUser", recipientUser);
+		model.addAttribute("recipientIsAccount", recipientIsAccount);
 		model.addAttribute("user", userService.findUserByUsername(principal.getName()));
 		return "user/userShowPaymentInfo";
 	}

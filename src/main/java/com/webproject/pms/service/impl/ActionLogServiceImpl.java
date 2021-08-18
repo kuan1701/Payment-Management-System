@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Service
-@Transactional
 public class ActionLogServiceImpl implements ActionLogService {
 
     private final ActionLogDao actionLogDao;
@@ -28,6 +27,7 @@ public class ActionLogServiceImpl implements ActionLogService {
     }
 
     @Override
+    @Transactional
     public Boolean createLog(String description, User user) {
 
         LogEntry logEntry = new LogEntry();
@@ -40,6 +40,7 @@ public class ActionLogServiceImpl implements ActionLogService {
     }
 
     @Override
+    @Transactional
     public Boolean save(LogEntry logEntry) {
 
         actionLogDao.save(logEntry);
@@ -47,6 +48,7 @@ public class ActionLogServiceImpl implements ActionLogService {
     }
 
     @Override
+    @Transactional
     public Boolean clearActionLog(Long userId) {
 
         if (userId != null) {

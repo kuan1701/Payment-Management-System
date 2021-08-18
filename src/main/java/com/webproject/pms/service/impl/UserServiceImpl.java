@@ -26,7 +26,6 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
@@ -36,9 +35,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ActionLogServiceImpl actionLogService;
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private final String ADMINPASSWORD = "123456";
     private final String ROLE_USER = "ROLE_USER";
+    private final String ADMINPASSWORD = "123456";
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     public UserServiceImpl(UserDao userDao,
@@ -71,12 +70,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public Boolean saveUser(User user) {
         userDao.save(user);
         return true;
     }
 
     @Override
+    @Transactional
     public Boolean updateUser(User user,
                               Long userId,
                               String name,
@@ -113,6 +114,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public Boolean updatePassword(User user, String newPassword) {
 
         if (!newPassword.equals("")) {
@@ -130,6 +132,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public Boolean deleteUser(User user) {
         userDao.delete(user);
         return true;
@@ -172,6 +175,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     //User registration
     @Override
+    @Transactional
     public Boolean registrationUser(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
 
@@ -208,6 +212,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public Boolean adminCreateUser(User user, String siteURL)
             throws UnsupportedEncodingException, MessagingException {
 
@@ -242,6 +247,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     //Activate user
     @Override
+    @Transactional
     public Boolean activateUser(String code) {
 
         User user = userDao.findUserByActivationCode(code);
@@ -262,6 +268,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void updateResetPasswordToken(String token, String email) throws UserNotFoundException {
 
         User user = userDao.findUserByEmail(email);

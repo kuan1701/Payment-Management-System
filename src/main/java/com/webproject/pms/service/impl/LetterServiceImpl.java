@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Service
-@Transactional
 public class LetterServiceImpl implements LetterService {
 	
 	private final UserDao userDao;
@@ -40,6 +39,7 @@ public class LetterServiceImpl implements LetterService {
 	}
 	
 	@Override
+	@Transactional
 	public Boolean addNewLetter(Letter letter, Principal principal) {
 		
 		User user = userDao.findUserByUsername(principal.getName());
@@ -56,6 +56,7 @@ public class LetterServiceImpl implements LetterService {
 	}
 
 	@Override
+	@Transactional
 	public Boolean updateLetterByLetterId(Long letterId) {
 
 		if (letterId != null) {
