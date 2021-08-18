@@ -4,31 +4,35 @@ import com.webproject.pms.model.entities.Account;
 import com.webproject.pms.model.entities.Letter;
 import com.webproject.pms.model.entities.User;
 import com.webproject.pms.service.impl.AccountServiceImpl;
+import com.webproject.pms.service.impl.ActionLogServiceImpl;
 import com.webproject.pms.service.impl.LetterServiceImpl;
 import com.webproject.pms.service.impl.UserServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
 @Controller
 public class UserController {
-	
+
 	private final UserServiceImpl userService;
 	private final LetterServiceImpl letterService;
 	private final PasswordEncoder passwordEncoder;
 	private final AccountServiceImpl accountService;
+	private final ActionLogServiceImpl actionLogService;
+	private static final Logger LOGGER = LogManager.getLogger(UserController.class);
 
-	public UserController(UserServiceImpl userService,
+	public UserController(ActionLogServiceImpl actionLogService, UserServiceImpl userService,
 						  PasswordEncoder passwordEncoder,
 						  LetterServiceImpl letterService,
 						  AccountServiceImpl accountService
 	) {
+		this.actionLogService = actionLogService;
 		this.userService = userService;
 		this.letterService = letterService;
 		this.accountService = accountService;
@@ -58,7 +62,10 @@ public class UserController {
 		model.addAttribute("accountsEmpty", accountList.isEmpty());
 		model.addAttribute("totalLetters", unprocessedLetters.size());
 		model.addAttribute("userAccountEmpty", userAccountList.isEmpty());
-		
+
+		actionLogService.createLog("SESSION_STARTED", user);
+		LOGGER.error("SESSION_STARTED");
+
 		if (user.getRole().getId() == 2) {
 			return "admin/admin";
 		}

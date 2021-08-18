@@ -43,15 +43,18 @@ public class BankCardServiceImpl implements BankCardService {
 
         StringBuilder stringBuilder = new StringBuilder();
         SimpleDateFormat formatter = new SimpleDateFormat("MM/yy");
+        formatter.setLenient(false);
         Date date = null;
+        Boolean expired = true;
 
         try {
             date = formatter.parse(bankCard.getMonth() + "/" + bankCard.getYear());
+            expired = date.before(new Date());
         } catch (ParseException e) {
             LOGGER.error("ParseException: " + e.getMessage());
         }
 
-        if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null || account == null) {
+        if (bankCardDao.findBankCardByNumber(bankCard.getNumber()) != null || account == null || expired) {
             actionLogService.createLog("ERROR: Unsuccessful attempt to attach a card", account.getUser());
             LOGGER.error("ERROR: Unsuccessful attempt to attach a card\n");
             return false;
