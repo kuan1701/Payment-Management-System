@@ -26,7 +26,6 @@ public class AdminUserController {
 	private List<Letter> letterList;
 	private List<Account> accountList;
 	private List<Payment> paymentList;
-	private List<LogEntry> logEntryList;
 
 
 	public AdminUserController(UserServiceImpl userService,
@@ -200,7 +199,7 @@ public class AdminUserController {
 	public String adminCreateUserPage(Model model,
                                   Principal principal
 	) {
-		List<Letter> letterList = letterService.findUnprocessedLetters();
+		letterList = letterService.findUnprocessedLetters();
 
 		model.addAttribute("newUser", new User());
 		model.addAttribute("totalLetters", letterList.size());
@@ -225,6 +224,7 @@ public class AdminUserController {
                                   @ModelAttribute("newUser") User newUser
 	) throws UnsupportedEncodingException, MessagingException {
 		User user = userService.findUserByUsername(principal.getName());
+		letterList = letterService.findUnprocessedLetters();
 		
 		if (!userService.adminCreateUser(newUser, MailSender.getSiteURL(request))){
 			model.addAttribute("user", user);
@@ -238,6 +238,7 @@ public class AdminUserController {
 
 		}
 		model.addAttribute("user", user);
+		model.addAttribute("totalLetters", letterList.size());
 		return "admin/adminAddUser";
 	}
 }

@@ -213,6 +213,7 @@ public class AdminAccountController {
 	                                       @PathVariable("userId") Long userId,
 	                                       @ModelAttribute("account") Account account
 	) {
+		letterList = letterService.findUnprocessedLetters();
 		User viewableUser = userService.findUserByUserId(userId);
 		User user = userService.findUserByUsername(principal.getName());
 
@@ -227,6 +228,7 @@ public class AdminAccountController {
 		
 		model.addAttribute("user", user);
 		model.addAttribute("viewableUser", viewableUser);
+		model.addAttribute("totalLetters", letterList.size());
 		return "admin/adminAttachAccount";
 	}
 	
